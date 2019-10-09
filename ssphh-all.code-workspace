@@ -1,0 +1,60 @@
+{
+	"folders": [{
+			"name": "viperfish",
+			"path": "..\\damselfish"
+		},
+		{
+			"name": "fluxions",
+			"path": "..\\fluxions"
+		},
+		{
+			"name": "fluxions-deps",
+			"path": "..\\fluxions-deps"
+		},
+		{
+			"name": "fluxions-gte",
+			"path": "..\\fluxions-gte"
+		},
+		{
+			"name": "hatchetfish",
+			"path": "..\\hatchetfish"
+		},
+		{
+			"name": "ssphh",
+			"path": "..\\ssphh"
+		},
+		{
+			"name": "ssphh-all",
+			"path": "."
+		},
+		{
+			"name": "sunfish",
+			"path": "..\\sunfish"
+		},
+		{
+			"name": "toadfish",
+			"path": "..\\toadfish"
+		},
+		{
+			"name": "unicornfish",
+			"path": "..\\unicornfish"
+		},
+		{
+			"name": "viperfish",
+			"path": "..\\viperfish"
+		},
+		{
+			"name": "ssphh-data",
+			"path": "..\\ssphh-data"
+		},
+		{
+			"name": "glfw-template",
+			"path": "..\\glfw-template"
+		},
+		{
+			"name": "ssphh-tests",
+			"path": "..\\ssphh-tests"
+		}
+	],
+	"settings": {}
+}
