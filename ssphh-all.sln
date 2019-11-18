@@ -8,8 +8,14 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fluxions", "..\fluxions\fluxions.vcxproj", "{CC5438F5-5E12-4F28-8B2F-13359021B095}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ssphh", "ssphh\ssphh.vcxproj", "{8F93792A-FC28-4E97-A4CC-27EBB0DABDE9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CC5438F5-5E12-4F28-8B2F-13359021B095} = {CC5438F5-5E12-4F28-8B2F-13359021B095}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ssphh-tests", "ssphh-tests\ssphh-tests.vcxproj", "{26F2CC6D-675B-4775-BBFA-949445675DB6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CC5438F5-5E12-4F28-8B2F-13359021B095} = {CC5438F5-5E12-4F28-8B2F-13359021B095}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
