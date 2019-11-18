@@ -159,8 +159,7 @@ int main(int argc, char **argv)
 #ifdef USE_FREEGLUT
 	GlutTemplateSetParameters("SSPHH", 1280, 720);
 	GlutTemplateInit(argc, argv);
-#endif
-#ifdef USE_GLFW
+#elif USE_GLFW
 	GlfwTemplateSetParameters("SSPHH", 1280, 720);
 	if (!GlfwTemplateInit(argc, argv)) {
 		return -1;
@@ -171,8 +170,7 @@ int main(int argc, char **argv)
 #ifdef USE_FREEGLUT
 	GlutTemplateWidget(vfApp);
 	GlutTemplateMainLoop();
-#endif
-#ifdef USE_GLFW
+#elif USE_GLFW
 	GlfwTemplateWidget(vfApp);
 	GlfwTemplateMainLoop();
 #endif
