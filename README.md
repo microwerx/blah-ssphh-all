@@ -28,6 +28,10 @@ PS Z:\github\vcpkg> .\vcpkg.exe install --triplet x64-windows openexr czmq curl 
 - [ ] GLES 2.0 Renderer
 - [ ] GLES 3.0 Renderer
 
+## Current Status
+
+`SSPHH_Application` is a `Vf::Widget` which is decorated by `Vf::DearImGuiWidget` and `Vf::Widget`. But a better way would use a `Vf::RootWindow` as a container which steps through several `Vf::Widget` children.
+
 ## TODO
 
 - [ ] Add Viperfish/ImGui Controls
