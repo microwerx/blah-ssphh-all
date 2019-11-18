@@ -32,8 +32,6 @@ static const int AllDegrees = -1;
 //static float imguiWinX = 64.0f;
 //static float imguiWinW = 384.0f;
 
-extern double gt_Fps;
-
 #ifdef __APPLE__
 #define __unix__
 #endif
@@ -216,9 +214,9 @@ namespace SSPHH
 			LeaveMainLoop();
 		}
 
-		float time_ms = (float)(1000.0 / gt_Fps);
+		float time_ms = (float)(1000.0 / framesPerSecond);
 		ImGui::SameLine();
-		ImGui::Text("[ %3.1f fps/ %3.1f ms ]", gt_Fps, time_ms);
+		ImGui::Text("[ %3.1f fps/ %3.1f ms ]", framesPerSecond, time_ms);
 		if (ImGui::SmallButton("Save Stats")) {
 			imguiToolsSaveStats();
 		}
