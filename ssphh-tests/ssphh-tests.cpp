@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fluxions_gte.hpp>
 
-#pragma comment(lib, "fluxions-gte.lib")
+#pragma comment(lib, "fluxions.lib")
 
 int main()
 {
