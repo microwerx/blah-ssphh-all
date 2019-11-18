@@ -199,24 +199,27 @@ void InitApp()
 {
 	Fluxions::Init();
 	Fluxions::EnableGLDebugFunc();
+	constexpr int testwidgets = 0;
+	if (testwidgets) {
+		vf_app_ptr = std::make_shared<Vf::RootWindow>("root");
+		imgui_widget_ptr = std::make_shared<Vf::DearImGuiWidget>("imguiwidget");
 
-	//ssphh_widget_ptr = std::make_shared<SSPHH::SSPHH_Application>("ssphh");
-	//imgui_widget_ptr = std::make_shared<Vf::DearImGuiWidget>("imguiwidget");
-	//imgui_widget_ptr->decorate(ssphh_widget_ptr);
-	//vf_app_ptr = std::make_shared<Vf::Widget>("controller");
-	//vf_app_ptr->decorate(imgui_widget_ptr);
-
-	vf_app_ptr = std::make_shared<Vf::RootWindow>("root");
-	imgui_widget_ptr = std::make_shared<Vf::DearImGuiWidget>("imguiwidget");
-	
-	// vf_app decorates imgui_widget because
-	// - imgui_widget needs to initialize first
-	// - vf_app calls decoratee first, then children
-	vf_app_ptr->decorate(imgui_widget_ptr);
-	auto loadingWindow = std::make_shared<Vf::LoadingWindow>("Fluxions");
-	vf_app_ptr->push_back(loadingWindow);
-	auto window2 = std::make_shared<Vf::LoadingWindow>("Fluxions 2");
-	vf_app_ptr->push_back(window2);
+		// vf_app decorates imgui_widget because
+		// - imgui_widget needs to initialize first
+		// - vf_app calls decoratee first, then children
+		vf_app_ptr->decorate(imgui_widget_ptr);
+		auto loadingWindow = std::make_shared<Vf::LoadingWindow>("Fluxions");
+		vf_app_ptr->push_back(loadingWindow);
+		auto window2 = std::make_shared<Vf::LoadingWindow>("Fluxions 2");
+		vf_app_ptr->push_back(window2);
+	}
+	else {
+		ssphh_widget_ptr = std::make_shared<SSPHH::SSPHH_Application>("ssphh");
+		imgui_widget_ptr = std::make_shared<Vf::DearImGuiWidget>("imguiwidget");
+		imgui_widget_ptr->decorate(ssphh_widget_ptr);
+		vf_app_ptr = std::make_shared<Vf::Widget>("controller");
+		vf_app_ptr->decorate(imgui_widget_ptr);
+	}
 }
 
 void KillApp()
