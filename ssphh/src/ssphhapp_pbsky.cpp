@@ -12,13 +12,13 @@ namespace SSPHH
 		HFLOGINFO("Saving pbsky ppm texture maps");
 
 		Hf::StopWatch stopwatch;
-		ssg.environment.pbsky.generatedCylMap.savePPMRaw("pbsky_cylmap.ppm");
-		ssg.environment.pbsky.generatedCubeMap.savePPMRaw("pbsky_cubemap_0.ppm", 0);
-		ssg.environment.pbsky.generatedCubeMap.savePPMRaw("pbsky_cubemap_1.ppm", 1);
-		ssg.environment.pbsky.generatedCubeMap.savePPMRaw("pbsky_cubemap_2.ppm", 2);
-		ssg.environment.pbsky.generatedCubeMap.savePPMRaw("pbsky_cubemap_3.ppm", 3);
-		ssg.environment.pbsky.generatedCubeMap.savePPMRaw("pbsky_cubemap_4.ppm", 4);
-		ssg.environment.pbsky.generatedCubeMap.savePPMRaw("pbsky_cubemap_5.ppm", 5);
+		ssg.environment.pbsky.generatedCylMap.savePPM("pbsky_cylmap.ppm");
+		ssg.environment.pbsky.generatedCubeMap.savePPM("pbsky_cubemap_0.ppm", 0);
+		ssg.environment.pbsky.generatedCubeMap.savePPM("pbsky_cubemap_1.ppm", 1);
+		ssg.environment.pbsky.generatedCubeMap.savePPM("pbsky_cubemap_2.ppm", 2);
+		ssg.environment.pbsky.generatedCubeMap.savePPM("pbsky_cubemap_3.ppm", 3);
+		ssg.environment.pbsky.generatedCubeMap.savePPM("pbsky_cubemap_4.ppm", 4);
+		ssg.environment.pbsky.generatedCubeMap.savePPM("pbsky_cubemap_5.ppm", 5);
 		ssg.environment.pbsky.generatedCubeMap.saveCubePPM("pbsky_cubemap.ppm");
 		stopwatch.Stop();
 		HFLOGINFO("Saving pbsky ppm texture maps took %4.2f seconds", stopwatch.GetSecondsElapsed());
