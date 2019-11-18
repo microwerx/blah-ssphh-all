@@ -17,5 +17,5 @@ This is the repository for my 2019-2020 work on SSPHH.
 ## Libraries
 
 ```
-> .\vcpkg install --triplet x64-windows glew glfw sdl2 sdl2-image sdl2-mixer zeromq[sodium] czmq curl openexr imgui python3
+PS Z:\github\vcpkg> .\vcpkg.exe install --triplet x64-windows openexr czmq curl sdl2-mixer sdl2-image imgui sdl2 glew python3 zeromq[sodium] glfw3 freeglut
 ```
