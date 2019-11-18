@@ -178,7 +178,9 @@ namespace glfwt
 	void OnRender()
 	{
 		if (!vfWidget) return;
+
 		vfWidget->OnPreRender();
+		vfWidget->display();
 		vfWidget->OnRender3D();
 		vfWidget->OnRender2D();
 		vfWidget->OnRenderDearImGui();

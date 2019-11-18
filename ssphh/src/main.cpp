@@ -113,6 +113,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #endif
+#include <viperfish_root_window.hpp>
+#include <viperfish_loading_window.hpp>
 
 extern void do_tests();
 
@@ -198,13 +200,23 @@ void InitApp()
 	Fluxions::Init();
 	Fluxions::EnableGLDebugFunc();
 
-	ssphh_widget_ptr = std::make_shared<SSPHH::SSPHH_Application>("ssphh");
-	imgui_widget_ptr = std::make_shared<Vf::DearImGuiWidget>("imguiwidget");
-	imgui_widget_ptr->decorate(ssphh_widget_ptr);
-	vf_app_ptr = std::make_shared<Vf::Widget>("controller");
-	vf_app_ptr->decorate(imgui_widget_ptr);
+	//ssphh_widget_ptr = std::make_shared<SSPHH::SSPHH_Application>("ssphh");
+	//imgui_widget_ptr = std::make_shared<Vf::DearImGuiWidget>("imguiwidget");
+	//imgui_widget_ptr->decorate(ssphh_widget_ptr);
+	//vf_app_ptr = std::make_shared<Vf::Widget>("controller");
+	//vf_app_ptr->decorate(imgui_widget_ptr);
 
-	vf_app_ptr = std::make_shared<Vf::RootWindowWidget>("root");
+	vf_app_ptr = std::make_shared<Vf::RootWindow>("root");
+	imgui_widget_ptr = std::make_shared<Vf::DearImGuiWidget>("imguiwidget");
+	
+	// vf_app decorates imgui_widget because
+	// - imgui_widget needs to initialize first
+	// - vf_app calls decoratee first, then children
+	vf_app_ptr->decorate(imgui_widget_ptr);
+	auto loadingWindow = std::make_shared<Vf::LoadingWindow>("Fluxions");
+	vf_app_ptr->push_back(loadingWindow);
+	auto window2 = std::make_shared<Vf::LoadingWindow>("Fluxions 2");
+	vf_app_ptr->push_back(window2);
 }
 
 void KillApp()
