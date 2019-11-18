@@ -75,7 +75,7 @@
 #pragma comment(lib, "glew32d.lib")
 #pragma comment(lib, "glfw3dll.lib")
 #else
-#pragma comment(lib, "zmq4.lib")
+#pragma comment(lib, "libzmq-mt-4_3_3.lib")
 #pragma comment(lib, "glew32.lib")
 #pragma comment(lib, "glfw3dll.lib")
 #endif // _DEBUG
