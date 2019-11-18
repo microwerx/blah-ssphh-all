@@ -1,0 +1,51 @@
+{
+    "configurations": [{
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/../libs/include",
+                "${workspaceFolder}/../damselfish/include",
+                "${workspaceFolder}/../fluxions/include",
+                "${workspaceFolder}/../fluxions-deps/include",
+                "${workspaceFolder}/../fluxions-gte/include",
+                "${workspaceFolder}/../hatchetfish/include",
+                "${workspaceFolder}/../ssphh/include",
+                "${workspaceFolder}/../sunfish/include",
+                "${workspaceFolder}/../toadfish/include",
+                "${workspaceFolder}/../unicornfish/include",
+                "${workspaceFolder}/../viperfish/include",
+                "/usr/include/python3.7m"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-x64"
+        },
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/../libs/include",
+                "${workspaceFolder}/../damselfish/include",
+                "${workspaceFolder}/../fluxions/include",
+                "${workspaceFolder}/../fluxions-deps/include",
+                "${workspaceFolder}/../fluxions-gte/include",
+                "${workspaceFolder}/../hatchetfish/include",
+                "${workspaceFolder}/../ssphh/include",
+                "${workspaceFolder}/../sunfish/include",
+                "${workspaceFolder}/../toadfish/include",
+                "${workspaceFolder}/../unicornfish/include",
+                "${workspaceFolder}/../viperfish/include",
+                "C:/Program Files/Python37/include"
+            ],
+            "defines": [],
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "msvc-x64"
+        }
+    ],
+    "version": 4
+}
