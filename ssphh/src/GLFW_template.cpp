@@ -87,7 +87,7 @@ namespace glfwt
 	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
 		keyMap[key] = action;
-		Vf::SetKeyboardModifiers(
+		Vf::KeyboardState::SetKeyboardModifiers(
 			mods & GLFW_MOD_SHIFT,
 			mods & GLFW_MOD_CONTROL,
 			mods & GLFW_MOD_ALT,
@@ -95,8 +95,10 @@ namespace glfwt
 			mods & GLFW_MOD_CAPS_LOCK,
 			mods & GLFW_MOD_NUM_LOCK);
 		key = glfwKeyToVf(key);
-		int keymod = Vf::GetKeyboardModifiers();
-		std::string keyName = key < 0x100 ? Vf::KeyToHTML5Name(key) : Vf::SpecialKeyToHTML5Name(key);
+		int keymod = Vf::KeyboardState::GetKeyboardModifiers();
+		std::string keyName = key < 0x100
+			? Vf::KeyboardState::KeyToHTML5Name(key)
+			: Vf::KeyboardState::SpecialKeyToHTML5Name(key);
 		
 		//HFLOGDEBUG("%03d %s %s",
 		//	key,
