@@ -156,11 +156,15 @@ int main(int argc, char **argv)
 		Fluxions::debugging = true;
 	}
 
+	const std::string WindowTitle{ "SSPHH" };
+	constexpr int WindowWidth = 1280;
+	constexpr int WindowHeight = 720;
+
 #ifdef USE_FREEGLUT
-	GlutTemplateSetParameters("SSPHH", 1280, 720);
+	GlutTemplateSetParameters(WindowTitle, WindowWidth, WindowHeight);
 	GlutTemplateInit(argc, argv);
 #elif USE_GLFW
-	GlfwTemplateSetParameters("SSPHH", 1280, 720);
+	GlfwTemplateSetParameters(WindowTitle, WindowWidth, WindowHeight);
 	if (!GlfwTemplateInit(argc, argv)) {
 		return -1;
 	}
