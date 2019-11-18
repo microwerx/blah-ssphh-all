@@ -545,6 +545,7 @@ namespace SSPHH
 
 		InterfaceInfo Interface;
 		int counter = 0;
+		double framesPerSecond = 0.0;
 
 		//virtual void OnKeyDown(int key);
 		//virtual void OnKeyUp(int key);

@@ -4,6 +4,7 @@
 namespace SSPHH
 {
 	void SSPHH_Application::OnUpdate(double deltaTime) {
+		framesPerSecond = 1.0 / deltaTime;
 		Widget::OnUpdate(deltaTime);
 
 		Hf::StopWatch stopwatch;
