@@ -26,35 +26,68 @@
 #ifdef _WIN32
 #define _STDCALL_SUPPORTED
 
+#pragma comment(lib, "xinput.lib")		// XInput Library
+#pragma comment(lib, "glu32.lib")		// OpenGL Utility library
+#pragma comment(lib, "opengl32.lib")	// Microsoft OpenGL library
+#pragma comment(lib, "gdi32.lib")		// Windows GDI library
+#pragma comment(lib, "winmm.lib")		// Windows MultiMedia library
+#pragma comment(lib, "user32.lib")		// Windows User library
+
 #ifndef FLUXIONS_NO_SDL
-#pragma comment(lib, "SDL2.lib")
-#pragma comment(lib, "SDL2main.lib")
+#ifdef _DEBUG
+#pragma comment(lib, "SDL2d.lib")
 #pragma comment(lib, "SDL2_image.lib")
+#pragma comment(lib, "SDL2_mixer.lib")
+#else
+#pragma comment(lib, "SDL2.lib")
+#pragma comment(lib, "SDL2_image.lib")
+#pragma comment(lib, "SDL2_mixer.lib")
+#endif
 #endif
 
 #pragma comment(lib, "fluxions.lib")
-#pragma comment(lib, "fluxions-deps.lib")
-#pragma comment(lib, "fluxions-gte.lib")
-
-#pragma comment(lib, "viperfish.lib")
-#pragma comment(lib, "unicornfish.lib")
-#pragma comment(lib, "damselfish.lib")
 
 #ifndef FLUXIONS_NO_OPENEXR
+#ifdef _DEBUG
+#pragma comment(lib, "Half-2_3_d.lib")
+#pragma comment(lib, "IlmImf-2_3_d.lib")
+#else
 #pragma comment(lib, "Half-2_3.lib")
+#pragma comment(lib, "IlmImf-2_3.lib")
+#endif // _DEBUG
 //#pragma comment(lib, "Iex-2_3")
 //#pragma comment(lib, "IexMath-2_3")
-#pragma comment(lib, "IlmImf-2_3.lib")
 //#pragma comment(lib, "IlmImfUtil-2_3")
 //#pragma comment(lib, "IlmThread-2_3")
 //#pragma comment(lib, "Imath-2_3")
 #endif
 
+
+//#ifdef _WIN32
+//#pragma comment(lib, "libsodium.lib")
+//#pragma comment(lib, "libzmq.lib")
+//#pragma comment(lib, "libczmq.lib")
+//#pragma comment(lib, "libcurl.lib")
+//#endif
+
 #ifdef _DEBUG
-#pragma comment(lib, "zmq4d.lib")
+//#pragma comment(lib, "libzmq-mt-gd-4_3_3.lib")
+#pragma comment(lib, "glew32d.lib")
+#pragma comment(lib, "glfw3dll.lib")
 #else
 #pragma comment(lib, "zmq4.lib")
+#pragma comment(lib, "glew32.lib")
+#pragma comment(lib, "glfw3dll.lib")
 #endif // _DEBUG
+
+
+#ifdef SSPHH_USE_FREEGLUT
+#ifdef _DEBUG
+#pragma comment(lib, "freeglut_staticd.lib")
+#else
+#pragma comment(lib, "freeglut_static.lib")
+#endif // _DEBUG
+#endif // SSPHH_USE_FREEGLUT
 
 #endif // _WIN32
 

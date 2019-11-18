@@ -1,16 +1,10 @@
 #include <string>
 #include <vector>
 #include <fluxions.hpp>
-#include <GLUT_template.hpp>
-#include <GL/freeglut.h>
 
-#ifdef _WIN32
-#ifdef _DEBUG
-#pragma comment(lib, "freeglut_staticd.lib")
-#else
-#pragma comment(lib, "freeglut_static.lib")
-#endif // _DEBUG
-#endif // _WIN32
+#include <GLUT_template.hpp>
+#ifdef SSPHH_USE_FREEGLUT
+#include <GL/freeglut.h>
 
 //////////////////////////////////////////////////////////////////////
 // G L O B A L   V A R I A B L E S ///////////////////////////////////
@@ -677,3 +671,5 @@ void RenderOpenGL11TestScene()
 	glDisable(GL_LIGHTING);
 	glDisable(GL_DEPTH_TEST);
 }
+
+#endif
