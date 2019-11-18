@@ -71,12 +71,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>$(ProjectName)-debug</TargetName>
-    <IncludePath>$(ProjectDir)../vcpkg/installed/x64-windows/include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../vcpkg/installed/x64-windows/include;$(SolutionDir)../fluxions/include;$(ProjectDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)../vcpkg/installed/x64-windows/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>$(ProjectName)-release</TargetName>
-    <IncludePath>$(ProjectDir)../vcpkg/installed/x64-windows/include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../vcpkg/installed/x64-windows/include;$(SolutionDir)../fluxions/include;$(ProjectDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)../vcpkg/installed/x64-windows/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -99,6 +99,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -126,6 +127,7 @@
       <SDLCheck>true</SDLCheck>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <SupportJustMyCode>true</SupportJustMyCode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

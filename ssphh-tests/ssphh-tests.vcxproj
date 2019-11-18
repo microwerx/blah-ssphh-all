@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)..\fluxions\include;$(ProjectDir)..\fluxions-deps\include;$(ProjectDir)..\fluxions-gte\include;$(ProjectDir)..\hatchetfish\include;$(ProjectDir)..\viperfish\include;$(ProjectDir)..\libs\include\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(ProjectDir)../vcpkg/installed/x64-windows/include;$(SolutionDir)../fluxions/include;$(ProjectDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)..\ssphh-all\$(Platform)\$(Configuration)\;$(SolutionDir)$(Platform)\$(Configuration)\;$(ProjectDir)..\libs\lib\x64\;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -83,7 +83,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)..\fluxions\include;$(ProjectDir)..\fluxions-deps\include;$(ProjectDir)..\fluxions-gte\include;$(ProjectDir)..\hatchetfish\include;$(ProjectDir)..\viperfish\include;$(ProjectDir)..\libs\include\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(ProjectDir)../vcpkg/installed/x64-windows/include;$(SolutionDir)../fluxions/include;$(ProjectDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)..\ssphh-all\$(Platform)\$(Configuration)\;$(SolutionDir)$(Platform)\$(Configuration)\;$(ProjectDir)..\libs\lib\x64\;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -95,6 +95,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -146,6 +147,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
