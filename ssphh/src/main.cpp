@@ -116,8 +116,8 @@
 
 extern void do_tests();
 
-Vf::Widget::SharedPtr vfApp;
-Vf::Widget::SharedPtr imguiPtr;
+Vf::Widget::SharedPtr vf_app_ptr;
+Vf::Widget::SharedPtr imgui_widget_ptr;
 
 double g_distance = -10.0;
 double xrot = 0.0;
@@ -169,15 +169,18 @@ int main(int argc, char **argv)
 		return -1;
 	}
 #endif
+
 	dragDrop.Init();
 	InitApp();
+
 #ifdef USE_FREEGLUT
-	GlutTemplateWidget(vfApp);
+	GlutTemplateWidget(vf_app_ptr);
 	GlutTemplateMainLoop();
 #elif USE_GLFW
-	GlfwTemplateWidget(vfApp);
+	GlfwTemplateWidget(vf_app_ptr);
 	GlfwTemplateMainLoop();
 #endif
+
 	KillApp();
 	dragDrop.Kill();
 
@@ -195,11 +198,13 @@ void InitApp()
 	Fluxions::Init();
 	Fluxions::EnableGLDebugFunc();
 
-	ssphhPtr = std::make_shared<SSPHH::SSPHH_Application>("ssphh");
-	imguiPtr = std::make_shared<Vf::DearImGuiWidget>("imguiwidget");
-	imguiPtr->decorate(ssphhPtr);
-	vfApp = std::make_shared<Vf::Widget>("controller");
-	vfApp->decorate(imguiPtr);
+	ssphh_widget_ptr = std::make_shared<SSPHH::SSPHH_Application>("ssphh");
+	imgui_widget_ptr = std::make_shared<Vf::DearImGuiWidget>("imguiwidget");
+	imgui_widget_ptr->decorate(ssphh_widget_ptr);
+	vf_app_ptr = std::make_shared<Vf::Widget>("controller");
+	vf_app_ptr->decorate(imgui_widget_ptr);
+
+	vf_app_ptr = std::make_shared<Vf::RootWindowWidget>("root");
 }
 
 void KillApp()

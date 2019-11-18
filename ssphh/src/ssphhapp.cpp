@@ -27,7 +27,7 @@ namespace Fluxions
 	extern bool debugging;
 } // namespace Fluxions
 
-std::shared_ptr<SSPHH::SSPHH_Application> ssphhPtr;
+std::shared_ptr<SSPHH::SSPHH_Application> ssphh_widget_ptr;
 extern std::vector<std::string> g_args;
 
 #ifdef USE_GLUT
@@ -41,12 +41,12 @@ extern double g_distance;
 using namespace Fluxions;
 
 void InitSSPHH() {
-	ssphhPtr = std::make_shared<SSPHH::SSPHH_Application>();
+	ssphh_widget_ptr = std::make_shared<SSPHH::SSPHH_Application>();
 }
 
 void KillSSPHH() {
 	//ssphh->Stop();
-	ssphhPtr->Kill();
+	ssphh_widget_ptr->Kill();
 }
 
 namespace SSPHH

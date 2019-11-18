@@ -591,7 +591,7 @@ namespace SSPHH
 } // namespace SSPHH
 
 // extern SSPHH_Application ssphh;
-extern std::shared_ptr<SSPHH::SSPHH_Application> ssphhPtr;
+extern std::shared_ptr<SSPHH::SSPHH_Application> ssphh_widget_ptr;
 void InitSSPHH();
 void KillSSPHH();
 

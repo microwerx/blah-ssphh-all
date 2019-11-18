@@ -52,7 +52,7 @@ namespace Uf
 				context->SetUIMessage(Unicornfish::NodeType::Worker, messageStr);
 
 				// do the job!
-				ssphhPtr->RunJob(job);
+				ssphh_widget_ptr->RunJob(job);
 				job.MarkJobFinished();
 
 				reply = request;
@@ -102,7 +102,7 @@ namespace Uf
 				context->SetUIMessage(Unicornfish::NodeType::Worker, messageStr);
 
 				// do the job!
-				ssphhPtr->RunJob(job);
+				ssphh_widget_ptr->RunJob(job);
 				job.MarkJobFinished();
 
 				// report the results

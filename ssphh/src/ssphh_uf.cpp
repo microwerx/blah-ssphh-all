@@ -23,7 +23,7 @@
 
 using namespace Fluxions;
 
-extern std::shared_ptr<SSPHH::SSPHH_Application> ssphhPtr;
+extern std::shared_ptr<SSPHH::SSPHH_Application> ssphh_widget_ptr;
 Unicornfish ssphhUf;
 
 void Unicornfish::StartClient(const std::string & endpoint)
@@ -43,7 +43,7 @@ void Unicornfish::StartBroker()
 
 void Unicornfish::StartStandalone(bool client, bool broker, bool worker)
 {
-	if (!ssphhPtr)
+	if (!ssphh_widget_ptr)
 		return;
 	if (!stopped) return;
 	stopped = false;
@@ -53,7 +53,7 @@ void Unicornfish::StartStandalone(bool client, bool broker, bool worker)
 	if (client)
 		client_thread = std::thread(Uf::DoClient, "tcp://127.0.0.1:9081", this);
 	if (worker)
-		worker_thread = std::thread(Uf::DoWorker, "tcp://127.0.0.1:9081", ssphhPtr->GetSceneName().c_str(), this);
+		worker_thread = std::thread(Uf::DoWorker, "tcp://127.0.0.1:9081", ssphh_widget_ptr->GetSceneName().c_str(), this);
 }
 
 void Unicornfish::Join()

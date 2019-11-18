@@ -28,9 +28,9 @@ namespace Uf
 	{
 		if (!uf)
 			return;
-		if (!ssphhPtr)
+		if (!ssphh_widget_ptr)
 			return;
-		std::shared_ptr<SSPHH::SSPHH_Application> ssphh = ssphhPtr;
+		std::shared_ptr<SSPHH::SSPHH_Application> ssphh = ssphh_widget_ptr;
 
 		uf->SetUIMessage(Unicornfish::NodeType::Client, "started");
 		Uf::Client client;
