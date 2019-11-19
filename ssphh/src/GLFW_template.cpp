@@ -171,10 +171,10 @@ namespace glfwt
 	}
 
 	// timeStamp is seconds
-	void OnUpdate(double deltaTime)
+	void OnUpdate(double timeStamp)
 	{
 		if (!vfWidget) return;
-		vfWidget->OnUpdate(deltaTime);
+		vfWidget->OnUpdate(timeStamp);
 	}
 
 	void OnRender()
@@ -257,8 +257,10 @@ void GlfwTemplateMainLoop()
 		double dt = t1 - t0;
 		t0 = t1;
 
+		glClear(GL_COLOR_BUFFER_BIT);
+
 		// Update widgets
-		glfwt::OnUpdate(dt);
+		glfwt::OnUpdate(t1);
 
 		// Render widgets (3D, 2D, and then DearImGUI)
 		glfwt::OnRender();
