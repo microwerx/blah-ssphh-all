@@ -102,6 +102,9 @@
 #include <string>
 #include <regex>
 #include <viperfish.hpp>
+#include <viperfish_root_window.hpp>
+#include <viperfish_loading_window.hpp>
+#include <viperfish_stats_window.hpp>
 #include <unicornfish.hpp>
 #include <ssphhapp.hpp>
 
@@ -113,8 +116,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #endif
-#include <viperfish_root_window.hpp>
-#include <viperfish_loading_window.hpp>
 
 extern void do_tests();
 
@@ -199,7 +200,7 @@ void InitApp()
 {
 	Fluxions::Init();
 	Fluxions::EnableGLDebugFunc();
-	constexpr int testwidgets = 0;
+	constexpr int testwidgets = 1;
 	if (testwidgets) {
 		vf_app_ptr = std::make_shared<Vf::RootWindow>("root");
 		imgui_widget_ptr = std::make_shared<Vf::DearImGuiWidget>("imguiwidget");
@@ -208,10 +209,10 @@ void InitApp()
 		// - imgui_widget needs to initialize first
 		// - vf_app calls decoratee first, then children
 		vf_app_ptr->decorate(imgui_widget_ptr);
-		auto loadingWindow = std::make_shared<Vf::LoadingWindow>("Fluxions");
+		Vf::LoadingWindowPtr loadingWindow = std::make_shared<Vf::LoadingWindow>("Fluxions");
 		vf_app_ptr->push_back(loadingWindow);
-		auto window2 = std::make_shared<Vf::LoadingWindow>("Fluxions 2");
-		vf_app_ptr->push_back(window2);
+		Vf::StatsWindowPtr statsWindow = std::make_shared<Vf::StatsWindow>("Statistics");
+		vf_app_ptr->push_back(statsWindow);
 	}
 	else {
 		ssphh_widget_ptr = std::make_shared<SSPHH::SSPHH_Application>("ssphh");
