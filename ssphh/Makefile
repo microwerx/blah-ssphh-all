@@ -8,15 +8,17 @@
 # development packages
 # global
 
-DEP_INCDIR = ../fluxions/dep/include
-DEP_SRCDIR = ../fluxions/dep/src
-SRCDIR = src
-INCDIR = include
-OBJDIR = build
-FLUXIONS = ../fluxions/build/libfluxions.a
-FLUXIONS_INCDIR = ../fluxions/include
-FLUXIONS_LIBDIR = ../fluxions/build
-FLUXIONS_SRCDIR = ../fluxions/src
+SOLUTIONDIR=../../
+PROJECTDIR=ssphh/
+DEP_INCDIR = $(SOLUTIONDIR)fluxions/dep/include
+DEP_SRCDIR = $(SOLUTIONDIR)fluxions/dep/src
+SRCDIR = $(SOLUTIONDIR)$(PROJECTDIR)src
+INCDIR = $(SOLUTIONDIR)$(PROJECTDIR)include
+OBJDIR = $(SOLUTIONDIR)$(PROJECTDIR)build
+FLUXIONS = $(SOLUTIONDIR)fluxions/build/libfluxions.a
+FLUXIONS_INCDIR = $(SOLUTIONDIR)fluxions/include
+FLUXIONS_LIBDIR = $(SOLUTIONDIR)fluxions/build
+FLUXIONS_SRCDIR = $(SOLUTIONDIR)fluxions/src
 FLUXIONS_HEADERS = $(wildcard $(FLUXIONS_INCDIR)/*.hpp) $(wildcard $(FLUXIONS_INCDIR)/*.h)
 FLUXIONS_SOURCES = $(wildcard $(FLUXIONS_SRCDIR)/*.cpp) $(wildcard $(FLUXIONS_SRCDIR)/*.c)
 DEPCXXSOURCES = $(wildcard $(DEP_SRCDIR)/*.cpp)
@@ -39,7 +41,7 @@ CC = gcc
 CCFLAGS = -Wall -I$(INCDIR) -I$(DEP_INCDIR) `python3-config --includes`
 CXX = g++
 CXXFLAGS = -std=c++14 -g -Wall -I$(INCDIR) -I$(DEP_INCDIR) -I$(FLUXIONS_INCDIR) `python3-config --includes`
-LDFLAGS = -L../fluxions/build -lfluxions -lglut -lGLEW -lGL -lcurl -lczmq -lzmq -lSDL2_image -lSDL2 -lIlmImf -lHalf -lImath -lpthread -lstdc++
+LDFLAGS = -L../../fluxions/build -lfluxions -lglut -lGLEW -lGL -lcurl -lczmq -lzmq -lSDL2_image -lSDL2 -lIlmImf -lHalf -lImath -lpthread -lstdc++
 
 .PHONY: all clean precompiled
 
@@ -62,7 +64,7 @@ $(GCH): $(GCH_SRC) $(HEADERS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(FLUXIONS): $(FLUXIONS_HEADERS) $(FLUXIONS_SOURCES)
-	$(MAKE) -C ../fluxions/
+	$(MAKE) -C $(SOLUTIONDIR)fluxions/
 
 # $(OBJDIR)/%.o: $(CXXSOURCES)/%.cpp $(GCH)
 # 	$(CXX) $(CXXFLAGS) -c $< -o $@
