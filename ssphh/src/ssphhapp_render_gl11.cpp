@@ -10,7 +10,7 @@ namespace SSPHH
 		sunMatrix.Rotate(ssg.environment.pbsky.GetSunAltitude(), 1.0f, 0.0f, 0.0f);
 		Vector4f sunVector;
 		sunVector = sunMatrix * Vector4f(0.0f, 0.0f, -1.0f, 0.0f);
-		Vector3f v = ssg.environment.pbsky.GetSunVector().norm();
+		Vector3f v = ssg.environment.pbsky.GetSunVector().unit();
 		sunVector = Vector4f(v.x, v.y, v.z, 0.0f);
 		glLightfv(GL_LIGHT0, GL_POSITION, sunVector.const_ptr());
 
