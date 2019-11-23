@@ -3,9 +3,10 @@
 
 namespace SSPHH
 {
-	void SSPHH_Application::OnUpdate(double deltaTime) {
+	void SSPHH_Application::OnUpdate(double timeStamp) {
+		Widget::OnUpdate(timeStamp);
+		double deltaTime = GetFrameTime();
 		framesPerSecond = 1.0 / deltaTime;
-		Widget::OnUpdate(deltaTime);
 
 		Hf::StopWatch stopwatch;
 		DoInterfaceUpdate(deltaTime);

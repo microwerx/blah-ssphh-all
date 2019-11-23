@@ -200,7 +200,7 @@ void InitApp()
 {
 	Fluxions::Init();
 	Fluxions::EnableGLDebugFunc();
-	constexpr int testwidgets = 1;
+	constexpr int testwidgets = 0;
 	if (testwidgets) {
 		vf_app_ptr = std::make_shared<Vf::RootWindow>("root");
 		imgui_widget_ptr = std::make_shared<Vf::DearImGuiWidget>("imguiwidget");
