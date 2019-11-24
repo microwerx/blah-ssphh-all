@@ -183,10 +183,12 @@ namespace SSPHH
 
 		if (Interface.showImGui) {
 			short c = (key.size() == 1) ? key[0] : 0;
-			ImGuiIO& io = ImGui::GetIO();
-			if (isalnum(c) || c == ' ' || c == '-' || c == '_' || c == '.') {
-				io.AddInputCharacter(c);
-				return;
+			if (Vf::DearImGuiWidget::ContextInitialized) {
+				ImGuiIO& io = ImGui::GetIO();
+				if (isalnum(c) || c == ' ' || c == '-' || c == '_' || c == '.') {
+					io.AddInputCharacter(c);
+					return;
+				}
 			}
 		}
 

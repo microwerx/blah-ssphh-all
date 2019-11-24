@@ -27,7 +27,7 @@ namespace Fluxions
 	extern bool debugging;
 } // namespace Fluxions
 
-std::shared_ptr<SSPHH::SSPHH_Application> ssphh_widget_ptr;
+SSPHHPtr ssphh_widget_ptr;
 extern std::vector<std::string> g_args;
 
 #ifdef USE_GLUT

@@ -97,6 +97,12 @@ namespace SSPHH
 
 		GI_ScatterJobs();
 		GI_GatherJobs();
+
+		// Verify certain conditions
+
+		if (!Vf::DearImGuiWidget::ContextInitialized) {
+			Interface.showImGui = false;
+		}
 	}
 
 	void SSPHH_Application::DoInterfaceUpdate(double deltaTime) {

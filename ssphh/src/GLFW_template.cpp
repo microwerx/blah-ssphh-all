@@ -225,7 +225,6 @@ void OnRender()
 		return;
 
 	vfWidget->OnPreRender();
-	vfWidget->display();
 	vfWidget->OnRender3D();
 	vfWidget->OnRender2D();
 	vfWidget->OnRenderDearImGui();
@@ -321,6 +320,10 @@ void GlfwTemplateMainLoop()
 		if (glfwt::vfWidget)
 		{
 			glfwt::exitMainloop = glfwt::vfWidget->leaveMainLoop();
+			// Are all children from RootWindow visible?
+			if (glfwt::vfWidget->CountVisible() <= 1) {
+				glfwt::vfWidget->LeaveMainLoop();
+			}
 		}
 	}
 

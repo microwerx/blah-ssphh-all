@@ -105,6 +105,7 @@
 #include <viperfish_root_window.hpp>
 #include <viperfish_loading_window.hpp>
 #include <viperfish_stats_window.hpp>
+#include <viperfish_animation_window.hpp>
 #include <unicornfish.hpp>
 #include <ssphhapp.hpp>
 
@@ -119,8 +120,11 @@
 
 extern void do_tests();
 
-Vf::Widget::SharedPtr vf_app_ptr;
-Vf::Widget::SharedPtr imgui_widget_ptr;
+Vf::WidgetPtr vf_app_ptr;
+Vf::WidgetPtr imgui_widget_ptr;
+Vf::LoadingWindowPtr loading_window_ptr;
+Vf::StatsWindowPtr stats_window_ptr;
+Vf::AnimationWindowPtr animation_window_ptr;
 
 double g_distance = -10.0;
 double xrot = 0.0;
@@ -200,7 +204,7 @@ void InitApp()
 {
 	Fluxions::Init();
 	Fluxions::EnableGLDebugFunc();
-	constexpr int testwidgets = 0;
+	constexpr int testwidgets = 1;
 	if (testwidgets) {
 		vf_app_ptr = std::make_shared<Vf::RootWindow>("root");
 		imgui_widget_ptr = std::make_shared<Vf::DearImGuiWidget>("imguiwidget");
@@ -208,18 +212,20 @@ void InitApp()
 		// vf_app decorates imgui_widget because
 		// - imgui_widget needs to initialize first
 		// - vf_app calls decoratee first, then children
-		vf_app_ptr->decorate(imgui_widget_ptr);
+		vf_app_ptr->decorateWith(imgui_widget_ptr);
 		Vf::LoadingWindowPtr loadingWindow = std::make_shared<Vf::LoadingWindow>("Fluxions");
 		vf_app_ptr->push_back(loadingWindow);
 		Vf::StatsWindowPtr statsWindow = std::make_shared<Vf::StatsWindow>("Statistics");
 		vf_app_ptr->push_back(statsWindow);
+		Vf::AnimationWindowPtr animWindow = Vf::MakeSharedChild<Vf::AnimationWindow>(vf_app_ptr, "Animation");
 	}
 	else {
-		ssphh_widget_ptr = std::make_shared<SSPHH::SSPHH_Application>("ssphh");
-		imgui_widget_ptr = std::make_shared<Vf::DearImGuiWidget>("imguiwidget");
-		imgui_widget_ptr->decorate(ssphh_widget_ptr);
-		vf_app_ptr = std::make_shared<Vf::Widget>("controller");
-		vf_app_ptr->decorate(imgui_widget_ptr);
+		vf_app_ptr = Vf::MakeShared<Vf::RootWindow>("root");
+		imgui_widget_ptr = Vf::MakeSharedDecorator<Vf::DearImGuiWidget>(vf_app_ptr, "DearImGui");
+		ssphh_widget_ptr = Vf::MakeSharedChild<SSPHH::SSPHH_Application>(vf_app_ptr, "ssphh");
+		loading_window_ptr = Vf::MakeSharedChild<Vf::LoadingWindow>(vf_app_ptr, "Loading");
+		stats_window_ptr = Vf::MakeSharedChild<Vf::StatsWindow>(vf_app_ptr, "Statistics");
+		animation_window_ptr = Vf::MakeSharedChild<Vf::AnimationWindow>(vf_app_ptr, "Animation");
 	}
 }
 
