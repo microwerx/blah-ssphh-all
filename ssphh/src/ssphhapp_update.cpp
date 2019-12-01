@@ -1,5 +1,8 @@
 #include <ssphhapp.hpp>
 #include <hatchetfish_stopwatch.hpp>
+#include <viperfish_math_window.hpp>
+
+extern Vf::MathWindowPtr math_window_ptr;
 
 namespace SSPHH
 {
@@ -28,6 +31,17 @@ namespace SSPHH
 			Interface.recomputeSky = false;
 		}
 
+		if (Interface.enableAnimation) {
+			Vector3f p = cameraAnimation.p(0.1f * (float)GetElapsedTime());
+			Quaternionf q = cameraAnimation.q(0.1f * (float)GetElapsedTime());
+			math_window_ptr->q2 = q;
+			math_window_ptr->p2 = p;
+			Matrix4f m;
+			m.Translate(p.x, p.y, p.z);
+			m.MultMatrix((math_window_ptr->q * q).toMatrix4());
+			ssg.camera.viewMatrix = m.AsInverse();
+		}
+
 		if (Interface.enableOrbit) {
 			rotX += (float)deltaTime;
 			rotY += (float)deltaTime;
@@ -35,6 +49,8 @@ namespace SSPHH
 
 			Interface.cameraOrbit.x += (float)deltaTime;
 			Interface.cameraOrbit.y = 0.5f * (float)deltaTime * (Interface.cameraOrbit.y); // +(float)sin(0.25 * rotY) * 15.0f - 15.0f);
+
+			//Interface.preCameraMatrix
 
 			//	for (auto geoIt = ssg.geometry.begin(); geoIt != ssg.geometry.end(); geoIt++)
 			//	{

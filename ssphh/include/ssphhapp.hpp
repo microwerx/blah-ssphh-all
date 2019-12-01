@@ -38,6 +38,7 @@
 #ifdef SSPHH_RENDER_CLASSIC_OPENGL
 #include <GLUT_template.hpp>
 #endif
+#include <camera_animation.hpp>
 
 using namespace Vf;
 using namespace Fluxions;
@@ -153,6 +154,7 @@ namespace SSPHH
 			double moveRate = 0.5;
 			double turnRate = 1.0;
 
+			bool enableAnimation = true;
 			bool enableOrbit = false;
 			bool enableSunCycle = false;
 			bool usePBSKY = true;
@@ -543,6 +545,7 @@ namespace SSPHH
 
 		const std::string& GetSceneName() const { return Interface.sceneName; }
 
+		CameraAnimation cameraAnimation;
 		InterfaceInfo Interface;
 		int counter = 0;
 		double framesPerSecond = 0.0;

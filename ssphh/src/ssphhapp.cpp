@@ -56,12 +56,12 @@ namespace SSPHH
 
 	SSPHH_Application::SSPHH_Application()
 		: Widget("ssphhapplication"), PBSkyCubeMap(GL_TEXTURE_CUBE_MAP) {
-		sceneFilename = "resources/scenes/test_texture_scene/test_gallery3_scene.scn";
+		sceneFilename = "resources/scenes/test_texture_scene/test_outdoor_scene.scn";
 	}
 
 	SSPHH_Application::SSPHH_Application(const std::string& name)
 		: Widget(name), PBSkyCubeMap(GL_TEXTURE_CUBE_MAP) {
-		sceneFilename = "resources/scenes/test_texture_scene/test_gallery3_scene.scn";
+		sceneFilename = "resources/scenes/test_texture_scene/test_outdoor_scene.scn";
 	}
 
 	SSPHH_Application::~SSPHH_Application() {
@@ -182,6 +182,7 @@ namespace SSPHH
 	void SSPHH_Application::OnInit(const std::vector<std::string>& args) {
 		HFLOGINFO("Initializing SSPHH App");
 		init_count++;
+		cameraAnimation.create();
 		// TODO: I would like to make the following code work:
 		//
 		// SceneGraph sg;
