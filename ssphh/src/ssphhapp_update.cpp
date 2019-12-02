@@ -44,6 +44,20 @@ namespace SSPHH
 				math_window_ptr->q1 = cameraAnimation.controlQuaternions[i];
 			}
 
+			{
+				int i = math_window_ptr->key;
+				math_window_ptr->kq0 = cameraAnimation.getq(i - 1);
+				math_window_ptr->kq1 = cameraAnimation.getq(i);
+				math_window_ptr->kq2 = cameraAnimation.getq(i + 1);
+				math_window_ptr->kq3 = cameraAnimation.getq(i + 2);
+				math_window_ptr->ka = squad_a(math_window_ptr->kq0,
+											  math_window_ptr->kq1,
+											  math_window_ptr->kq2);
+				math_window_ptr->kb = squad_b(math_window_ptr->kq1,
+											  math_window_ptr->kq2,
+											  math_window_ptr->kq3);
+			}
+
 			cameraAnimation.calcgraph(math_window_ptr);
 
 			math_window_ptr->t += math_window_ptr->speed * GetFrameTime();
@@ -185,8 +199,9 @@ namespace SSPHH
 			}
 		}
 
-		double mdx = mouse.buttons[0] ? mouse.dragStates[0].currentDelta.x : 0.0;
-		double mdy = mouse.buttons[0] ? mouse.dragStates[0].currentDelta.y : 0.0;
+		bool mousemvmt = (!Interface.enableAnimation && mouse.buttons[0]);
+		double mdx = mousemvmt ? mouse.dragStates[0].currentDelta.x : 0.0;
+		double mdy = mousemvmt ? mouse.dragStates[0].currentDelta.y : 0.0;
 
 		Vector2f dimensions = Vector2f((float)renderer2.GetDeferredRect().w, (float)renderer2.GetDeferredRect().h);
 		double rectLength = dimensions.length();
