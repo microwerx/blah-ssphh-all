@@ -7,12 +7,15 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <iomanip>
 #include <fluxions_gte.hpp>
 #include <fluxions_gte_catmull_rom.hpp>
 
 using namespace std;
 
 #pragma comment(lib, "fluxions.lib")
+#pragma comment(lib, "opengl32.lib")
+#pragma comment(lib, "xinput.lib")
 
 void printControlPoints(ostream& fout,
 						const std::vector<Fluxions::Vector3f>& points,
@@ -116,7 +119,7 @@ public:
 		}
 	}
 
-	Vector3f p(float t) const {
+	Vector3f pcatmullrom(float t) const {
 		return CatmullRomSplinePoint(t, controlPoints, controlAlpha);
 	}
 
@@ -124,7 +127,20 @@ public:
 		int q1 = int(t) % numControlPoints;
 		int q2 = (q1 + 1) % numControlPoints;
 		t = t - int(t);
-		return Fluxions::slerp(t, controlQuaternions[q1], controlQuaternions[q2]);
+		return Fluxions::slerp(controlQuaternions[q1], controlQuaternions[q2], t);
+	}
+
+	Fluxions::Quaternionf qsquad(float t) const {
+		int iq1 = int(t) % numControlPoints;
+		int iq0 = (iq1 - 1) % numControlPoints;
+		int iq2 = (iq1 + 1) % numControlPoints;
+		int iq3 = (iq1 + 2) % numControlPoints;
+		t = t - int(t);
+		Fluxions::Quaternionf q0 = controlQuaternions[iq0];
+		Fluxions::Quaternionf q1 = controlQuaternions[iq1];
+		Fluxions::Quaternionf q2 = controlQuaternions[iq2];
+		Fluxions::Quaternionf q3 = controlQuaternions[iq3];
+		return Fluxions::squad(q0, q1, q2, q3, t);
 	}
 };
 
@@ -167,9 +183,16 @@ void TestCatmullRom() {
 	const unsigned pcount = (unsigned)curveQuaternions.size();
 	for (int j = 0; j < curveTime.size(); j++) {
 		int q1 = int(curveTime[j % pcount]) % ccount;
+		int q0 = (q1 - 1) % ccount;
 		int q2 = (q1 + 1) % ccount;
+		int q3 = (q1 + 2) % ccount;
 		float t = curveTime[j] - int(curveTime[j]);
-		curveQuaternions[j] = Fluxions::slerp(t, controlQuaternions[q1], controlQuaternions[q2]);
+		//curveQuaternions[j] = Fluxions::slerp(controlQuaternions[q1], controlQuaternions[q2], t);
+		curveQuaternions[j] = Fluxions::squad(controlQuaternions[q0],
+											  controlQuaternions[q1],
+											  controlQuaternions[q2],
+											  controlQuaternions[q3],
+											  t);
 	}
 
 	std::vector<Vector3f> curve;
@@ -205,7 +228,97 @@ void TestCatmullRom() {
 	fout.close();
 }
 
+using Fluxions::Quaternionf;
+using std::ostream;
+using std::endl;
+
+ostream& operator<<(ostream& os, Quaternionf q) {
+	os << q.a << ", " << q.b << ", " << q.c << ", " << q.d;
+	return os;
+}
+
+namespace Fluxions
+{
+
+}
+
+void TestQuaternions() {
+	Quaternionf q(1, 2, 3, 4);
+	cout << setprecision(6);
+	cout << setfill(' ');
+	cout << fixed << showpos;
+	cout << "q            " << q << endl;
+	cout << "q'           " << q.normalized() << endl;
+	cout << "log(q)       " << q.log() << endl;
+	cout << "exp(q)       " << q.exp() << endl;
+	cout << "exp(log(q)): " << q.log().exp() << endl;
+	cout << "q^-1         " << q.inverse() << endl;
+	cout << "q*           " << q.conjugate() << endl;
+	cout << "q^p          " << q.pow(-1.0f) << endl;
+
+	Quaternionf q0 = Quaternionf::makeFromAngleAxis(15.0, 0, 0, 1);
+	Quaternionf q1 = Quaternionf::makeFromAngleAxis(35.0, 1, 0, 0);
+	Quaternionf q2 = Quaternionf::makeFromAngleAxis(75.0, 0, 1, 0);
+	Quaternionf q3 = Quaternionf::makeFromAngleAxis(95.0, 0, 0, 1);
+	Quaternionf a = Fluxions::squad_si(q0, q1, q2);
+	Quaternionf b = Fluxions::squad_si(q1, q2, q3);
+	cout << "q0           " << q0 << endl;
+	cout << "q1           " << q1 << endl;
+	cout << "a            " << a << endl;
+	cout << "b            " << b << endl;
+	cout << "q2           " << q2 << endl;
+	cout << "q3           " << q3 << endl;
+
+	//Quaternion kQ0inv = rkQ0.UnitInverse();
+	//Quaternion kQ1inv = rkQ1.UnitInverse();
+	//Quaternion rkP0 = kQ0inv * rkQ1;
+	//Quaternion rkP1 = kQ1inv * rkQ2;
+	//Quaternion kArg = 0.25 * (rkP0.Log() - rkP1.Log());
+	//Quaternion kMinusArg = -kArg;
+
+	//rkA = rkQ1 * kArg.Exp();
+	//rkB = rkQ1 * kMinusArg.Exp();
+
+	Quaternionf q0inv = q0.inverse();
+	Quaternionf q1inv = q1.inverse();
+	Quaternionf p0 = q0inv * q1;
+	Quaternionf p1 = q1inv * q2;
+	Quaternionf arg = (p0.log() - p1.log()).scale(0.25f);
+	Quaternionf narg = -arg;
+	a = q1 * arg.exp();
+	b = q1 * narg.exp();
+	a = Fluxions::squad_a(q0, q1, q2);
+	b = Fluxions::squad_b(q0, q1, q2);
+	cout << "a            " << a << endl;
+	cout << "b            " << b << endl;
+
+	float y = Fluxions::randomSampler(-180, 180);
+	float p = Fluxions::randomSampler(-90, 90);
+	float r = Fluxions::randomSampler(-180, 180);
+	q0 = Quaternionf::makeFromAngles(y, p, r);
+	cout << "y,p,r        " << y << ", " << p << ", " << r << endl;
+	cout << "q            " << q0 << endl;
+	y = q0.yawInDegrees();
+	p = q0.pitchInDegrees();
+	r = q0.rollInDegrees();
+	q0 = Quaternionf::makeFromAngles(y, p, r);
+	cout << "y,p,r        " << y << ", " << p << ", " << r << endl;
+	y = q0.yawInDegrees();
+	p = q0.pitchInDegrees();
+	r = q0.rollInDegrees();
+	q0 = Quaternionf::makeFromAngles(y, p, r);
+	cout << "y,p,r        " << y << ", " << p << ", " << r << endl;
+	y = q0.yawInDegrees();
+	p = q0.pitchInDegrees();
+	r = q0.rollInDegrees();
+	q0 = Quaternionf::makeFromAngles(y, p, r);
+	cout << "y,p,r        " << y << ", " << p << ", " << r << endl;
+}
+
 int main() {
+	TestQuaternions();
+	return 0;
+
 	auto float_category = std::iterator_traits<float*>::iterator_category();
 
 	//cout << _Is_random_iter_v<Fluxions::Vector3f>;

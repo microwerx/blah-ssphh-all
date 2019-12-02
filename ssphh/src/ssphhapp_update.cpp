@@ -32,8 +32,33 @@ namespace SSPHH
 		}
 
 		if (Interface.enableAnimation) {
-			Vector3f p = cameraAnimation.p(0.1f * (float)GetElapsedTime());
-			Quaternionf q = cameraAnimation.q(0.1f * (float)GetElapsedTime());
+			math_window_ptr->max_keys = cameraAnimation.numControlPoints;
+			if (math_window_ptr->set_key) {
+				int i = math_window_ptr->key;
+				cameraAnimation.controlPoints[i] = math_window_ptr->p1;
+				cameraAnimation.controlQuaternions[i] = math_window_ptr->q1;
+			}
+			else {
+				int i = math_window_ptr->key;
+				math_window_ptr->p1 = cameraAnimation.controlPoints[i];
+				math_window_ptr->q1 = cameraAnimation.controlQuaternions[i];
+			}
+
+			cameraAnimation.calcgraph(math_window_ptr);
+
+			math_window_ptr->t += math_window_ptr->speed * GetFrameTime();
+			if (math_window_ptr->t > cameraAnimation.numControlPoints) {
+				math_window_ptr->t -= int(math_window_ptr->t);
+			}
+			float t = math_window_ptr->t;
+
+			Vector3f p = math_window_ptr->blerp ?
+				cameraAnimation.plerp(t) :
+				cameraAnimation.pcatmullrom(t);
+			Quaternionf q = math_window_ptr->bsquad ?
+				cameraAnimation.qsquad(t) :
+				cameraAnimation.qslerp(t);
+
 			math_window_ptr->q2 = q;
 			math_window_ptr->p2 = p;
 			Matrix4f m;

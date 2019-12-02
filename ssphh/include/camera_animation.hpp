@@ -3,6 +3,7 @@
 
 #include <fluxions_gte_vector_math.hpp>
 #include <fluxions_gte_catmull_rom.hpp>
+#include <viperfish_math_window.hpp>
 
 class CameraAnimation
 {
@@ -22,8 +23,11 @@ public:
 	std::vector<Quaternionf> curveQuaternions;
 
 	void create();
-	Vector3f p(float t) const;
-	Quaternionf q(float t) const;
+	void calcgraph(Vf::MathWindowPtr& mw);
+	Vector3f pcatmullrom(float t) const;
+	Vector3f plerp(float t) const;
+	Quaternionf qslerp(float t) const;
+	Quaternionf qsquad(float t) const;
 };
 
 
