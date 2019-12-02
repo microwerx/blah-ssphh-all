@@ -13,9 +13,9 @@ void CameraAnimation::create() {
 											 randomSampler(-s, s) * ysize,
 											 randomSampler(-s, s) * size));
 		controlAlpha.push_back(1.0f);
-		controlQuaternions.push_back(Quaternionf::makeFromAngles(randomSampler(-360, 360.0),
-																 randomSampler(-45.0, 45.0),
-																 randomSampler(-30.0, 30.0)));
+		controlQuaternions.push_back(Quaternionf::makeFromAngles(randomSampler(-180, 180.0),
+																 randomSampler(-30.0, 0.0),
+																 randomSampler(-15.0, 15.0)));
 	}
 }
 
