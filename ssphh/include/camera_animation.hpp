@@ -28,6 +28,10 @@ public:
 	Vector3f plerp(float t) const;
 	Quaternionf qslerp(float t) const;
 	Quaternionf qsquad(float t) const;
+
+	const Quaternionf& getq(int i) const {
+		return controlQuaternions[i % controlQuaternions.size()];
+	}
 };
 
 
