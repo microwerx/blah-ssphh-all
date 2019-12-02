@@ -32,6 +32,16 @@ namespace SSPHH
 		}
 
 		if (Interface.enableAnimation) {
+			if (math_window_ptr->createNewPath) {
+				math_window_ptr->createNewPath = false;
+				cameraAnimation.create();
+				return;
+			}
+
+			std::fill(cameraAnimation.controlAlpha.begin(),
+					  cameraAnimation.controlAlpha.end(),
+					  math_window_ptr->alpha);
+
 			math_window_ptr->max_keys = cameraAnimation.numControlPoints;
 			if (math_window_ptr->set_key) {
 				int i = math_window_ptr->key;

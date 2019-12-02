@@ -1,6 +1,9 @@
 #include <camera_animation.hpp>
 
 void CameraAnimation::create() {
+	controlPoints.clear();
+	controlAlpha.clear();
+	controlQuaternions.clear();
 	using Fluxions::randomSampler;
 	constexpr float size = 10.0f;
 	constexpr float ysize = 5.0f;
