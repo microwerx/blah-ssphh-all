@@ -101,7 +101,7 @@ public:
 	std::vector<Quaternionf> controlQuaternions;
 	std::vector<Vector3f> controlPoints;
 	std::vector<float> controlAlpha;
-	std::vector<float> curveTime;
+	std::vector<float> controlTime;
 	std::vector<Quaternionf> curveQuaternions;
 
 	void create() {
