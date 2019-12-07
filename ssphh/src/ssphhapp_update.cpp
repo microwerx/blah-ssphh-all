@@ -72,7 +72,7 @@ void SSPHH_Application::OnUpdate(double timeStamp) {
 
 		cameraAnimation.calcgraph(math_window_ptr);
 
-		math_window_ptr->t += math_window_ptr->speed * GetFrameTime();
+		math_window_ptr->t += math_window_ptr->speed * (float)GetFrameTime();
 		if (math_window_ptr->t > cameraAnimation.size()) {
 			math_window_ptr->t -= int(math_window_ptr->t);
 		}
