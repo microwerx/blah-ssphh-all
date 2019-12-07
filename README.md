@@ -32,21 +32,33 @@ PS Z:\github\vcpkg> .\vcpkg.exe install --triplet x64-windows openexr czmq curl 
 
 `SSPHH_Application` is a `Vf::Widget` which is decorated by `Vf::DearImGuiWidget` and `Vf::Widget`. But a better way would use a `Vf::RootWindow` as a container which steps through several `Vf::Widget` children.
 
+So the plan is to add several windows which can be opened and closed with a menu. F10 is used to open the window. The window list will include the following:
+
+- [ ] Statistics Window
+- [ ] Mathematics Window
+- [ ] PPM Compare Window
+- [ ] Unicornfish Window
+- [ ] SSPHH Window
+- [ ] Animation Window
+- [ ] Scene Graph Window
+- [ ] Render Config Window
+
 ## TODO
 
 - [ ] Add Viperfish/ImGui Controls
-  - [ ] `VfWidget()`
-  - [ ] `VfWindow(const std::string&, int w, int h)`
-  - [ ] `VfCheckbox(const std::string&, bool)`
-  - [ ] `VfOptions(const std::string&, std::vector<std::string>)`
-  - [ ] `VfSlider<T>(const std::string&, T x, T a, T b)`
-  - [ ] `VfSliderf = VfSlider<float>`
-  - [ ] `VfSlideri = VfSlider<int>`
-  - [ ] `VfGraph(const std::string&, float xmin, float xmax, float ymin, float ymax)`
+  - [ ] `Vf::Widget()`
+  - [ ] `Vf::Window(const std::string&, int w, int h)`
+  - [ ] `Vf::Checkbox(const std::string&, bool)`
+  - [ ] `Vf::Options(const std::string&, std::vector<std::string>)`
+  - [ ] `Vf::Slider<T>(const std::string&, T x, T a, T b)`
+  - [ ] `Vf::Sliderf = VfSlider<float>`
+  - [ ] `Vf::Slideri = VfSlider<int>`
+  - [ ] `Vf::Graph(const std::string&, float xmin, float xmax, float ymin, float ymax)`
 - [ ] Add a `FX_LoadingScreenWindow`
 - [ ] Add a `FX_PerformanceWindow` to display frame rate and other statistics
 - [ ] Add a `FX_RenderConfigWindow` to display information about loaded render configs 
 - [ ] Add a `FX_SceneGraphWindow` to display information about the loaded scene graph
+- [ ] Add a `SG_Window` to control `NodeWindow`, `GeometryWindow`, `LightWindow`, `EnviroMapWindow`, `SG_TextureMapWindow`
 - [ ] Add a `SG_NodeWindow` to display node hierarchy and matrix transformations
 - [ ] Add a `SG_GeometryWindow` to display information about loaded 3D models
 - [ ] Add a `SG_LightWindow` to display information about lights in the scene
