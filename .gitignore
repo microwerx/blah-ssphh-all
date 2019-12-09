@@ -335,6 +335,7 @@ __pycache__/
 
 # Ignore the corona_export folder and cache files
 corona_export/
+corona_export2/
 corona_output/
 *.cache
 export*
