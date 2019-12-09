@@ -36,7 +36,7 @@ So the plan is to add several windows which can be opened and closed with a menu
 
 - [ ] Statistics Window
 - [ ] Mathematics Window
-- [ ] PPM Compare Window
+- [ ] Image Analysis Window
 - [ ] Unicornfish Window
 - [ ] SSPHH Window
 - [ ] Animation Window
