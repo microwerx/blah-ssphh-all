@@ -195,6 +195,8 @@ int main(int argc, char **argv)
 
 	Uf::Kill();
 
+	HFLOGINFO("Program finished");
+
 	return 0;
 }
 
@@ -235,4 +237,12 @@ void InitApp()
 void KillApp()
 {
 	Fluxions::Kill();
+	imgui_widget_ptr.reset();
+	ssphh_widget_ptr.reset();
+	loading_window_ptr.reset();
+	stats_window_ptr.reset();
+	animation_window_ptr.reset();
+	math_window_ptr.reset();
+	vf_app_ptr->Kill();
+	vf_app_ptr.reset();
 }

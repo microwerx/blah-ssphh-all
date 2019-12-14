@@ -285,7 +285,21 @@ namespace SSPHH
 		// r.Kill();
 		// r.Init();
 
+		ssg.Reset();
 		renderer.Reset();
+
+		defaultRenderConfig.reset();
+		gbufferRenderConfig.reset();
+		cubeShadowRenderConfig.reset();
+		cubeEnvMapRenderConfig.reset();
+		rectShadowRenderConfig.reset();
+		rectEnvMapRenderConfig.reset();
+		uberShaderRenderConfig.reset();
+		foursplitULRenderConfig.reset();
+		foursplitURRenderConfig.reset();
+		foursplitLLRenderConfig.reset();
+		foursplitLRRenderConfig.reset();
+
 		KillUnicornfish();
 
 		if (ssgUserData) {
