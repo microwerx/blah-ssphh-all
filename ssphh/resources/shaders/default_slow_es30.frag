@@ -1730,6 +1730,10 @@ vec3 ComputePBLighting(vec3 N, vec3 L, vec3 V, vec3 H, vec3 myKd, vec3 myKs, vec
 
 // -------------------------------------------------------------------
 
+vec3 filmicCompress(vec3 linearColor) {
+	vec3 x = max(vec3(0.0), linearColor - vec3(0.004));
+	return (x * (6.2 * x + 0.5)) / (x * (6.2 * x + 1.7) + 0.06);
+}
 
 // Main Function
 void main(void)
@@ -1739,11 +1743,13 @@ void main(void)
 	DoDeferredMain();
 	DoDeferredLightAccum();
 
-	DeferredLightBuffer = max(vec3(0.0), DeferredLightBuffer);
+	DeferredLightBuffer = max(vec3(0.0), DeferredLightBuffer * ToneMapExposure);
 
 	// exposure and gamma
-	vec3 finalColor = DeferredLightBuffer * ToneMapExposure;
-	finalColor = pow(finalColor, vec3(1.0 / ToneMapGamma));	
+	// update on 12/13/2019 to use filmic compress
+	// vec3 finalColor = DeferredLightBuffer * ToneMapExposure;
+	// finalColor = pow(finalColor, vec3(1.0 / ToneMapGamma));	
+	vec3 finalColor = filmicCompress(DeferredLightBuffer);
 
 	// vec3 finalColor = DeferredLightBuffer * ToneMapScale;
 
