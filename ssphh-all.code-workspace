@@ -17,5 +17,13 @@
 			"path": "../glfw-template"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.associations": {
+			"future": "cpp",
+			"memory": "cpp",
+			"random": "cpp",
+			"bitset": "cpp",
+			"optional": "cpp"
+		}
+	}
 }
