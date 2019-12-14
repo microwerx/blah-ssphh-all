@@ -16,7 +16,8 @@ namespace SSPHH
 		if (Interface.uf.uf_type == UfType::Broker)
 			return;
 
-		if (rectShadowRenderConfig.viewportRect.w != Interface.renderconfig.sunShadowMapSize) {
+		bool size_equal = rectShadowRenderConfig.viewportRect.w == Interface.renderconfig.sunShadowMapSize;
+		if (!size_equal) {
 			InitRenderConfigs();
 		}
 		//glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
