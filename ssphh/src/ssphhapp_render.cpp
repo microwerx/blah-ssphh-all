@@ -16,7 +16,8 @@ namespace SSPHH
 		if (Interface.uf.uf_type == UfType::Broker)
 			return;
 
-		bool size_equal = rectShadowRenderConfig.viewportRect.w == Interface.renderconfig.sunShadowMapSize;
+		RendererConfig& rectShadowRC = rendererContext.rendererConfigs["rectShadow"];
+		bool size_equal = rectShadowRC.viewportRect.w == Interface.renderconfig.sunShadowMapSize;
 		if (!size_equal) {
 			InitRenderConfigs();
 		}
@@ -27,7 +28,7 @@ namespace SSPHH
 		// TODO: I would like to make the following code work:
 		//
 		// SceneGraph sg;
-		// Renderer r;
+		// RendererContext r;
 		// ...
 		// r.SetRenderConfig("pbr_monolithic");
 		// r.UpdateBuffers(sg);
@@ -75,22 +76,24 @@ namespace SSPHH
 		}
 
 		if (Interface.showDeferredHUD) {
-			// Vector2i split = renderer2.GetDeferredSplitPoint();
-			// Recti rect = renderer2.GetDeferredRect();
+			// FIXME: Are we using rendererContext?
 
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			// Vector2i split = rendererContext.GetDeferredSplitPoint();
+			// Recti rect = rendererContext.GetDeferredRect();
 
-			glColor4f(1.0f, 0.0f, 0.0f, 0.25f);
-			renderer2.RenderDeferred(Recti::UpperLeft);
-			glColor4f(0.0f, 1.0f, 0.0f, 0.24f);
-			renderer2.RenderDeferred(Recti::UpperRight);
-			glColor4f(0.0f, 0.0f, 1.0f, 0.25f);
-			renderer2.RenderDeferred(Recti::LowerLeft);
-			glColor4f(1.0f, 0.0f, 1.0f, 0.25f);
-			renderer2.RenderDeferred(Recti::LowerRight);
+			//glEnable(GL_BLEND);
+			//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			glDisable(GL_BLEND);
+			//glColor4f(1.0f, 0.0f, 0.0f, 0.25f);
+			//rendererContext.RenderDeferred(Recti::UpperLeft);
+			//glColor4f(0.0f, 1.0f, 0.0f, 0.24f);
+			//rendererContext.RenderDeferred(Recti::UpperRight);
+			//glColor4f(0.0f, 0.0f, 1.0f, 0.25f);
+			//rendererContext.RenderDeferred(Recti::LowerLeft);
+			//glColor4f(1.0f, 0.0f, 1.0f, 0.25f);
+			//rendererContext.RenderDeferred(Recti::LowerRight);
+
+			//glDisable(GL_BLEND);
 		}
 	}
 
@@ -246,7 +249,7 @@ namespace SSPHH
 		y += 15.0f;
 		PrintString9x15(0, y, 0, "gp3: %s", gamepads[3].GetHexRepresentation().c_str());
 		y += 15.0f;
-		PrintString9x15(0, y, 0, "screen split position: %i, %i", renderer2.GetDeferredSplitPoint().x, renderer2.GetDeferredSplitPoint().y);
+		PrintString9x15(0, y, 0, "screen split position: %i, %i", rendererContext.GetDeferredSplitPoint().x, rendererContext.GetDeferredSplitPoint().y);
 
 		const std::vector<std::string>& history = Hf::Log.getHistory();
 		for (int i = 0; i < history.size(); i++) {
@@ -352,12 +355,12 @@ namespace SSPHH
 		if (!Interface.showDeferredHUD)
 			return;
 #ifdef SSPHH_RENDER_QUAD
-		Vector2i splitPoint = renderer2.GetDeferredSplitPoint();
+		Vector2i splitPoint = rendererContext.GetDeferredSplitPoint();
 		Recti q[4] = {
-			renderer2.GetDeferredRect().GetQuadrant(Recti::UpperLeft, splitPoint),
-			renderer2.GetDeferredRect().GetQuadrant(Recti::UpperRight, splitPoint),
-			renderer2.GetDeferredRect().GetQuadrant(Recti::LowerLeft, splitPoint),
-			renderer2.GetDeferredRect().GetQuadrant(Recti::LowerRight, splitPoint) };
+			rendererContext.GetDeferredRect().GetQuadrant(Recti::UpperLeft, splitPoint),
+			rendererContext.GetDeferredRect().GetQuadrant(Recti::UpperRight, splitPoint),
+			rendererContext.GetDeferredRect().GetQuadrant(Recti::LowerLeft, splitPoint),
+			rendererContext.GetDeferredRect().GetQuadrant(Recti::LowerRight, splitPoint) };
 		const char* names[] = {
 			"Upper Left",
 			"Upper Right",

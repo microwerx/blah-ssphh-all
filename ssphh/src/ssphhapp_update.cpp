@@ -130,10 +130,11 @@ void SSPHH_Application::OnUpdate(double timeStamp) {
 		//	}
 	}
 
-	ssg.environment.pbskyColorMapSamplerId = defaultCubeTextureSampler.GetId();
-	ssg.environment.enviroColorMapSamplerId = defaultCubeTextureSampler.GetId();
-	ssg.environment.sunColorMapSamplerId = defaultCubeTextureSampler.GetId();
-	ssg.environment.sunDepthMapSamplerId = defaultCubeTextureSampler.GetId();
+	GLuint defaultCubeSamplerId = rendererContext.samplers["defaultCube"].getId();
+	ssg.environment.pbskyColorMapSamplerId = defaultCubeSamplerId;
+	ssg.environment.enviroColorMapSamplerId = defaultCubeSamplerId;
+	ssg.environment.sunColorMapSamplerId = defaultCubeSamplerId;
+	ssg.environment.sunDepthMapSamplerId = defaultCubeSamplerId;
 
 	stopwatch.Stop();
 	my_hud_info.onUpdateTime = stopwatch.GetMillisecondsElapsed();
@@ -215,7 +216,7 @@ void SSPHH_Application::DoInterfaceUpdate(double deltaTime) {
 	double mdx = mousemvmt ? mouse.dragStates[0].currentDelta.x : 0.0;
 	double mdy = mousemvmt ? mouse.dragStates[0].currentDelta.y : 0.0;
 
-	Vector2f dimensions = Vector2f((float)renderer2.GetDeferredRect().w, (float)renderer2.GetDeferredRect().h);
+	Vector2f dimensions = Vector2f((float)rendererContext.getDeferredRect().w, (float)rendererContext.getDeferredRect().h);
 	double rectLength = dimensions.length();
 	double scale = -180.0 / rectLength;
 	mdx *= scale;

@@ -20,7 +20,7 @@
 #define SSPHH_HPP
 
 #include <fluxions.hpp>
-#include <fluxions_renderer.hpp>
+#include <fluxions_renderer_context.hpp>
 #include <hatchetfish.hpp>
 #include <damselfish_python.hpp>
 #include <viperfish_mouse.hpp>
@@ -61,8 +61,9 @@ namespace SSPHH
 		time_t pbsky_localtime;
 		double pbsky_timeOffsetInSeconds = 0.0;
 		//void pbskyComputeCubemap();
-		SimpleTexture PBSkyCubeMap;
+		//RendererTextureObject PBSkyCubeMap;
 		SimpleRenderer_GLushort Skybox;
+		void SetupSkyBox();
 		void RenderSkyBox();
 		////////////////////////
 
@@ -87,45 +88,44 @@ namespace SSPHH
 		//std::string sceneFilename = "resources/scenes/test_texture_scene/simple_inside_scene.scn";
 		//std::string sceneFilename = "resources/scenes/rungholt_scene/rungholt.scn";
 
-		SimpleRenderConfiguration defaultRenderConfig;
-		SimpleRenderConfiguration gbufferRenderConfig;
-		SimpleRenderConfiguration cubeShadowRenderConfig;
-		SimpleRenderConfiguration cubeEnvMapRenderConfig;
-		SimpleRenderConfiguration rectShadowRenderConfig;
-		SimpleRenderConfiguration rectEnvMapRenderConfig;
-		SimpleRenderConfiguration uberShaderRenderConfig;
-		SimpleRenderConfiguration foursplitULRenderConfig;
-		SimpleRenderConfiguration foursplitURRenderConfig;
-		SimpleRenderConfiguration foursplitLLRenderConfig;
-		SimpleRenderConfiguration foursplitLRRenderConfig;
+		//RendererConfig defaultRenderConfig;
+		//RendererConfig gbufferRenderConfig;
+		//RendererConfig cubeShadowRenderConfig;
+		//RendererConfig cubeEnvMapRenderConfig;
+		//RendererConfig rectShadowRenderConfig;
+		//RendererConfig rectEnvMapRenderConfig;
+		//RendererConfig uberShaderRenderConfig;
+		//RendererConfig foursplitULRenderConfig;
+		//RendererConfig foursplitURRenderConfig;
+		//RendererConfig foursplitLLRenderConfig;
+		//RendererConfig foursplitLRRenderConfig;
 
-		SamplerObject defaultCubeTextureSampler;
-		SamplerObject default2DTextureSampler;
-		SamplerObject defaultShadowCubeTextureSampler;
-		SamplerObject defaultShadow2DTextureSampler;
+		//RendererSamplerObject defaultCubeTextureSampler;
+		//RendererSamplerObject default2DTextureSampler;
+		//RendererSamplerObject defaultShadowCubeTextureSampler;
+		//RendererSamplerObject defaultShadow2DTextureSampler;
 
 		//SimpleTexture enviroCubeTexture1;
 		//SimpleTexture enviroCubeTexture2;
-		SimpleTexture enviroCubeTexture3;
+		//RendererTextureObject enviroSkyBoxTexture;
 
 		//TMatrix4<GLfloat> screenPerspMatrix;
 		TMatrix4<GLfloat> screenOrthoMatrix;
 
-		Fluxions::SimpleRenderer_GLuint renderer;
+		//Fluxions::SimpleRenderer_GLuint renderer;
 		//Uf::CoronaDatabase sceneDB;
 		Fluxions::SimpleSceneGraph ssg;
 		Fluxions::SimpleSSPHH ssphh;
 		Fluxions::SSG_SSPHHRendererPlugin* ssgUserData = nullptr;
 		Uf::CoronaSceneFile coronaScene;
 		std::vector<Uf::CoronaJob> coronaJobs;
-		Fluxions::SimpleGLES30Renderer gles30;
 
-		Fluxions::Renderer renderer2;
-
-		Fluxions::SimpleGLES30Renderer gles30CubeMap;
+		RendererContext rendererContext;
+		//Fluxions::RendererGLES30 gles30{ "gles30" };
+		//Fluxions::RendererGLES30 gles30CubeMap{ "gles30CubeMap" };
 
 		// SPHL code
-		SimpleGLES30Renderer sph_renderer;
+		//Fluxions::RendererGLES30 sph_renderer{ "sph_renderer" };
 		SimpleGeometryMesh ssphh_hierarchy_mesh;
 		FxModel geosphere;
 		// Sphl sphl;

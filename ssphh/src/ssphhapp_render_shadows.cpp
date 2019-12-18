@@ -1,42 +1,46 @@
 #include <ssphhapp.hpp>
-#include <fluxions_render_utilities.hpp>
+#include <fluxions_renderer_utilities.hpp>
 
 namespace SSPHH
 {
 	void SSPHH_Application::RenderGLES30Shadows() {
 		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
 
-		std::map<GLenum, RenderTarget*> rts;
+		RendererConfig& cubeShadow = rendererContext.rendererConfigs["cubeShadow"];
+		RendererConfig& rectShadow = rendererContext.rendererConfigs["rectShadow"];
 
 		double sunShadowT0 = Hf::Log.getSecondsElapsed();
-		rectShadowRenderConfig.renderSkyBox = false;
-		rectShadowRenderConfig.viewportRect.w = Interface.renderconfig.sunShadowMapSize;
-		rectShadowRenderConfig.viewportRect.h = Interface.renderconfig.sunShadowMapSize;
-		rectShadowRenderConfig.preCameraMatrix.LoadIdentity();
-		rectShadowRenderConfig.postCameraMatrix.LoadIdentity();
-		rectShadowRenderConfig.projectionMatrix = ssg.environment.sunShadowProjectionMatrix;
-		rectShadowRenderConfig.cameraMatrix = ssg.environment.sunShadowViewMatrix;
-		rectShadowRenderConfig.cameraPosition = ssg.environment.sunShadowMapOrigin;
-		rectShadowRenderConfig.znear = ssg.environment.sunShadowMapNearZ;
-		rectShadowRenderConfig.zfar = ssg.environment.sunShadowMapFarZ;
-		rectShadowRenderConfig.clearColor.reset(1.0f, 0.0f, 1.0f, 1.0f);
-		rectShadowRenderConfig.clearColorBuffer = true;
-		rectShadowRenderConfig.renderToFBO = true;
-		ssg.AdvancedRender(rectShadowRenderConfig);
-		rectShadowRenderConfig.fbo.GenerateMipmaps();
+		rectShadow.renderSkyBox = false;
+		rectShadow.viewportRect.w = Interface.renderconfig.sunShadowMapSize;
+		rectShadow.viewportRect.h = Interface.renderconfig.sunShadowMapSize;
+		rectShadow.preCameraMatrix.LoadIdentity();
+		rectShadow.postCameraMatrix.LoadIdentity();
+		rectShadow.projectionMatrix = ssg.environment.sunShadowProjectionMatrix;
+		rectShadow.cameraMatrix = ssg.environment.sunShadowViewMatrix;
+		rectShadow.cameraPosition = ssg.environment.sunShadowMapOrigin;
+		rectShadow.znear = ssg.environment.sunShadowMapNearZ;
+		rectShadow.zfar = ssg.environment.sunShadowMapFarZ;
+		rectShadow.clearColor.reset(1.0f, 0.0f, 1.0f, 1.0f);
+		rectShadow.clearColorBuffer = true;
+		rectShadow.renderToFBO = true;
+
+		RenderImage(rendererContext, ssg, "gles30Shadow", "rectShadow");
+		//ssg.AdvancedRender(rectShadow);
+		//rectShadow.fbo.generateMipmaps();
 
 		// Sun Shadow Map is rendered, now let's bind it to a texture_ map...
 
-		for (auto& rt : rectShadowRenderConfig.fbo.renderTargets) {
-			if (rt.second.attachment == GL_COLOR_ATTACHMENT0)
-				ssg.environment.sunColorMapId = rt.second.object;
-			if (rt.second.attachment == GL_DEPTH_ATTACHMENT)
-				ssg.environment.sunDepthMapId = rt.second.object;
-		}
+		// FIXME: we shouldn't be using the SSG for rendering
+		//for (auto& rt : rectShadow.fbo.renderTargets) {
+		//	if (rt.second.attachment == GL_COLOR_ATTACHMENT0)
+		//		ssg.environment.sunColorMapId = rt.second.object;
+		//	if (rt.second.attachment == GL_DEPTH_ATTACHMENT)
+		//		ssg.environment.sunDepthMapId = rt.second.object;
+		//}
 
 		//for (int i = 0; i < (int)rectShadowRenderConfig.fbo.renderTargets.size(); i++)
 		//{
-		//	rts[rectShadowRenderConfig.fbo.renderTargets[i].first] = &(rectShadowRenderConfig.fbo.renderTargets[i].second);
+		//	rts[rectShadow.fbo.renderTargets[i].first] = &(rectShadow.fbo.renderTargets[i].second);
 		//}
 		//for (auto rtIt = rts.begin(); rtIt != rts.end(); rtIt++)
 		//{
@@ -82,16 +86,17 @@ namespace SSPHH
 		for (int i = 0; i < ssg.pointLights.size(); i++) {
 			auto& spl = ssg.pointLights[i];
 			auto& scs = ssg.pointLights[i].scs;
+			
+			scs.zfar = cubeShadow.zfar;
+			cubeShadow.fbo_gen_color = false;
 
-			scs.zfar = cubeShadowRenderConfig.zfar;
-			cubeShadowRenderConfig.fbo_gen_color = false;
+			cubeShadow.renderToFBO = false;
+			cubeShadow.useSceneCamera = false;
+			cubeShadow.cameraMatrix.LoadIdentity();
+			cubeShadow.cameraPosition = Vector4f(spl.position, 1.0f);
 
-			cubeShadowRenderConfig.renderToFBO = false;
-			cubeShadowRenderConfig.useSceneCamera = false;
-			cubeShadowRenderConfig.cameraMatrix.LoadIdentity();
-			cubeShadowRenderConfig.cameraPosition = Vector4f(spl.position, 1.0f);
-
-			RenderCubeShadowMap(ssg, scs, cubeShadowRenderConfig);
+			//RenderCubeShadowMap(ssg, scs, cubeShadow);
+			RenderCube(rendererContext, ssg, "gles30Shadow", "cubeShadow");
 			FxSetErrorMessage("ssphh.cpp", __LINE__, __FUNCTION__);
 		}
 
@@ -99,30 +104,31 @@ namespace SSPHH
 			auto& sphl = ssgUserData->ssphhLights[i];
 			auto& scs = sphl.depthSphlMap;
 
-			scs.zfar = cubeShadowRenderConfig.zfar;
+			scs.zfar = cubeShadow.zfar;
 			if (Interface.ssphh.enableShadowColorMap) {
-				sphl.colorSphlMap.texture.CreateTextureCube();
-				cubeShadowRenderConfig.clearColor.reset(0.2f, 0.4f, 0.6f, 1.0f);
-				cubeShadowRenderConfig.fbo_gen_color = true;
-				cubeShadowRenderConfig.fbo_color_map = sphl.colorSphlMap.texture.GetTexture();
+				sphl.colorSphlMap.createTextureCube();
+				cubeShadow.clearColor.reset(0.2f, 0.4f, 0.6f, 1.0f);
+				cubeShadow.fbo_gen_color = true;
+				cubeShadow.fbo_color_map = sphl.colorSphlMap.getTexture();
 			}
 			else {
-				cubeShadowRenderConfig.fbo_gen_color = false;
-				cubeShadowRenderConfig.fbo_color_map = 0;
+				cubeShadow.fbo_gen_color = false;
+				cubeShadow.fbo_color_map = 0;
 			}
-			cubeShadowRenderConfig.renderToFBO = false;
-			cubeShadowRenderConfig.useSceneCamera = false;
-			cubeShadowRenderConfig.cameraMatrix.LoadIdentity();
-			cubeShadowRenderConfig.cameraPosition = sphl.position;
+			cubeShadow.renderToFBO = false;
+			cubeShadow.useSceneCamera = false;
+			cubeShadow.cameraMatrix.LoadIdentity();
+			cubeShadow.cameraPosition = sphl.position;
 
-			RenderCubeShadowMap(ssg, sphl.depthSphlMap, cubeShadowRenderConfig);
+			//RenderCubeShadowMap(ssg, sphl.depthSphlMap, cubeShadow);
+			RenderCube(rendererContext, ssg, "gles30Shadow", "cubeShadow");
 			FxSetErrorMessage("ssphh.cpp", __LINE__, __FUNCTION__);
 
 			if (Interface.captureShadows) {
 				std::ostringstream ostr;
 				ostr << "sphl" << std::setw(2) << std::setfill('0') << i;
-				SaveTextureMap(GL_TEXTURE_CUBE_MAP, sphl.colorSphlMap.texture.GetTexture(), ostr.str() + "_color.ppm");
-				SaveTextureMap(GL_TEXTURE_CUBE_MAP, sphl.depthSphlMap.texture.GetTexture(), ostr.str() + "_depth.ppm");
+				SaveTextureMap(GL_TEXTURE_CUBE_MAP, sphl.colorSphlMap.getTexture(), ostr.str() + "_color.ppm");
+				SaveTextureMap(GL_TEXTURE_CUBE_MAP, sphl.depthSphlMap.getTexture(), ostr.str() + "_depth.ppm");
 			}
 		}
 

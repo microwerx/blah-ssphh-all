@@ -366,7 +366,7 @@ namespace SSPHH
 	void SSPHH_Application::OnMouseDrag(int button, const MouseDragState& mds) {
 		Widget::OnMouseDrag(button, mds);
 		if (button == 2) {
-			renderer2.SetDeferredSplit(mds.currentPosition);
+			rendererContext.setDeferredSplit(mds.currentPosition);
 		}
 	}
 }

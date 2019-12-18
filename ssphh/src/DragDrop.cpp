@@ -370,7 +370,7 @@ public:
 		*pdwEffect = DropEffect(grfKeyState, pt, DROPEFFECT_COPY);
 
 		if (QueryDataObject(pDataObj)) {
-			dragDrop_->Reset();
+			dragDrop_->reset();
 			SetFocus(window);
 		}
 		else {
@@ -599,7 +599,7 @@ void DragDrop::Kill()
 }
 
 
-void DragDrop::Reset()
+void DragDrop::reset()
 {
 	gotText_ = false;
 	gotUnicodeText_ = false;

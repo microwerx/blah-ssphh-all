@@ -1,3 +1,4 @@
+#include <fluxions_renderer_utilities.hpp>
 #include <ssphhapp.hpp>
 
 namespace SSPHH
@@ -33,6 +34,7 @@ namespace SSPHH
 	void SSPHH_Application::RenderGLES30Scene() {
 		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
 
+		RendererConfig& defaultRenderConfig = rendererContext.rendererConfigs["default"];
 		defaultRenderConfig.clearDepthBuffer = true;
 		defaultRenderConfig.clearColorBuffer = false;
 		defaultRenderConfig.viewportRect.x = 0;
@@ -51,7 +53,8 @@ namespace SSPHH
 		defaultRenderConfig.shaderDebugSphl = Interface.tools.shaderDebugSphl;
 
 		while (glGetError());
-		ssg.AdvancedRender(defaultRenderConfig);
+		Fluxions::RenderImage(rendererContext, ssg, "gles30", "default");
+		//ssg.AdvancedRender(defaultRenderConfig);
 		ssg.camera.actualViewMatrix = defaultRenderConfig.cameraMatrix;
 		while (glGetError()) HFLOGWARN("AdvancedRender() ERROR!");
 

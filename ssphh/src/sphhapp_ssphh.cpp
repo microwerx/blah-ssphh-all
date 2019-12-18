@@ -16,7 +16,7 @@ namespace SSPHH
 			//sphl.randomize();
 			//sphl.createMesh(geosphere);
 			//sphl.createLightProbe();
-			sph_renderer.SetSceneGraph(ssg);
+			rendererContext.renderers["sph_renderer"].setSceneGraph(&ssg);
 			coefs_init = true;
 		}
 
@@ -40,8 +40,8 @@ namespace SSPHH
 				//	sphl.msph[1][lm] = sphls[i].v_coefs[Sphl::GreenComponent][lm];
 				//	sphl.msph[2][lm] = sphls[i].v_coefs[Sphl::BlueComponent][lm];
 				//}
-				sphl.Randomize();
-				sphl.Standardize();
+				sphl.randomizeCoefficients();
+				sphl.standardize();
 				sphl.randomize = false;
 				sphl.dirty = true;
 			}
@@ -68,19 +68,19 @@ namespace SSPHH
 		unsigned i = 0;
 		for (auto& sphl : ssgUserData->ssphhLights) {
 			if (sphl.ptrcLightProbeImage.empty()) {
-				sphl.UploadLightProbe(sphl.ptrcLightProbeImage, sphl.ptrcLightProbeTexture);
-				sphl.UploadLightProbe(sphl.msphLightProbeImage, sphl.msphLightProbeTexture);
-				sphl.UploadLightProbe(sphl.hierLightProbeImage, sphl.hierLightProbeTexture);
+				sphl.uploadLightProbe(sphl.ptrcLightProbeImage, sphl.ptrcLightProbeTexture);
+				sphl.uploadLightProbe(sphl.msphLightProbeImage, sphl.msphLightProbeTexture);
+				sphl.uploadLightProbe(sphl.hierLightProbeImage, sphl.hierLightProbeTexture);
 			}
 
 			if (Interface.ssphh.enableShadowColorMap) {
-				sphls[i].lightProbeTexIds[0] = sphl.colorSphlMap.texture.GetTexture();
+				sphls[i].lightProbeTexIds[0] = sphl.colorSphlMap.getTexture();
 			}
 			else {
-				sphls[i].lightProbeTexIds[0] = sphl.hierLightProbeTexture.GetTexture();
+				sphls[i].lightProbeTexIds[0] = sphl.hierLightProbeTexture.getTexture();
 			}
-			sphls[i].lightProbeTexIds[1] = sphl.ptrcLightProbeTexture.GetTexture();
-			sphls[i].lightProbeTexIds[2] = sphl.msphLightProbeTexture.GetTexture();
+			sphls[i].lightProbeTexIds[1] = sphl.ptrcLightProbeTexture.getTexture();
+			sphls[i].lightProbeTexIds[2] = sphl.msphLightProbeTexture.getTexture();
 			i++;
 		}
 
@@ -89,9 +89,10 @@ namespace SSPHH
 	void SSPHH_Application::RenderGLES30SPHLs() {
 		if (!Interface.ssphh.enableShowSPHLs)
 			return;
-		//Renderer gl;
-		SimpleRenderConfiguration rc = defaultRenderConfig;
-		rc.shaderProgram = renderer2.FindProgram("sphl", "sphl");
+		//RendererContext gl;
+		RendererConfig& rc = rendererContext.rendererConfigs["default"];
+		// FIXME: Are we using rendererContext?
+		rc.shaderProgram.reset();// = rendererContext.FindProgram("sphl", "sphl");
 		rc.clearDepthBuffer = false;
 		rc.clearColorBuffer = false;
 		rc.enableBlend = false;
@@ -103,15 +104,16 @@ namespace SSPHH
 			return;
 		}
 
-		GLint vloc = rc.shaderProgram->GetAttribLocation("aPosition");
-		GLint tloc = rc.shaderProgram->GetAttribLocation("aTexCoord");
+		GLint vloc = rc.shaderProgram->getAttribLocation("aPosition");
+		GLint tloc = rc.shaderProgram->getAttribLocation("aTexCoord");
 
 		// BEGIN RENDER SPH
-		sph_renderer.SetRenderConfig(rc);
-		//auto program1 = rc.shaderProgram = renderer2.FindProgram("sphl", "sphl");
-		//auto program2 = rc.shaderProgram = renderer2.FindProgram("glut", "cubemap");
-		sph_renderer.SaveGLState();
-		if (sph_renderer.ApplyRenderConfig()) {
+		RendererGLES30&sph_renderer = rendererContext.renderers["sph_renderer"];
+		sph_renderer.setRenderConfig(&rc);
+		//auto program1 = rc.shaderProgram = rendererContext.FindProgram("sphl", "sphl");
+		//auto program2 = rc.shaderProgram = rendererContext.FindProgram("glut", "cubemap");
+		sph_renderer.saveGLState();
+		if (sph_renderer.applyRenderConfig()) {
 			glActiveTexture(GL_TEXTURE0);
 			for (auto& it : sphls) {
 				auto& sphl = it.second;
@@ -121,19 +123,19 @@ namespace SSPHH
 
 				// glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, sphl.lightProbeTexIds[0]);
 
-				rc.shaderProgram->ApplyUniform("SPHL_LightProbeMode", (SimpleUniform)0);
-				rc.shaderProgram->ApplyUniform("SPHL_NumDegrees", (SimpleUniform)2);
-				rc.shaderProgram->ApplyUniform("SPHL_Coefs", SimpleUniform(GL_FLOAT_VEC4, 9, GL_FALSE, (GLubyte*)sphl.coefs));
-				rc.shaderProgram->ApplyUniform("SPHL_LightProbe", (SimpleUniform)0);
+				rc.shaderProgram->applyUniform("SPHL_LightProbeMode", (RendererUniform)0);
+				rc.shaderProgram->applyUniform("SPHL_NumDegrees", (RendererUniform)2);
+				rc.shaderProgram->applyUniform("SPHL_Coefs", RendererUniform(GL_FLOAT_VEC4, 9, GL_FALSE, (GLubyte*)sphl.coefs));
+				rc.shaderProgram->applyUniform("SPHL_LightProbe", (RendererUniform)0);
 
 				Matrix4f worldMatrix;
 				worldMatrix.Translate(sphl.position.x, sphl.position.y, sphl.position.z);
-				sph_renderer.RenderMesh(sphl.sph_model, worldMatrix);
+				rendererContext.renderers["sph_renderer"].renderMesh(sphl.sph_model, worldMatrix);
 
 				if (!Interface.ssphh.enableBasicShowSPHLs) {
 					Matrix4f identityMatrix;
-					rc.shaderProgram->ApplyUniform("SPHL_LightProbeMode", (SimpleUniform)1);
-					rc.shaderProgram->ApplyUniform("WorldMatrix", (SimpleUniform)identityMatrix);
+					rc.shaderProgram->applyUniform("SPHL_LightProbeMode", (RendererUniform)1);
+					rc.shaderProgram->applyUniform("WorldMatrix", (RendererUniform)identityMatrix);
 					// Render light probe cube maps
 					float angles[3] = { 270.0f, 135.0f, 45.0f };
 					for (auto& a : angles)
@@ -141,12 +143,12 @@ namespace SSPHH
 					float R = 1.0f;
 					float S = 0.5f;
 					Matrix4f lpWorldMatrix[3];
-					rc.shaderProgram->Use();
+					rc.shaderProgram->use();
 					for (int i = 0; i < 3; i++) {
 
 						// glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, sphl.lightProbeTexIds[i]);
 						//if (i == 0)
-						//	glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, enviroCubeTexture3.GetTextureId());
+						//	glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, enviroSkyBoxTexture.GetTextureId());
 						//else if (i == 1)
 						//	glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, ssg.environment.pbskyColorMapId);
 						//else if (i == 2)
@@ -172,19 +174,19 @@ namespace SSPHH
 			for (auto& sphl : ssgUserData->ssphhLights) {
 				double S = 0.25;
 				double R = 1.0;
-				FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, sphl.ptrcLightProbeTexture.GetTexture());
+				FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, sphl.ptrcLightProbeTexture.getTexture());
 				FxDrawGL2CubeMap(
 					sphl.position.x + R * 0.707 + S * 1,
 					sphl.position.y - R * 0.707,
 					sphl.position.z,
 					S, vloc, tloc);
-				FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, sphl.msphLightProbeTexture.GetTexture());
+				FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, sphl.msphLightProbeTexture.getTexture());
 				FxDrawGL2CubeMap(
 					sphl.position.x + R * 0.707 + S * 3,
 					sphl.position.y - R * 0.707,
 					sphl.position.z,
 					S, vloc, tloc);
-				FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, sphl.hierLightProbeTexture.GetTexture());
+				FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, sphl.hierLightProbeTexture.getTexture());
 				FxDrawGL2CubeMap(
 					sphl.position.x + R * 0.707 + S * 5,
 					sphl.position.y - R * 0.707,
@@ -233,7 +235,7 @@ namespace SSPHH
 				FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 			}
 		}
-		sph_renderer.RestoreGLState();
+		sph_renderer.restoreGLState();
 	}
 
 	void SSPHH_Application::RenderGL11Hierarchies() {
@@ -241,8 +243,8 @@ namespace SSPHH
 			glMatrixMode(GL_PROJECTION);
 			glPushMatrix();
 			glLoadIdentity();
-			glMultMatrixf(defaultRenderConfig.projectionMatrix.const_ptr());
-			glMultMatrixf(defaultRenderConfig.cameraMatrix.const_ptr());
+			glMultMatrixf(rendererContext.rendererConfigs["default"].projectionMatrix.const_ptr());
+			glMultMatrixf(rendererContext.rendererConfigs["default"].cameraMatrix.const_ptr());
 
 			glMatrixMode(GL_MODELVIEW);
 			glPushMatrix();
@@ -282,7 +284,7 @@ namespace SSPHH
 					vertices.push_back(v2);
 				}
 				SimpleVertex v1, v2;
-				v1.color = sphl.E0 * sphl.GetCoefficientColor(0, 0);
+				v1.color = sphl.E0 * sphl.getCoefficientColor(0, 0);
 				v2.color = v1.color;
 				v1.position = sphl.position.xyz() - Vector3f(0.0f, 0.5f, 0.0f);
 				v2.position = sphl.position.xyz() + Vector3f(0.0f, 0.5f, 0.0f);

@@ -11,6 +11,7 @@ void PbskyViewController::init() {
 	ImGui::SetNextWindowSize(ImVec2(w, h));
 	firstshow = false;
 }
+
 void PbskyViewController::show() {
 	if (!visible) return;
 	if (firstshow) init();

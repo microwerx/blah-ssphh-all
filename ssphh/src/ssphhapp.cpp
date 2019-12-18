@@ -38,7 +38,7 @@ extern void PrintString9x15(float x, float y, int justification, const char* for
 extern double gt_Fps;
 extern double g_distance;
 
-using namespace Fluxions;
+//using namespace Fluxions;
 
 void InitSSPHH() {
 	ssphh_widget_ptr = std::make_shared<SSPHH::SSPHH_Application>();
@@ -51,17 +51,22 @@ void KillSSPHH() {
 
 namespace SSPHH
 {
+	namespace Fx = Fluxions;
 	using namespace Fluxions;
 	using namespace Vf;
 
+	const char* default_skyboxcubemap_path = "export_cubemap.png";
+	const char* default_scene_file = "resources/scenes/maze_scene/maze.scn";
+	//const char* default_scene_file = "resources/scenes/test_texture_scene/test_terrain_scene.scn";
+
 	SSPHH_Application::SSPHH_Application()
-		: Widget("ssphhapplication"), PBSkyCubeMap(GL_TEXTURE_CUBE_MAP) {
-		sceneFilename = "resources/scenes/test_texture_scene/test_terrain_scene.scn";
+		: Widget("ssphhapplication") {
+		sceneFilename = default_scene_file;
 	}
 
 	SSPHH_Application::SSPHH_Application(const std::string& name)
-		: Widget(name), PBSkyCubeMap(GL_TEXTURE_CUBE_MAP) {
-		sceneFilename = "resources/scenes/test_texture_scene/test_terrain_scene.scn";
+		: Vf::Widget(name) {
+		sceneFilename = default_scene_file;
 	}
 
 	SSPHH_Application::~SSPHH_Application() {
@@ -100,9 +105,9 @@ namespace SSPHH
 		FilePathInfo fpi(sceneFilename);
 		Interface.sceneName = fpi.fname;
 		ssg.Load(sceneFilename);
-		ssg.BuildBuffers();
+		//ssg.BuildBuffers();
 
-		gles30CubeMap.SetSceneGraph(ssg);
+		rendererContext.renderers["gles30CubeMap"].setSceneGraph(&ssg);
 	}
 
 	void SSPHH_Application::OptimizeClippingPlanes() {
@@ -120,10 +125,10 @@ namespace SSPHH
 		znear = std::max(0.1f, distanceToBoxCenter - boxRadius);
 		zfar = distanceToBoxCenter + 2 * boxRadius; // min(1000.0f, distanceToBoxCenter + boxRadius);
 
-		defaultRenderConfig.znear = znear;
-		defaultRenderConfig.zfar = zfar;
-		rectShadowRenderConfig.znear = std::max(0.1f, ssg.environment.sunShadowMapNearZ);
-		rectShadowRenderConfig.zfar = std::min(1000.0f, ssg.environment.sunShadowMapFarZ);
+		rendererContext.rendererConfigs["default"].znear = znear;
+		rendererContext.rendererConfigs["default"].zfar = zfar;
+		rendererContext.rendererConfigs["rectShadow"].znear = std::max(0.1f, ssg.environment.sunShadowMapNearZ);
+		rendererContext.rendererConfigs["rectShadow"].zfar = std::min(1000.0f, ssg.environment.sunShadowMapFarZ);
 	}
 
 	void SSPHH_Application::ParseCommandArguments(const std::vector<std::string>& cmdargs) {
@@ -183,13 +188,39 @@ namespace SSPHH
 		HFLOGINFO("Initializing SSPHH App");
 		init_count++;
 		cameraAnimation.create();
+
+		rendererContext.renderers["gles30"].init("gles30");
+		rendererContext.renderers["gles30CubeMap"].init("gles30CubeMap");
+		rendererContext.renderers["sph_renderer"].init("sph_renderer");
+
+		rendererContext.samplers["samplerCube"].init("samplerCube");
+		rendererContext.samplers["sampler2D"].init("sampler2D");
+		rendererContext.samplers["shadowCube"].init("shadowCube");
+		rendererContext.samplers["shadow2D"].init("shadow2D");
+
+		rendererContext.textures["enviroSkyBox"].init("enviroSkyBox");
+		rendererContext.textures["pbSkyBox"].init("pbSkyBox");
+
+		rendererContext.rendererConfigs["default"].init("default");
+		rendererContext.rendererConfigs["gbuffer"].init("gbuffer");
+		rendererContext.rendererConfigs["cubeShadow"].init("cubeShadow");
+		rendererContext.rendererConfigs["cubeEnvMap"].init("cubeEnvMap");
+		rendererContext.rendererConfigs["rectShadow"].init("rectShadow");
+		rendererContext.rendererConfigs["rectEnvMap"].init("rectEnvMap");
+		rendererContext.rendererConfigs["uberShader"].init("uberShader");
+		rendererContext.rendererConfigs["foursplitUL"].init("foursplitUL");
+		rendererContext.rendererConfigs["foursplitUR"].init("foursplitUR");
+		rendererContext.rendererConfigs["foursplitLL"].init("foursplitLL");
+		rendererContext.rendererConfigs["foursplitLR"].init("foursplitLR");
+
+
 		// TODO: I would like to make the following code work:
 		//
 		// SceneGraph sg;
 		// sg.Init();
 		// sg.Load("myscene.scn");
 		//
-		// Renderer r;
+		// RendererContext r;
 		// r.Init();
 		// r.LoadRenderConfig("deferred.renderconfig")
 		// r.LoadRenderConfig("pbr_monolithic.renderconfig")
@@ -220,40 +251,31 @@ namespace SSPHH
 		my_hud_info.glVendorString = glvendor ? glvendor : "Unknown Vendor";
 		my_hud_info.glVersionString = glversion ? glversion : "Unknown Version";
 
-		if (!enviroCubeTexture3.LoadTextureCoronaCubeMap("export_cubemap.png", true)) {
-			Hf::Log.error("%s(): enviroCubeTexture3...Could not load export_cubemap.png", __FUNCTION__);
-		}
-		else {
-			Hf::Log.info("Loaded enviroCubeTexture3...loaded export_cubemap.png");
-		}
-
-		vcPbsky = new PbskyViewController(this);
-		PBSkyCubeMap.Create();
-		PBSkyCubeMap.SetTextureCubeMap(GL_RGB, GL_FLOAT, 64, 64, nullptr, true);
-		PBSkyCubeMap.samplerObject.Create();
-		PBSkyCubeMap.samplerObject.SetMinFilter(GL_LINEAR);
-		PBSkyCubeMap.samplerObject.SetMagFilter(GL_LINEAR);
-		PBSkyCubeMap.samplerObject.SetWrapSTR(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+		SetupSkyBox();
 
 		// Initialize default sampler objects
-		defaultCubeTextureSampler.Create();
-		defaultCubeTextureSampler.SetMagFilter(GL_LINEAR);
-		defaultCubeTextureSampler.SetMinFilter(GL_LINEAR);
-		defaultCubeTextureSampler.SetWrapSTR(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
-		default2DTextureSampler.Create();
-		default2DTextureSampler.SetMagFilter(GL_LINEAR);
-		default2DTextureSampler.SetMinFilter(GL_LINEAR);
-		default2DTextureSampler.SetWrapST(GL_REPEAT, GL_REPEAT);
-		defaultShadowCubeTextureSampler.Create();
-		defaultShadowCubeTextureSampler.SetMagFilter(GL_LINEAR);
-		defaultShadowCubeTextureSampler.SetMinFilter(GL_LINEAR);
-		//defaultShadowCubeTextureSampler.SetCompareFunction(GL_LESS);
-		//defaultShadowCubeTextureSampler.SetCompareMode(GL_COMPARE_REF_TO_TEXTURE);
-		defaultShadow2DTextureSampler.Create();
-		defaultShadow2DTextureSampler.SetMagFilter(GL_LINEAR);
-		defaultShadow2DTextureSampler.SetMinFilter(GL_LINEAR);
-		//defaultShadow2DTextureSampler.SetCompareFunction(GL_LESS);
-		//defaultShadow2DTextureSampler.SetCompareMode(GL_COMPARE_REF_TO_TEXTURE);
+		RendererSamplerObject& samplerCube = rendererContext.samplers["samplerCube"];
+		samplerCube.init("samplerCube");
+		samplerCube.setMagFilter(GL_LINEAR);
+		samplerCube.setMinFilter(GL_LINEAR);
+		samplerCube.setWrapSTR(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+		RendererSamplerObject& sampler2D = rendererContext.samplers["sampler2D"];
+		sampler2D.init("sampler2D");
+		sampler2D.setMagFilter(GL_LINEAR);
+		sampler2D.setMinFilter(GL_LINEAR);
+		sampler2D.setWrapST(GL_REPEAT, GL_REPEAT);
+		RendererSamplerObject& shadowCube = rendererContext.samplers["shadowCube"];
+		shadowCube.init("shadowCube");
+		shadowCube.setMagFilter(GL_LINEAR);
+		shadowCube.setMinFilter(GL_LINEAR);
+		//shadowCube.setCompareFunction(GL_LESS);
+		//shadowCube.setCompareMode(GL_COMPARE_REF_TO_TEXTURE);
+		RendererSamplerObject& shadow2D = rendererContext.samplers["shadow2D"];
+		shadow2D.init("shadow2D");
+		shadow2D.setMagFilter(GL_LINEAR);
+		shadow2D.setMinFilter(GL_LINEAR);
+		//shadow2D.setCompareFunction(GL_LESS);
+		//shadow2D.setCompareMode(GL_COMPARE_REF_TO_TEXTURE);
 
 		FxSetErrorMessage(__FILE__, __LINE__, "before loading scene");
 
@@ -270,7 +292,7 @@ namespace SSPHH
 		ResetScene();
 
 		stopwatch.Stop();
-		Hf::Log.info("%s(): took %3.2f seconds", __FUNCTION__, stopwatch.GetSecondsElapsed());
+		HFLOGINFO("OnInit() took %3.2f seconds", stopwatch.GetSecondsElapsed());
 
 		Widget::OnInit(args);
 	}
@@ -279,26 +301,22 @@ namespace SSPHH
 		// TODO: I would like to make the following code work:
 		//
 		// SceneGraph sg;
-		// Renderer r;
+		// RendererContext r;
 		// ...
 		// sg.Kill();
 		// r.Kill();
 		// r.Init();
 
-		ssg.Reset();
-		renderer.Reset();
+		ssg.reset();
+		//renderer.reset();
+		for (auto& [k, renderer] : rendererContext.renderers) {
+			renderer.buildBuffers();
+			renderer.reset();
+		}
 
-		defaultRenderConfig.reset();
-		gbufferRenderConfig.reset();
-		cubeShadowRenderConfig.reset();
-		cubeEnvMapRenderConfig.reset();
-		rectShadowRenderConfig.reset();
-		rectEnvMapRenderConfig.reset();
-		uberShaderRenderConfig.reset();
-		foursplitULRenderConfig.reset();
-		foursplitURRenderConfig.reset();
-		foursplitLLRenderConfig.reset();
-		foursplitLRRenderConfig.reset();
+		for (auto& [k, rc] : rendererContext.rendererConfigs) {
+			rc.reset();
+		}
 
 		KillUnicornfish();
 
@@ -332,10 +350,12 @@ namespace SSPHH
 		screenHeight = h;
 		aspect = w / h;
 
-		renderer2.SetDeferredRect(Recti(0, 0, (int)w, (int)h));
+		// FIXME: Are we using rendererContext
+		//rendererContext.SetDeferredRect(Recti(0, 0, (int)w, (int)h));
 
-		defaultRenderConfig.projectionMatrix.LoadIdentity();
-		defaultRenderConfig.projectionMatrix.Perspective(ssg.camera.fov, ssg.camera.imageAspect, ssg.camera.imageNearZ, ssg.camera.imageFarZ);
+		rendererContext.rendererConfigs["default"].projectionMatrix.LoadIdentity();
+		rendererContext.rendererConfigs["default"].projectionMatrix.Perspective(ssg.camera.fov,
+																				ssg.camera.imageAspect, ssg.camera.imageNearZ, ssg.camera.imageFarZ);
 
 		screenOrthoMatrix.LoadIdentity();
 		screenOrthoMatrix.Ortho2D(0.0f, screenWidth, screenHeight, 0.0f);
@@ -348,20 +368,22 @@ namespace SSPHH
 	void SSPHH_Application::RenderTest1SunShadows() {
 		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
 
-		int w = rectShadowRenderConfig.viewportRect.w;
-		int h = rectShadowRenderConfig.viewportRect.h;
+		RendererConfig& rc = rendererContext.rendererConfigs["rectShadow"];
+		int w = rc.viewportRect.w;
+		int h = rc.viewportRect.h;
 		glClear(GL_DEPTH_BUFFER_BIT);
-		rectShadowRenderConfig.viewportRect.x = (GLsizei)(screenWidth - 256);
-		rectShadowRenderConfig.viewportRect.y = 0;
-		rectShadowRenderConfig.viewportRect.w = 256;
-		rectShadowRenderConfig.viewportRect.h = 256;
-		rectShadowRenderConfig.clearColorBuffer = false;
-		rectShadowRenderConfig.renderToFBO = false;
-		ssg.AdvancedRender(rectShadowRenderConfig);
-		rectShadowRenderConfig.viewportRect.w = w;
-		rectShadowRenderConfig.viewportRect.h = h;
-		rectShadowRenderConfig.viewportRect.x = 0;
-		rectShadowRenderConfig.viewportRect.y = 0;
+		rc.viewportRect.x = (GLsizei)(screenWidth - 256);
+		rc.viewportRect.y = 0;
+		rc.viewportRect.w = 256;
+		rc.viewportRect.h = 256;
+		rc.clearColorBuffer = false;
+		rc.renderToFBO = false;
+		// TODO: fix Advanced render
+		// ssg.AdvancedRender(rc);
+		rc.viewportRect.w = w;
+		rc.viewportRect.h = h;
+		rc.viewportRect.x = 0;
+		rc.viewportRect.y = 0;
 	}
 
 	void SSPHH_Application::RenderTest2SphereCubeMap() {
@@ -370,42 +392,66 @@ namespace SSPHH
 		Matrix4f cameraMatrix = Interface.inversePreCameraMatrix * ssg.camera.viewMatrix;
 		Vector3f cameraPosition(cameraMatrix.m14, cameraMatrix.m24, cameraMatrix.m34);
 		int s = 128;
-		SimpleRenderConfiguration& cubeRC = gles30CubeMap.GetRenderConfig();
+		RendererConfig* cubeRC = rendererContext.renderers["gles30CubeMap"].getRenderConfig();
+		if (!cubeRC) return;
 
-		cubeRC.clearColorBuffer = false;
-		cubeRC.viewportRect.x = 0;
-		cubeRC.viewportRect.y = 0;
-		cubeRC.preCameraMatrix = Interface.inversePreCameraMatrix;
-		cubeRC.postCameraMatrix.LoadIdentity();
-		cubeRC.useZOnly = false;
-		cubeRC.useMaterials = true;
-		cubeRC.viewportRect.w = s;
-		cubeRC.viewportRect.h = s;
-		cubeRC.postCameraMatrix = ssg.spheres[1].transform;
-		cubeRC.useSceneCamera = true;
-		cubeRC.isCubeMap = true;
+		// FIXME: why are we setting these values here?
+		cubeRC->clearColorBuffer = false;
+		cubeRC->viewportRect.x = 0;
+		cubeRC->viewportRect.y = 0;
+		cubeRC->preCameraMatrix = Interface.inversePreCameraMatrix;
+		cubeRC->postCameraMatrix.LoadIdentity();
+		cubeRC->useZOnly = false;
+		cubeRC->useMaterials = true;
+		cubeRC->viewportRect.w = s;
+		cubeRC->viewportRect.h = s;
+		cubeRC->postCameraMatrix = ssg.spheres[1].transform;
+		cubeRC->useSceneCamera = true;
+		cubeRC->isCubeMap = true;
 		// gles30CubeMap.Render();
 	}
 
 	void SSPHH_Application::RenderTest3EnviroCubeMap() {
 		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
 
-		SimpleProgramPtr program = renderer2.FindProgram("glut", "UnwrappedCubeMap");
+		// FIXME: Are we using rendererContext?
+		RendererProgramPtr program;// = rendererContext.FindProgram("glut", "UnwrappedCubeMap");
 		if (program != nullptr) {
-			program->Use();
-			GLint tloc = program->GetAttribLocation("aTexCoord");
-			GLint vloc = program->GetAttribLocation("aPosition");
-			SimpleUniform orthoProjectionMatrix = Matrix4f().Ortho2D(0.0f, screenWidth, 0.0f, screenHeight);
-			SimpleUniform identityMatrix = Matrix4f().LoadIdentity();
-			program->ApplyUniform("uCubeTexture", SimpleUniform(0));
-			program->ApplyUniform("ProjectionMatrix", orthoProjectionMatrix);
-			program->ApplyUniform("CameraMatrix", identityMatrix);
-			program->ApplyUniform("WorldMatrix", identityMatrix);
-			FxBindTextureAndSampler(0, GL_TEXTURE_CUBE_MAP, enviroCubeTexture3.GetTextureId(), ssg.environment.enviroColorMapSamplerId);
+			program->use();
+			GLint tloc = program->getAttribLocation("aTexCoord");
+			GLint vloc = program->getAttribLocation("aPosition");
+			RendererUniform orthoProjectionMatrix = Matrix4f().Ortho2D(0.0f, screenWidth, 0.0f, screenHeight);
+			RendererUniform identityMatrix = Matrix4f().LoadIdentity();
+			program->applyUniform("uCubeTexture", RendererUniform(0));
+			program->applyUniform("ProjectionMatrix", orthoProjectionMatrix);
+			program->applyUniform("CameraMatrix", identityMatrix);
+			program->applyUniform("WorldMatrix", identityMatrix);
+			FxBindTextureAndSampler(0,
+									GL_TEXTURE_CUBE_MAP,
+									rendererContext.textures["enviroSkyBox"].getTextureId(),
+									ssg.environment.enviroColorMapSamplerId);
 			FxDrawGL2UnwrappedCubeMap(0, 0, 256, vloc, tloc);
 			FxBindTextureAndSampler(0, GL_TEXTURE_CUBE_MAP, 0, 0);
 			glUseProgram(0);
 		}
+	}
+
+	void SSPHH_Application::SetupSkyBox() {
+		if (!rendererContext.textures["enviroSkyBox"].loadTextureCoronaCubeMap(default_skyboxcubemap_path, true)) {
+			HFLOGERROR("enviroSkyBoxTexture...could not load %s", default_skyboxcubemap_path);
+		}
+		else {
+			HFLOGINFO("enviroSkyBoxTexture...loaded %s", default_skyboxcubemap_path);
+		}
+
+		vcPbsky = new PbskyViewController(this);
+		RendererTextureObject& PBSkyCubeMap = rendererContext.textures["pbSkyBox"];
+		PBSkyCubeMap.init("pbskyCubeMap");
+		PBSkyCubeMap.setTextureCubeMap(GL_RGB, GL_FLOAT, 64, 64, nullptr, true);
+		PBSkyCubeMap.samplerObject.init("pbskyCubeMapSampler");
+		PBSkyCubeMap.samplerObject.setMinFilter(GL_LINEAR);
+		PBSkyCubeMap.samplerObject.setMagFilter(GL_LINEAR);
+		PBSkyCubeMap.samplerObject.setWrapSTR(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
 	}
 
 	void SSPHH_Application::RenderSkyBox() {
@@ -478,20 +524,21 @@ namespace SSPHH
 		GLint uToneMapExposure = -1;
 		GLint uToneMapGamma = -1;
 
-		auto p = renderer2.FindProgram("skybox", "skybox");
+		// FIXME: Are we using rendererContext?
+		RendererProgramPtr p;// = rendererContext.FindProgram("skybox", "skybox");
 		if (p) {
-			program = p->GetProgram();
-			uCubeTexture = p->GetUniformLocation("uCubeTexture");
-			uWorldMatrix = p->GetUniformLocation("WorldMatrix");
-			uCameraMatrix = p->GetUniformLocation("CameraMatrix");
-			uProjectionMatrix = p->GetUniformLocation("ProjectionMatrix");
-			uSunE0 = p->GetUniformLocation("SunE0");
-			uGroundE0 = p->GetUniformLocation("GroundE0");
-			uSunDirTo = p->GetUniformLocation("SunDirTo");
-			uIsHemisphere = p->GetUniformLocation("IsHemisphere");
-			uToneMapScale = p->GetUniformLocation("ToneMapScale");
-			uToneMapExposure = p->GetUniformLocation("ToneMapExposure");
-			uToneMapGamma = p->GetUniformLocation("ToneMapGamma");
+			program = p->getProgram();
+			uCubeTexture = p->getUniformLocation("uCubeTexture");
+			uWorldMatrix = p->getUniformLocation("WorldMatrix");
+			uCameraMatrix = p->getUniformLocation("CameraMatrix");
+			uProjectionMatrix = p->getUniformLocation("ProjectionMatrix");
+			uSunE0 = p->getUniformLocation("SunE0");
+			uGroundE0 = p->getUniformLocation("GroundE0");
+			uSunDirTo = p->getUniformLocation("SunDirTo");
+			uIsHemisphere = p->getUniformLocation("IsHemisphere");
+			uToneMapScale = p->getUniformLocation("ToneMapScale");
+			uToneMapExposure = p->getUniformLocation("ToneMapExposure");
+			uToneMapGamma = p->getUniformLocation("ToneMapGamma");
 		}
 
 		if (program == 0)
@@ -591,7 +638,7 @@ namespace SSPHH
 
 		if (Interface.ssg.resetScene) {
 			Interface.ssg.resetScene = false;
-			ssg.Reset();
+			ssg.reset();
 		}
 
 		if (Interface.ssg.createScene) {

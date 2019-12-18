@@ -15,7 +15,7 @@ public:
 
 	void Init();
 	void Kill();
-	void Reset();
+	void reset();
 
 	const bool gotDragDrop() const noexcept { return gotText_ || gotUnicodeText_ || gotPaths_; }
 	const bool gotText() const noexcept { return gotText_; }

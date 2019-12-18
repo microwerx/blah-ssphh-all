@@ -4,7 +4,7 @@
 namespace SSPHH
 {
 	void SSPHH_Application::ReloadScenegraph() {
-		ssg.Reset();
+		ssg.reset();
 		Hf::StopWatch stopwatch;
 		LoadScene();
 		stopwatch.Stop();

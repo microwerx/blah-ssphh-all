@@ -94,18 +94,18 @@ namespace SSPHH
 				sphl.vizgenLightProbes[recvLight].loadPPM(fpi.path);
 			}
 			sphl.vizgenLightProbes[recvLight].convertRectToCubeMap();
-			sphl.LightProbeToSph(sphl.vizgenLightProbes[recvLight], sph.msph);
+			sphl.lightProbeToSph(sphl.vizgenLightProbes[recvLight], sph.msph);
 			job.CopySPH(sph);
 			return true;
 		}
 		else if (job.IsGEN()) {
-			sphl.ReadPtrcLightProbe(job.GetOutputPath(useEXR));
-			sphl.SavePtrcLightProbe(job.GetName() + "_sph.ppm");
+			sphl.readPtrcLightProbe(job.GetOutputPath(useEXR));
+			sphl.savePtrcLightProbe(job.GetName() + "_sph.ppm");
 
 			//if (ssgUserData->ssphh.saveJSONs)
 			//	sphl.SaveJsonSph(job.GetName() + "_sph.json");
 			if (ssphh.saveJSONs)
-				sphl.SaveJsonSph(job.GetName() + "_sph.json");
+				sphl.saveJsonSph(job.GetName() + "_sph.json");
 
 			if (useEXR) {
 				sphl.vizgenLightProbes[sendLight].loadEXR(fpi.path);
@@ -115,9 +115,9 @@ namespace SSPHH
 
 			}
 			sphl.vizgenLightProbes[sendLight].convertRectToCubeMap();
-			sphl.LightProbeToSph(sphl.vizgenLightProbes[sendLight], sph.msph);
+			sphl.lightProbeToSph(sphl.vizgenLightProbes[sendLight], sph.msph);
 			job.CopySPH(sph);
-			sphl.UploadLightProbe(sphl.vizgenLightProbes[sendLight], sphl.hierLightProbeTexture);
+			sphl.uploadLightProbe(sphl.vizgenLightProbes[sendLight], sphl.hierLightProbeTexture);
 			return true;
 		}
 		return false;
@@ -138,12 +138,12 @@ namespace SSPHH
 		Sph4f sph;
 		job.CopySPHToSph4f(sph);
 		if (job.IsVIZ()) {
-			sphl.SphToLightProbe(sph.msph, sphl.vizgenLightProbes[recvLight]);
+			sphl.sphToLightProbe(sph.msph, sphl.vizgenLightProbes[recvLight]);
 			return true;
 		}
 		else if (job.IsGEN()) {
-			sphl.SphToLightProbe(sph.msph, sphl.vizgenLightProbes[sendLight]);
-			sphl.UploadLightProbe(sphl.vizgenLightProbes[sendLight], sphl.hierLightProbeTexture);
+			sphl.sphToLightProbe(sph.msph, sphl.vizgenLightProbes[sendLight]);
+			sphl.uploadLightProbe(sphl.vizgenLightProbes[sendLight], sphl.hierLightProbeTexture);
 			return true;
 		}
 		return false;
