@@ -58,6 +58,7 @@ namespace SSPHH
 	const char* default_skyboxcubemap_path = "export_cubemap.png";
 	const char* default_scene_file = "resources/scenes/maze_scene/maze.scn";
 	//const char* default_scene_file = "resources/scenes/test_texture_scene/test_terrain_scene.scn";
+	// The renderconfig default is in ssphhapp_renderconfigs.cpp
 
 	SSPHH_Application::SSPHH_Application()
 		: Widget("ssphhapplication") {
@@ -98,7 +99,7 @@ namespace SSPHH
 
 	void SSPHH_Application::LoadScene() {
 		if (Interface.uf.uf_type == UfType::Broker) {
-			Hf::Log.info("configured to be a broker, so not loading scene");
+			HFLOGINFO("configured to be a broker, so not loading scene");
 			return;
 		}
 
@@ -144,34 +145,34 @@ namespace SSPHH
 				FilePathInfo fpi(cmdargs[j + 1]);
 				if (fpi.Exists()) {
 					sceneFilename = cmdargs[j + 1];
-					Hf::Log.info("%s(): loading scene file %s", __FUNCTION__, sceneFilename.c_str());
+					HFLOGINFO("loading scene file %s", sceneFilename.c_str());
 				}
 				else {
-					Hf::Log.error("%s(): scene file %s does not exist.", __FUNCTION__, sceneFilename.c_str());
+					HFLOGERROR("scene file %s does not exist.", sceneFilename.c_str());
 				}
 				j++;
 			}
 
 			if (cmdargs[j] == "-broker") {
 				Interface.uf.uf_type = UfType::Broker;
-				Hf::Log.info("Unicornfish: starting in broker mode");
+				HFLOGINFO("Unicornfish: starting in broker mode");
 			}
 			if (cmdargs[j] == "-worker") {
 				Interface.uf.uf_type = UfType::Worker;
-				Hf::Log.info("Unicornfish: starting in client mode");
+				HFLOGINFO("Unicornfish: starting in client mode");
 			}
 			if (cmdargs[j] == "-client") {
 				Interface.uf.uf_type = UfType::Client;
-				Hf::Log.info("Unicornfish: starting in worker mode");
+				HFLOGINFO("Unicornfish: starting in worker mode");
 			}
 			if ((cmdargs[j] == "-endpoint") && nextArgExists) {
 				Interface.uf.endpoint = cmdargs[j + 1];
 				j++;
-				Hf::Log.info("Unicornfish: using endpoint %s", Interface.uf.endpoint.c_str());
+				HFLOGINFO("Unicornfish: using endpoint %s", Interface.uf.endpoint.c_str());
 			}
 			if ((cmdargs[j] == "-service") && nextArgExists) {
 				Interface.uf.service = cmdargs[j + 1];
-				Hf::Log.info("Unicornfish: using service %s", Interface.uf.service.c_str());
+				HFLOGINFO("Unicornfish: using service %s", Interface.uf.service.c_str());
 				j++;
 			}
 		}
@@ -189,29 +190,29 @@ namespace SSPHH
 		init_count++;
 		cameraAnimation.create();
 
-		rendererContext.renderers["gles30"].init("gles30");
-		rendererContext.renderers["gles30CubeMap"].init("gles30CubeMap");
-		rendererContext.renderers["sph_renderer"].init("sph_renderer");
+		//rendererContext.renderers["gles30"].init("gles30");
+		//rendererContext.renderers["gles30CubeMap"].init("gles30CubeMap");
+		//rendererContext.renderers["sph_renderer"].init("sph_renderer");
 
-		rendererContext.samplers["samplerCube"].init("samplerCube");
-		rendererContext.samplers["sampler2D"].init("sampler2D");
-		rendererContext.samplers["shadowCube"].init("shadowCube");
-		rendererContext.samplers["shadow2D"].init("shadow2D");
+		//rendererContext.samplers["samplerCube"].init("samplerCube");
+		//rendererContext.samplers["sampler2D"].init("sampler2D");
+		//rendererContext.samplers["shadowCube"].init("shadowCube");
+		//rendererContext.samplers["shadow2D"].init("shadow2D");
 
-		rendererContext.textures["enviroSkyBox"].init("enviroSkyBox");
-		rendererContext.textures["pbSkyBox"].init("pbSkyBox");
+		//rendererContext.textures["enviroSkyBox"].init("enviroSkyBox");
+		//rendererContext.textures["pbSkyBox"].init("pbSkyBox");
 
-		rendererContext.rendererConfigs["default"].init("default");
-		rendererContext.rendererConfigs["gbuffer"].init("gbuffer");
-		rendererContext.rendererConfigs["cubeShadow"].init("cubeShadow");
-		rendererContext.rendererConfigs["cubeEnvMap"].init("cubeEnvMap");
-		rendererContext.rendererConfigs["rectShadow"].init("rectShadow");
-		rendererContext.rendererConfigs["rectEnvMap"].init("rectEnvMap");
-		rendererContext.rendererConfigs["uberShader"].init("uberShader");
-		rendererContext.rendererConfigs["foursplitUL"].init("foursplitUL");
-		rendererContext.rendererConfigs["foursplitUR"].init("foursplitUR");
-		rendererContext.rendererConfigs["foursplitLL"].init("foursplitLL");
-		rendererContext.rendererConfigs["foursplitLR"].init("foursplitLR");
+		//rendererContext.rendererConfigs["default"].init("default");
+		//rendererContext.rendererConfigs["gbuffer"].init("gbuffer");
+		//rendererContext.rendererConfigs["cubeShadow"].init("cubeShadow");
+		//rendererContext.rendererConfigs["cubeEnvMap"].init("cubeEnvMap");
+		//rendererContext.rendererConfigs["rectShadow"].init("rectShadow");
+		//rendererContext.rendererConfigs["rectEnvMap"].init("rectEnvMap");
+		//rendererContext.rendererConfigs["uberShader"].init("uberShader");
+		//rendererContext.rendererConfigs["foursplitUL"].init("foursplitUL");
+		//rendererContext.rendererConfigs["foursplitUR"].init("foursplitUR");
+		//rendererContext.rendererConfigs["foursplitLL"].init("foursplitLL");
+		//rendererContext.rendererConfigs["foursplitLR"].init("foursplitLR");
 
 
 		// TODO: I would like to make the following code work:
@@ -253,29 +254,29 @@ namespace SSPHH
 
 		SetupSkyBox();
 
-		// Initialize default sampler objects
-		RendererSamplerObject& samplerCube = rendererContext.samplers["samplerCube"];
-		samplerCube.init("samplerCube");
-		samplerCube.setMagFilter(GL_LINEAR);
-		samplerCube.setMinFilter(GL_LINEAR);
-		samplerCube.setWrapSTR(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
-		RendererSamplerObject& sampler2D = rendererContext.samplers["sampler2D"];
-		sampler2D.init("sampler2D");
-		sampler2D.setMagFilter(GL_LINEAR);
-		sampler2D.setMinFilter(GL_LINEAR);
-		sampler2D.setWrapST(GL_REPEAT, GL_REPEAT);
-		RendererSamplerObject& shadowCube = rendererContext.samplers["shadowCube"];
-		shadowCube.init("shadowCube");
-		shadowCube.setMagFilter(GL_LINEAR);
-		shadowCube.setMinFilter(GL_LINEAR);
-		//shadowCube.setCompareFunction(GL_LESS);
-		//shadowCube.setCompareMode(GL_COMPARE_REF_TO_TEXTURE);
-		RendererSamplerObject& shadow2D = rendererContext.samplers["shadow2D"];
-		shadow2D.init("shadow2D");
-		shadow2D.setMagFilter(GL_LINEAR);
-		shadow2D.setMinFilter(GL_LINEAR);
-		//shadow2D.setCompareFunction(GL_LESS);
-		//shadow2D.setCompareMode(GL_COMPARE_REF_TO_TEXTURE);
+		//// Initialize default sampler objects
+		//RendererSamplerObject& samplerCube = rendererContext.samplers["samplerCube"];
+		//samplerCube.init("samplerCube");
+		//samplerCube.setMagFilter(GL_LINEAR);
+		//samplerCube.setMinFilter(GL_LINEAR);
+		//samplerCube.setWrapSTR(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+		//RendererSamplerObject& sampler2D = rendererContext.samplers["sampler2D"];
+		//sampler2D.init("sampler2D");
+		//sampler2D.setMagFilter(GL_LINEAR);
+		//sampler2D.setMinFilter(GL_LINEAR);
+		//sampler2D.setWrapST(GL_REPEAT, GL_REPEAT);
+		//RendererSamplerObject& shadowCube = rendererContext.samplers["shadowCube"];
+		//shadowCube.init("shadowCube");
+		//shadowCube.setMagFilter(GL_LINEAR);
+		//shadowCube.setMinFilter(GL_LINEAR);
+		////shadowCube.setCompareFunction(GL_LESS);
+		////shadowCube.setCompareMode(GL_COMPARE_REF_TO_TEXTURE);
+		//RendererSamplerObject& shadow2D = rendererContext.samplers["shadow2D"];
+		//shadow2D.init("shadow2D");
+		//shadow2D.setMagFilter(GL_LINEAR);
+		//shadow2D.setMinFilter(GL_LINEAR);
+		////shadow2D.setCompareFunction(GL_LESS);
+		////shadow2D.setCompareMode(GL_COMPARE_REF_TO_TEXTURE);
 
 		FxSetErrorMessage(__FILE__, __LINE__, "before loading scene");
 
@@ -445,13 +446,14 @@ namespace SSPHH
 		}
 
 		vcPbsky = new PbskyViewController(this);
-		RendererTextureObject& PBSkyCubeMap = rendererContext.textures["pbSkyBox"];
-		PBSkyCubeMap.init("pbskyCubeMap");
-		PBSkyCubeMap.setTextureCubeMap(GL_RGB, GL_FLOAT, 64, 64, nullptr, true);
-		PBSkyCubeMap.samplerObject.init("pbskyCubeMapSampler");
-		PBSkyCubeMap.samplerObject.setMinFilter(GL_LINEAR);
-		PBSkyCubeMap.samplerObject.setMagFilter(GL_LINEAR);
-		PBSkyCubeMap.samplerObject.setWrapSTR(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+		//TODO: Make sure pbsky texture is in renderconfig
+		//RendererTextureObject& PBSkyCubeMap = rendererContext.textures["pbSkyBox"];
+		//PBSkyCubeMap.init("pbskyCubeMap");
+		//PBSkyCubeMap.setTextureCubeMap(GL_RGB, GL_FLOAT, 64, 64, nullptr, true);
+		//PBSkyCubeMap.samplerObject.init("pbskyCubeMapSampler");
+		//PBSkyCubeMap.samplerObject.setMinFilter(GL_LINEAR);
+		//PBSkyCubeMap.samplerObject.setMagFilter(GL_LINEAR);
+		//PBSkyCubeMap.samplerObject.setWrapSTR(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
 	}
 
 	void SSPHH_Application::RenderSkyBox() {

@@ -31,7 +31,7 @@ void SSPHH_Application::OnUpdate(double timeStamp) {
 		Interface.recomputeSky = false;
 	}
 
-	if (Interface.enableAnimation) {
+	if (Interface.enableAnimation && math_window_ptr) {
 		if (math_window_ptr->createNewPath) {
 			math_window_ptr->createNewPath = false;
 			cameraAnimation.create();

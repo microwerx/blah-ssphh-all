@@ -34,28 +34,32 @@ namespace SSPHH
 	void SSPHH_Application::RenderGLES30Scene() {
 		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
 
-		RendererConfig& defaultRenderConfig = rendererContext.rendererConfigs["default"];
-		defaultRenderConfig.clearDepthBuffer = true;
-		defaultRenderConfig.clearColorBuffer = false;
-		defaultRenderConfig.viewportRect.x = 0;
-		defaultRenderConfig.viewportRect.y = 0;
-		defaultRenderConfig.viewportRect.w = (size_t)screenWidth;
-		defaultRenderConfig.viewportRect.h = (size_t)screenHeight;
-		defaultRenderConfig.preCameraMatrix = Interface.inversePreCameraMatrix;
-		defaultRenderConfig.postCameraMatrix = Interface.inversePostCameraMatrix;
-		defaultRenderConfig.fov = Interface.ssg.cameraFOV;
-		defaultRenderConfig.isCubeMap = false;
-		defaultRenderConfig.useSceneCamera = true;
-		defaultRenderConfig.useZOnly = false;
-		defaultRenderConfig.useMaterials = true;
-		defaultRenderConfig.shaderDebugChoice = Interface.tools.shaderDebugChoice;
-		defaultRenderConfig.shaderDebugLight = Interface.tools.shaderDebugLight;
-		defaultRenderConfig.shaderDebugSphl = Interface.tools.shaderDebugSphl;
+		//RendererConfig& defaultRenderConfig = rendererContext.rendererConfigs["pbr_shader"];
+		//defaultRenderConfig.clearDepthBuffer = true;
+		//defaultRenderConfig.clearColorBuffer = false;
+		//defaultRenderConfig.viewportRect.x = 0;
+		//defaultRenderConfig.viewportRect.y = 0;
+		//defaultRenderConfig.viewportRect.w = (size_t)screenWidth;
+		//defaultRenderConfig.viewportRect.h = (size_t)screenHeight;
+		//defaultRenderConfig.preCameraMatrix = Interface.inversePreCameraMatrix;
+		//defaultRenderConfig.postCameraMatrix = Interface.inversePostCameraMatrix;
+		//defaultRenderConfig.fov = Interface.ssg.cameraFOV;
+		//defaultRenderConfig.isCubeMap = false;
+		//defaultRenderConfig.useSceneCamera = true;
+		//defaultRenderConfig.useZOnly = false;
+		//defaultRenderConfig.useMaterials = true;
+		//defaultRenderConfig.shaderDebugChoice = Interface.tools.shaderDebugChoice;
+		//defaultRenderConfig.shaderDebugLight = Interface.tools.shaderDebugLight;
+		//defaultRenderConfig.shaderDebugSphl = Interface.tools.shaderDebugSphl;
 
 		while (glGetError());
-		Fluxions::RenderImage(rendererContext, ssg, "gles30", "default");
+		const std::string renderername{ "gles30" };
+		if (rendererContext.renderers.count(renderername)) {
+			const std::string& renderconfigname = rendererContext.renderers[renderername].renderconfigname;
+			Fluxions::RenderImage(rendererContext, ssg, renderername, renderconfigname);
+		}
 		//ssg.AdvancedRender(defaultRenderConfig);
-		ssg.camera.actualViewMatrix = defaultRenderConfig.cameraMatrix;
+		//ssg.camera.actualViewMatrix = defaultRenderConfig.cameraMatrix;
 		while (glGetError()) HFLOGWARN("AdvancedRender() ERROR!");
 
 		if (Interface.drawSkyBox) {

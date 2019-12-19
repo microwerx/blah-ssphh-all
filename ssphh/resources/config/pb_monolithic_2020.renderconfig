@@ -32,60 +32,56 @@ sampler GL_TEXTURE_MAG_FILTER GL_LINEAR
 
 # ==== Textures ====
 
-texture enviroCubeTexture
-texture GL_TEXTURE_CUBE_MAP
-texture GL_TEXTURE_CUBE_MAP_POSITIVE_X "cube_pos_x.png"
-texture GL_TEXTURE_CUBE_MAP_POSITIVE_Y "cube_pos_y.png"
-texture GL_TEXTURE_CUBE_MAP_POSITIVE_Z "cube_pos_z.png"
-texture GL_TEXTURE_CUBE_MAP_NEGATIVE_X "cube_neg_x.png"
-texture GL_TEXTURE_CUBE_MAP_NEGATIVE_Y "cube_neg_y.png"
-texture GL_TEXTURE_CUBE_MAP_NEGATIVE_Z "cube_neg_z.png"
-texture GL_GENERATE_MIPMAP
+#texture enviroCubeTexture
+#texture GL_TEXTURE_CUBE_MAP
+#texture GL_TEXTURE_CUBE_MAP_POSITIVE_X "cube_pos_x.png"
+#texture GL_TEXTURE_CUBE_MAP_POSITIVE_Y "cube_pos_y.png"
+#texture GL_TEXTURE_CUBE_MAP_POSITIVE_Z "cube_pos_z.png"
+#texture GL_TEXTURE_CUBE_MAP_NEGATIVE_X "cube_neg_x.png"
+#texture GL_TEXTURE_CUBE_MAP_NEGATIVE_Y "cube_neg_y.png"
+#texture GL_TEXTURE_CUBE_MAP_NEGATIVE_Z "cube_neg_z.png"
+#texture GL_GENERATE_MIPMAP
 
-texture enviroCubeTexture2
-texture GL_TEXTURE_CUBE_MAP
-texture GL_TEXTURE_CUBE_MAP_POSITIVE_X "free_cube_map_positive_x.png"
-texture GL_TEXTURE_CUBE_MAP_POSITIVE_Y "free_cube_map_positive_y.png"
-texture GL_TEXTURE_CUBE_MAP_POSITIVE_Z "free_cube_map_positive_z.png"
-texture GL_TEXTURE_CUBE_MAP_NEGATIVE_X "free_cube_map_negative_x.png"
-texture GL_TEXTURE_CUBE_MAP_NEGATIVE_Y "free_cube_map_negative_y.png"
-texture GL_TEXTURE_CUBE_MAP_NEGATIVE_Z "free_cube_map_negative_z.png"
-texture GL_GENERATE_MIPMAP
+#texture enviroCubeTexture2
+#texture GL_TEXTURE_CUBE_MAP
+#texture GL_TEXTURE_CUBE_MAP_POSITIVE_X "free_cube_map_positive_x.png"
+#texture GL_TEXTURE_CUBE_MAP_POSITIVE_Y "free_cube_map_positive_y.png"
+#texture GL_TEXTURE_CUBE_MAP_POSITIVE_Z "free_cube_map_positive_z.png"
+#texture GL_TEXTURE_CUBE_MAP_NEGATIVE_X "free_cube_map_negative_x.png"
+#texture GL_TEXTURE_CUBE_MAP_NEGATIVE_Y "free_cube_map_negative_y.png"
+#texture GL_TEXTURE_CUBE_MAP_NEGATIVE_Z "free_cube_map_negative_z.png"
+#texture GL_GENERATE_MIPMAP
 
-# ==== Render Configurations ====
+texture2D test2d
+texture2D sampler default2dSampler
+texture2D uniform MapKd
+texture2D map "test2d.png"
 
-renderconfig pb_monolithic
+textureCube pbsky
+textureCube map "export_cubemap.png"
+textureCube uniform MapEnviroCube
+textureCube sampler defaultCubeSampler
 
-program DefaultSlowProgram
-vertshader default_slow_es30.vert
-fragshader default_slow_es30.frag
-vertattrib 0 vtxPosition
-vertattrib 1 vtxNormal
-vertattrib 2 vtxTexCoord
-vertattrib 3 vtxColor
-vertattrib 4 vtxAttrib
+textureCube enviroSkyBox
+textureCube map "freecube.png"
+textureCube uniform MapEnviroCube
+textureCube sampler defaultCubeSampler
 
-program DefaultFastProgram
-vertshader default_fast_vs.glsl
-fragshader default_fast_fs.glsl
-vertattrib 0 vtxPosition
-vertattrib 1 vtxNormal
-vertattrib 2 vtxTexCoord
-vertattrib 3 vtxColor
-vertattrib 4 vtxAttrib
-vertattrib 6 vtxTangent
-vertattrib 7 vtxBinormal
+# ==== Programs ====
 
-program DefaultZProgram
-vertshader default_z_vs.glsl
-fragshader default_z_fs.glsl
-vertattrib 0 vtxPosition
+program zonly
+vertshader zonly.vert
+fragshader zonly.frag
+vertattrib 0 aPosition
 
-renderbuffer "rb_color0" GL_RGBA @DEFAULTWIDTH @DEFAULTHEIGHT
-fbo "renderToTexture"
-fbo attach GL_RENDERBUFFER GL_COLOR_ATTACHMENT0 rb_color0
-
-renderconfig sphl
+program gles30
+vertshader gles30.vert
+fragshader gles30.frag
+vertattrib 0 aPosition
+vertattrib 1 aNormal
+vertattrib 2 aTexCoord
+vertattrib 3 aColor
+vertattrib 4 aAttrib
 
 program sphl
 vertshader sphl300.vert
@@ -94,8 +90,6 @@ vertattrib 0 aPosition
 vertattrib 1 aNormal
 vertattrib 2 aTexCoord
 
-renderconfig skybox
-
 program skybox
 vertshader skybox.vert
 fragshader skybox.frag
@@ -103,20 +97,91 @@ vertattrib 0 aPosition
 vertattrib 1 aNormal
 vertattrib 2 aTexCoord
 
-renderconfig glut
-
 program UnwrappedCubeMap
 vertshader glut_unwrapped_cubemap.vert
 fragshader glut_unwrapped_cubemap.frag
 vertattrib 0 aPosition
 vertattrib 1 aTexCoord
 
-renderconfig cube_shadow
 program cube_shadow
 vertshader cube_shadow_gl330.vert
 geomshader cube_shadow_gl330.geom
 fragshader cube_shadow_gl330.frag
 vertattrib 0 aPosition
+
+# ==== Render Configurations ====
+
+fbo sunShadow
+fbo dimensions @DEFAULTWIDTH @DEFAULTHEIGHT
+fbo attach GL_TEXTURE_2D GL_DEPTH_ATTACHMENT  GL_DEPTH_COMPONENT32F MapSunShadow
+fbo attach GL_TEXTURE_2D GL_COLOR_ATTACHMENT0 GL_RGBA32F            MapSunColor
+
+fbo moonShadow
+fbo dimensions 512 512
+fbo attach GL_TEXTURE_2D GL_DEPTH_ATTACHMENT  GL_DEPTH_COMPONENT16 MapMoonShadow
+fbo attach GL_TEXTURE_2D GL_COLOR_ATTACHMENT0 GL_RGBA32F           MapMoonColor
+
+renderconfig sunShadow
+renderconfig writefbo sunShadow
+renderconfig program zonly
+renderconfig camera sunInverseTransform
+renderconfig projection orthoSquare
+
+renderconfig moonShadow
+renderconfig writefbo moonShadow
+renderconfig program zonly
+renderconfig camera moonInverseTransform
+renderconfig projection orthoSquare
+
+renderconfig pbr_shader
+renderconfig program gles30
+renderconfig readfbo sunShadow
+renderconfig readfbo moonShadow
+renderconfig camera defaultInverseTransform
+renderconfig camera perspectiveScreen
+renderconfig clearcolor 1.0 0.0 1.0 1.0
+
+renderconfig sky_shader
+renderconfig program skybox
+renderconfig camera defaultInverseTransform
+renderconfig camera perspectiveScreen
+
+# program DefaultSlowProgram
+# vertshader default_slow_es30.vert
+# fragshader default_slow_es30.frag
+# vertattrib 0 vtxPosition
+# vertattrib 1 vtxNormal
+# vertattrib 2 vtxTexCoord
+# vertattrib 3 vtxColor
+# vertattrib 4 vtxAttrib
+
+# program DefaultFastProgram
+# vertshader default_fast_vs.glsl
+# fragshader default_fast_fs.glsl
+# vertattrib 0 vtxPosition
+# vertattrib 1 vtxNormal
+# vertattrib 2 vtxTexCoord
+# vertattrib 3 vtxColor
+# vertattrib 4 vtxAttrib
+# vertattrib 6 vtxTangent
+# vertattrib 7 vtxBinormal
+
+# program DefaultZProgram
+# vertshader default_z_vs.glsl
+# fragshader default_z_fs.glsl
+# vertattrib 0 vtxPosition
+
+# renderbuffer "rb_color0" GL_RGBA @DEFAULTWIDTH @DEFAULTHEIGHT
+# fbo "renderToTexture"
+# fbo attach GL_RENDERBUFFER GL_COLOR_ATTACHMENT0 rb_color0
+
+# renderconfig sphl
+
+# renderconfig skybox
+
+# renderconfig glut
+
+# renderconfig cube_shadow
 
 # ==== UniformLists ====
 
@@ -124,6 +189,23 @@ uniformlist defaultCamera
 uniformMatrix4f cameraMatrix @CAMERAMATRIX
 uniformMatrix4f shadowMatrix @SHADOWMATRIX
 uniformMatrix4f sunMatrix @SUNMATRIX
+
+# ==== Renderers ====
+
+renderer gles30
+renderer renderconfig pbr_shader
+
+renderer gles30Shadow
+renderer renderconfig zonly
+
+renderer gles30CubeMap
+renderer renderconfig 
+
+renderer sph_renderer
+renderer renderconfig sph_shader
+
+renderer sky_shader
+renderer renderconfig sph_shader
 
 # ==== Render Commands ====
 
