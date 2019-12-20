@@ -47,7 +47,9 @@ namespace SSPHH
 {
 	class SSPHH_Application : public Widget
 	{
-	private:
+	public:
+		// PHYSICALLY BASED SKY METHODS/MEMBERS /////////////////////////////
+
 		// Physically Based Code
 		//Color4f groundRadiance;
 		//Color4f sunDiskRadiance;
@@ -63,9 +65,14 @@ namespace SSPHH
 		//void pbskyComputeCubemap();
 		//RendererTextureObject PBSkyCubeMap;
 		SimpleRenderer_GLushort Skybox;
-		void SetupSkyBox();
-		void RenderSkyBox();
-		////////////////////////
+		void Sky_RegenHosekWilkieTextures();
+		void Sky_SaveHosekWilkieTextures();
+		void Sky_RegenCoronaSky();
+		void Sky_LoadCoronaSky(bool loadEXR, const std::string& path);
+		void Sky_InitViewController();
+		void Sky_Render();
+		
+		///////////////////////////////////////////////////////////////
 
 	public:
 		GLfloat aspect = 1.0f;
@@ -76,6 +83,8 @@ namespace SSPHH
 		GLfloat screenY = 0.0f;
 		GLfloat screenWidth = 0.0f;
 		GLfloat screenHeight = 0.0f;
+
+		// SCENE GRAPH METHODS
 
 		float rotX = 0.0;
 		float rotY = 0.0;
@@ -88,31 +97,6 @@ namespace SSPHH
 		//std::string sceneFilename = "resources/scenes/test_texture_scene/simple_inside_scene.scn";
 		//std::string sceneFilename = "resources/scenes/rungholt_scene/rungholt.scn";
 
-		//RendererConfig defaultRenderConfig;
-		//RendererConfig gbufferRenderConfig;
-		//RendererConfig cubeShadowRenderConfig;
-		//RendererConfig cubeEnvMapRenderConfig;
-		//RendererConfig rectShadowRenderConfig;
-		//RendererConfig rectEnvMapRenderConfig;
-		//RendererConfig uberShaderRenderConfig;
-		//RendererConfig foursplitULRenderConfig;
-		//RendererConfig foursplitURRenderConfig;
-		//RendererConfig foursplitLLRenderConfig;
-		//RendererConfig foursplitLRRenderConfig;
-
-		//RendererSamplerObject defaultCubeTextureSampler;
-		//RendererSamplerObject default2DTextureSampler;
-		//RendererSamplerObject defaultShadowCubeTextureSampler;
-		//RendererSamplerObject defaultShadow2DTextureSampler;
-
-		//SimpleTexture enviroCubeTexture1;
-		//SimpleTexture enviroCubeTexture2;
-		//RendererTextureObject enviroSkyBoxTexture;
-
-		//TMatrix4<GLfloat> screenPerspMatrix;
-		TMatrix4<GLfloat> screenOrthoMatrix;
-
-		//Fluxions::SimpleRenderer_GLuint renderer;
 		//Uf::CoronaDatabase sceneDB;
 		Fluxions::SimpleSceneGraph ssg;
 		Fluxions::SimpleSSPHH ssphh;
@@ -120,18 +104,12 @@ namespace SSPHH
 		Uf::CoronaSceneFile coronaScene;
 		std::vector<Uf::CoronaJob> coronaJobs;
 
-		RendererContext rendererContext;
-		//Fluxions::RendererGLES30 gles30{ "gles30" };
-		//Fluxions::RendererGLES30 gles30CubeMap{ "gles30CubeMap" };
+		void SSG_LoadScene();
+		void SSG_ReloadScene();
+		void SSG_OptimizeClippingPlanes();
+		void SSG_ProcessInterfaceTasks();
 
-		// SPHL code
-		//Fluxions::RendererGLES30 sph_renderer{ "sph_renderer" };
-		SimpleGeometryMesh ssphh_hierarchy_mesh;
-		FxModel geosphere;
-		// Sphl sphl;
-		std::map<size_t, Sphl> sphls;
-		bool coefs_init = false;
-		// End SPHL code
+		// GRAPHICAL USER INTERFACE METHODS
 
 		struct InterfaceInfo
 		{
@@ -388,6 +366,7 @@ namespace SSPHH
 
 			std::string sceneName;
 		}; // InterfaceInfo
+
 		float imguiWinX = 64.0f;
 		float imguiWinW = 384.0f;
 
@@ -405,7 +384,7 @@ namespace SSPHH
 			std::vector<std::string> glLastDebugMessages;
 		};
 
-		void AdvanceSunClock(double numSeconds, bool recomputeSky = false);
+		void Sun_AdvanceClock(double numSeconds, bool recomputeSky = false);
 
 		void InitImGui();
 
@@ -460,12 +439,6 @@ namespace SSPHH
 	private:
 		PbskyViewController* vcPbsky = nullptr;
 	public:
-		void RegenHosekWilkieSky();
-		void SaveHosekWilkieSky();
-		void RegenCoronaSky();
-		void LoadCoronaSky(bool loadEXR, const std::string& path);
-
-
 		// TESTS
 
 		void Test();
@@ -482,21 +455,51 @@ namespace SSPHH
 		// TASKS
 
 		void SaveScreenshot();
-		void ProcessScenegraphTasks();
 
 		static std::string GetPathTracerName(const std::string& sceneName, bool ks, int mrd, int pl);
 		static std::string GetSphlRenderName(const std::string& sceneName, int md);
 		static std::string GetPathTracerSphlRenderName(const std::string& sceneName, bool ks, int mrd, int pl, int md);
 		static std::string GetStatsName(const std::string& sceneName, bool ks, int mrd, int pl, int md);
 
-		void SetupRenderGLES30();
-
 		void DirtySPHLs();
 		void UpdateSPHLs();
 		void UploadSPHLs();
 
+		// ssphhapp_render*.cpp
 		const int MAX_RENDER_MODES = 3;
 		int renderMode = 2;
+		void SetupRenderGLES30();
+
+		//RendererConfig defaultRenderConfig;
+		//RendererConfig gbufferRenderConfig;
+		//RendererConfig cubeShadowRenderConfig;
+		//RendererConfig cubeEnvMapRenderConfig;
+		//RendererConfig rectShadowRenderConfig;
+		//RendererConfig rectEnvMapRenderConfig;
+		//RendererConfig uberShaderRenderConfig;
+		//RendererConfig foursplitULRenderConfig;
+		//RendererConfig foursplitURRenderConfig;
+		//RendererConfig foursplitLLRenderConfig;
+		//RendererConfig foursplitLRRenderConfig;
+
+		//RendererSamplerObject defaultCubeTextureSampler;
+		//RendererSamplerObject default2DTextureSampler;
+		//RendererSamplerObject defaultShadowCubeTextureSampler;
+		//RendererSamplerObject defaultShadow2DTextureSampler;
+
+		//SimpleTexture enviroCubeTexture1;
+		//SimpleTexture enviroCubeTexture2;
+		//RendererTextureObject enviroSkyBoxTexture;
+
+		//TMatrix4<GLfloat> screenPerspMatrix;
+		TMatrix4<GLfloat> screenOrthoMatrix;
+
+		RendererContext rendererContext;
+		//Fluxions::SimpleRenderer_GLuint renderer;
+		//Fluxions::RendererGLES30 sph_renderer{ "sph_renderer" };
+		//Fluxions::RendererGLES30 gles30{ "gles30" };
+		//Fluxions::RendererGLES30 gles30CubeMap{ "gles30CubeMap" };
+
 		void RenderFixedFunctionGL();
 		void RenderGLES20();
 		void RenderGLES30();
@@ -509,7 +512,10 @@ namespace SSPHH
 		void RenderTest2SphereCubeMap();
 		void RenderTest3EnviroCubeMap();
 
+		// ssphhapp.cpp
 		void ParseCommandArguments(const std::vector<std::string>& args);
+
+		// Unicornfish Methods
 		void InitUnicornfish();
 		void KillUnicornfish();
 
@@ -517,6 +523,14 @@ namespace SSPHH
 		int GI_GatherJobs();
 		bool GI_ProcessJob(Uf::CoronaJob& job);
 		bool GI_ProcessGatherJob(Uf::CoronaJob& job);
+
+		// SPHL METHODS
+		SimpleGeometryMesh ssphh_hierarchy_mesh;
+		FxModel geosphere;
+		// Sphl sphl;
+		std::map<size_t, Sphl> sphls;
+		bool coefs_init = false;
+		// End SPHL code
 
 	public:
 		HUDInfo my_hud_info;
@@ -550,45 +564,41 @@ namespace SSPHH
 		int counter = 0;
 		double framesPerSecond = 0.0;
 
-		//virtual void OnKeyDown(int key);
-		//virtual void OnKeyUp(int key);
-		//virtual void OnSpecialKeyDown(int key);
-		//virtual void OnSpecialKeyUp(int key);
+		//void OnKeyDown(int key);
+		//void OnKeyUp(int key);
+		//void OnSpecialKeyDown(int key);
+		//void OnSpecialKeyUp(int key);
 
-		virtual void OnKeyDown(const std::string& key, int modifiers) override;
-		virtual void OnKeyUp(const std::string& key, int modifiers) override;
+		void OnKeyDown(const std::string& key, int modifiers) override;
+		void OnKeyUp(const std::string& key, int modifiers) override;
 
-		//virtual void OnMouseMove(int X, int y, int dx, int dy);
-		//virtual void OnMouseButtonDown(int X, int y, int button);
-		//virtual void OnMouseButtonUp(int X, int y, int button);
+		//void OnMouseMove(int X, int y, int dx, int dy);
+		//void OnMouseButtonDown(int X, int y, int button);
+		//void OnMouseButtonUp(int X, int y, int button);
 
-		virtual void OnMouseMove(int x, int y) override;
-		virtual void OnMouseButtonDown(int button) override;
-		virtual void OnMouseButtonUp(int button) override;
-		virtual void OnMouseClick(int button, const MouseClickState& mcs) override;
-		virtual void OnMouseDoubleClick(int button, const MouseDoubleClickState& mdcs) override;
-		virtual void OnMouseDrag(int button, const MouseDragState& mds) override;
+		void OnMouseMove(int x, int y) override;
+		void OnMouseButtonDown(int button) override;
+		void OnMouseButtonUp(int button) override;
+		void OnMouseClick(int button, const MouseClickState& mcs) override;
+		void OnMouseDoubleClick(int button, const MouseDoubleClickState& mdcs) override;
+		void OnMouseDrag(int button, const MouseDragState& mds) override;
 
 		void OnPreRender() override;
 		void OnRender3D() override;
 		void OnRender2D() override;
 		void OnRenderDearImGui() override;
 		void OnPostRender() override;
+		void OnReshape(int width, int height) override;
 
-		void ResetScene();
-		void UseCurrentTime();
+		void Sun_ResetClock();
+		void Sun_UseCurrentTime();
 		void InitRenderConfigs();
 		void LoadRenderConfigs();
-		void LoadScene();
-
-		virtual void OnReshape(int width, int height) override;
 
 		void RunJob(Uf::CoronaJob& job);
 
 	private:
-		void OptimizeClippingPlanes();
 		void ReloadRenderConfigs();
-		void ReloadScenegraph();
 		void StartPython();
 	};
 } // namespace SSPHH
