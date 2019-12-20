@@ -80,13 +80,13 @@ namespace SSPHH
 	//		if (key == '-' || key == '_')
 	//		{
 	//			// decrease 1 hour
-	//			AdvanceSunClock(-3600.0, true);
+	//			Sun_AdvanceClock(-3600.0, true);
 	//		}
 	//
 	//		if (key == '=' || key == '+')
 	//		{
 	//			// increase 1 hour
-	//			AdvanceSunClock(3600.0, true);
+	//			Sun_AdvanceClock(3600.0, true);
 	//		}
 	//
 	//		if (tolower(key) == 'a') Interface.moveLeft = true;
@@ -205,7 +205,7 @@ namespace SSPHH
 			}
 
 			if (key == "2") {
-				ReloadScenegraph();
+				SSG_ReloadScene();
 			}
 
 			if (key == "3") {
@@ -246,11 +246,11 @@ namespace SSPHH
 			if (key == "r" || key == "Tab") {
 				Interface.cameraOrbit.reset();
 				Interface.preCameraMatrix.LoadIdentity();
-				ResetScene();
+				Sun_ResetClock();
 			}
 
 			if (key == "n" || key == "N") {
-				UseCurrentTime();
+				Sun_UseCurrentTime();
 			}
 
 			if (key == " " || key == "o" || key == "O") {
@@ -259,7 +259,7 @@ namespace SSPHH
 
 			if (key == "i" || key == "I") {
 				imguiCoronaGenerateSphlINIT();
-				RegenCoronaSky();
+				Sky_RegenCoronaSky();
 			}
 
 			if (key == "v" || key == "V") {
@@ -297,12 +297,12 @@ namespace SSPHH
 
 			if (key == "-" || key == "_") {
 				// decrease 1 hour
-				AdvanceSunClock(-3600.0, true);
+				Sun_AdvanceClock(-3600.0, true);
 			}
 
 			if (key == "=" || key == "+") {
 				// increase 1 hour
-				AdvanceSunClock(3600.0, true);
+				Sun_AdvanceClock(3600.0, true);
 			}
 
 			if (key == "F1")
@@ -316,7 +316,7 @@ namespace SSPHH
 			if (key == "F5")
 				Interface.recomputeSky = !Interface.recomputeSky;
 			if (key == "F6")
-				RegenCoronaSky();
+				Sky_RegenCoronaSky();
 			if (key == "F7")
 				Interface.ssphh.enableShowSPHLs = !Interface.ssphh.enableShowSPHLs;
 			if (key == "F8")
@@ -327,7 +327,7 @@ namespace SSPHH
 			}
 
 			if (key == "F11") {
-				SaveHosekWilkieSky();
+				Sky_SaveHosekWilkieTextures();
 			}
 
 			if (key == "F12") {
