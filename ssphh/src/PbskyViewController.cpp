@@ -25,20 +25,20 @@ void PbskyViewController::show() {
 	ImGui::Text("Hosek-Wilkie");
 	ImGui::SameLine();
 	if (ImGui::Button("Gen")) {
-		app_->RegenHosekWilkieSky();
+		app_->Sky_RegenHosekWilkieTextures();
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Save")) {
-		app_->SaveHosekWilkieSky();
+		app_->Sky_SaveHosekWilkieTextures();
 	}
 	
 	ImGui::Text("Corona");
 	ImGui::SameLine();
 	if (ImGui::Button("Gen")) {
-		app_->RegenCoronaSky();
+		app_->Sky_RegenCoronaSky();
 	}
 	if (ImGui::Button("Load")) {
-		app_->LoadCoronaSky(coronaLoadEXR, coronaPath);
+		app_->Sky_LoadCoronaSky(coronaLoadEXR, coronaPath);
 	}
 
 	ImGui::End();
