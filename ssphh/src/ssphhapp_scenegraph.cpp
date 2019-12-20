@@ -3,12 +3,12 @@
 
 namespace SSPHH
 {
-	void SSPHH_Application::ReloadScenegraph() {
+	void SSPHH_Application::SSG_ReloadScene() {
 		ssg.reset();
 		Hf::StopWatch stopwatch;
-		LoadScene();
+		SSG_LoadScene();
 		stopwatch.Stop();
-		Hf::Log.info("%s(): SSG reload took %4.2f milliseconds", __FUNCTION__, stopwatch.GetMillisecondsElapsed());
+		HFLOGINFO("SSG reload took %4.2f milliseconds", stopwatch.GetMillisecondsElapsed());
 		Interface.lastScenegraphLoadTime = stopwatch.GetMillisecondsElapsed();
 	}
 }
