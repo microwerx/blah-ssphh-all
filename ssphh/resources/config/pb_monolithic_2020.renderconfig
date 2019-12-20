@@ -57,8 +57,13 @@ texture2D sampler default2dSampler
 texture2D uniform MapKd
 texture2D map "test2d.png"
 
-textureCube pbsky
-textureCube map "export_cubemap.png"
+textureCube pbskyEXR
+textureCube map "test_corona_skymap.exr"
+textureCube uniform MapEnviroCube
+textureCube sampler defaultCubeSampler
+
+textureCube pbskyPPM
+textureCube map "test_corona_skymap.ppm"
 textureCube uniform MapEnviroCube
 textureCube sampler defaultCubeSampler
 
