@@ -384,8 +384,6 @@ namespace SSPHH
 			std::vector<std::string> glLastDebugMessages;
 		};
 
-		void Sun_AdvanceClock(double numSeconds, bool recomputeSky = false);
-
 		void InitImGui();
 
 		void imguiSphlAdd();
@@ -590,6 +588,7 @@ namespace SSPHH
 		void OnPostRender() override;
 		void OnReshape(int width, int height) override;
 
+		void Sun_AdvanceClock(double numSeconds, bool recomputeSky = false);
 		void Sun_ResetClock();
 		void Sun_UseCurrentTime();
 		void InitRenderConfigs();
