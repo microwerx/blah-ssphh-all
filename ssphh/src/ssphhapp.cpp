@@ -51,11 +51,20 @@ void KillSSPHH() {
 
 namespace SSPHH
 {
+	template <typename T>
+	void deletenull(T** ptr) {
+		if (*ptr == nullptr) {
+			HFLOGWARN("Deleting nullptr");
+		}
+		delete *ptr;
+		*ptr = nullptr;
+	}
+
 	namespace Fx = Fluxions;
 	using namespace Fluxions;
 	using namespace Vf;
 
-	const char* default_skyboxcubemap_path = "export_cubemap.png";
+	const char* default_coronaskyboxcubemap_path = "export_cubemap.png";
 	const char* default_scene_file = "resources/scenes/maze_scene/maze.scn";
 	//const char* default_scene_file = "resources/scenes/test_texture_scene/test_terrain_scene.scn";
 	// The renderconfig default is in ssphhapp_renderconfigs.cpp
@@ -71,65 +80,7 @@ namespace SSPHH
 	}
 
 	SSPHH_Application::~SSPHH_Application() {
-		if (ssgUserData) {
-			delete ssgUserData;
-		}
-	}
-
-	void SSPHH_Application::ResetScene() {
-		ssg.environment.pbsky.SetCivilDateTime(ssg.environment.pbsky_dtg);
-		ssg.environment.pbsky.ComputeSunFromLocale();
-		pbsky_localtime = ssg.environment.pbsky.GetTime();
-		pbsky_timeOffsetInSeconds = 0.0;
-		Interface.recomputeSky = true;
-		AdvanceSunClock(0.0, true);
-		RegenHosekWilkieSky();
-	}
-
-	void SSPHH_Application::UseCurrentTime() {
-		pbsky_localtime = time(NULL);
-		pbsky_timeOffsetInSeconds = 0.0;
-
-		ssg.environment.pbsky.SetTime(time(NULL), 0.0);
-		ssg.environment.pbsky.ComputeSunFromLocale();
-		Interface.recomputeSky = true;
-		RegenHosekWilkieSky();
-	}
-
-
-	void SSPHH_Application::LoadScene() {
-		if (Interface.uf.uf_type == UfType::Broker) {
-			HFLOGINFO("configured to be a broker, so not loading scene");
-			return;
-		}
-
-		FilePathInfo fpi(sceneFilename);
-		Interface.sceneName = fpi.fname;
-		ssg.Load(sceneFilename);
-		//ssg.BuildBuffers();
-
-		rendererContext.renderers["gles30CubeMap"].setSceneGraph(&ssg);
-	}
-
-	void SSPHH_Application::OptimizeClippingPlanes() {
-		//Matrix4f cameraMatrix = defaultRenderConfig.preCameraMatrix * ssg.camera.actualViewMatrix * defaultRenderConfig.postCameraMatrix;
-		//cameraMatrix.AsInverse().col4()
-		Matrix4f cameraMatrix = ssg.camera.actualViewMatrix.AsInverse();
-		const BoundingBoxf& bbox = ssg.GetBoundingBox();
-		const Matrix4f& frameOfReference = cameraMatrix;
-		const Vector3f& position = frameOfReference.col4().xyz();
-		float znear;
-		float zfar;
-
-		float distanceToBoxCenter = (position - bbox.Center()).length() + 1.0f;
-		float boxRadius = bbox.RadiusRounded();
-		znear = std::max(0.1f, distanceToBoxCenter - boxRadius);
-		zfar = distanceToBoxCenter + 2 * boxRadius; // min(1000.0f, distanceToBoxCenter + boxRadius);
-
-		rendererContext.rendererConfigs["default"].znear = znear;
-		rendererContext.rendererConfigs["default"].zfar = zfar;
-		rendererContext.rendererConfigs["rectShadow"].znear = std::max(0.1f, ssg.environment.sunShadowMapNearZ);
-		rendererContext.rendererConfigs["rectShadow"].zfar = std::min(1000.0f, ssg.environment.sunShadowMapFarZ);
+		deletenull(&ssgUserData);
 	}
 
 	void SSPHH_Application::ParseCommandArguments(const std::vector<std::string>& cmdargs) {
@@ -186,9 +137,9 @@ namespace SSPHH
 
 	int init_count = 0;
 	void SSPHH_Application::OnInit(const std::vector<std::string>& args) {
+		Widget::OnInit(args);
 		HFLOGINFO("Initializing SSPHH App");
 		init_count++;
-		cameraAnimation.create();
 
 		//rendererContext.renderers["gles30"].init("gles30");
 		//rendererContext.renderers["gles30CubeMap"].init("gles30CubeMap");
@@ -232,13 +183,11 @@ namespace SSPHH
 
 		InitUnicornfish();
 		InitImGui();
+		Sky_InitViewController();
 
 		Hf::StopWatch stopwatch;
 
 		// StartPython();
-
-		InitRenderConfigs();
-		LoadRenderConfigs();
 
 		FxSetErrorMessage(__FILE__, __LINE__, "inside OnInit()");
 
@@ -252,7 +201,6 @@ namespace SSPHH
 		my_hud_info.glVendorString = glvendor ? glvendor : "Unknown Vendor";
 		my_hud_info.glVersionString = glversion ? glversion : "Unknown Version";
 
-		SetupSkyBox();
 
 		//// Initialize default sampler objects
 		//RendererSamplerObject& samplerCube = rendererContext.samplers["samplerCube"];
@@ -278,24 +226,28 @@ namespace SSPHH
 		////shadow2D.setCompareFunction(GL_LESS);
 		////shadow2D.setCompareMode(GL_COMPARE_REF_TO_TEXTURE);
 
-		FxSetErrorMessage(__FILE__, __LINE__, "before loading scene");
+		// Initialize Simple Scene Graph
+		FxSetErrorMessage(__FILE__, __LINE__, "initializing scene graph");
 
-		if (ssgUserData) {
-			delete ssgUserData;
-			ssgUserData = nullptr;
-		}
+		deletenull(&ssgUserData);
 		ssgUserData = new SSG_SSPHHRendererPlugin(&ssg);
+		SSG_LoadScene();
+		cameraAnimation.create();
 
-		LoadScene();
+		// Initialize Rendering System
+		FxSetErrorMessage(__FILE__, __LINE__, "initializing rendering system");
+		rendererContext.init("SSHH RendererContext", &rendererContext);
+		InitRenderConfigs();
+		LoadRenderConfigs();
 
 		FxSetDefaultErrorMessage();
 
-		ResetScene();
+		// Initialize Physically Based Sky
+		FxSetErrorMessage(__FILE__, __LINE__, "initializing physically based sky system");
+		Sun_ResetClock();
 
 		stopwatch.Stop();
 		HFLOGINFO("OnInit() took %3.2f seconds", stopwatch.GetSecondsElapsed());
-
-		Widget::OnInit(args);
 	}
 
 	void SSPHH_Application::OnKill() {
@@ -309,15 +261,15 @@ namespace SSPHH
 		// r.Init();
 
 		ssg.reset();
-		//renderer.reset();
-		for (auto& [k, renderer] : rendererContext.renderers) {
-			renderer.buildBuffers();
-			renderer.reset();
-		}
+		////renderer.reset();
+		//for (auto& [k, renderer] : rendererContext.renderers) {
+		//	renderer.buildBuffers();
+		//	renderer.reset();
+		//}
 
-		for (auto& [k, rc] : rendererContext.rendererConfigs) {
-			rc.reset();
-		}
+		//for (auto& [k, rc] : rendererContext.rendererConfigs) {
+		//	rc.reset();
+		//}
 
 		KillUnicornfish();
 
@@ -331,13 +283,6 @@ namespace SSPHH
 
 		Widget::OnKill();
 	}
-
-	void SSPHH_Application::AdvanceSunClock(double numSeconds, bool recomputeSky) {
-		pbsky_timeOffsetInSeconds += numSeconds;
-		ssg.environment.pbsky.SetTime(pbsky_localtime, (float)pbsky_timeOffsetInSeconds);
-		Interface.recomputeSky = true;
-	}
-
 
 	const Matrix4f& SSPHH_Application::GetCameraMatrix() const {
 		return Interface.preCameraMatrix;
@@ -437,178 +382,6 @@ namespace SSPHH
 		}
 	}
 
-	void SSPHH_Application::SetupSkyBox() {
-		if (!rendererContext.textures["enviroSkyBox"].loadTextureCoronaCubeMap(default_skyboxcubemap_path, true)) {
-			HFLOGERROR("enviroSkyBoxTexture...could not load %s", default_skyboxcubemap_path);
-		}
-		else {
-			HFLOGINFO("enviroSkyBoxTexture...loaded %s", default_skyboxcubemap_path);
-		}
-
-		vcPbsky = new PbskyViewController(this);
-		//TODO: Make sure pbsky texture is in renderconfig
-		//RendererTextureObject& PBSkyCubeMap = rendererContext.textures["pbSkyBox"];
-		//PBSkyCubeMap.init("pbskyCubeMap");
-		//PBSkyCubeMap.setTextureCubeMap(GL_RGB, GL_FLOAT, 64, 64, nullptr, true);
-		//PBSkyCubeMap.samplerObject.init("pbskyCubeMapSampler");
-		//PBSkyCubeMap.samplerObject.setMinFilter(GL_LINEAR);
-		//PBSkyCubeMap.samplerObject.setMagFilter(GL_LINEAR);
-		//PBSkyCubeMap.samplerObject.setWrapSTR(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
-	}
-
-	void SSPHH_Application::RenderSkyBox() {
-		static GLfloat size = 500.0f;
-		static GLfloat v[] = {
-			-size, size, -size,
-			size, size, -size,
-			size, -size, -size,
-			-size, -size, -size,
-			size, size, size,
-			-size, size, size,
-			-size, -size, size,
-			size, -size, size };
-
-		static GLfloat texcoords[] = {
-			-1.0f, 1.0f, -1.0f,
-			1.0f, 1.0f, -1.0f,
-			1.0f, -1.0f, -1.0f,
-			-1.0f, -1.0f, -1.0f,
-			1.0f, 1.0f, 1.0f,
-			-1.0f, 1.0f, 1.0f,
-			-1.0f, -1.0f, 1.0f,
-			1.0f, -1.0f, 1.0f };
-
-		static GLfloat buffer[] = {
-			-size, size, -size, -1.0f, 1.0f, -1.0f,
-			size, size, -size, 1.0f, 1.0f, -1.0f,
-			size, -size, -size, 1.0f, -1.0f, -1.0f,
-			-size, -size, -size, -1.0f, -1.0f, -1.0f,
-			size, size, size, 1.0f, 1.0f, 1.0f,
-			-size, size, size, -1.0f, 1.0f, 1.0f,
-			-size, -size, size, -1.0f, -1.0f, 1.0f,
-			size, -size, size, 1.0f, -1.0f, 1.0f };
-
-		static GLushort indices[] = {
-			// FACE 0
-			7, 4, 1,
-			1, 2, 7,
-			// FACE 1
-			3, 0, 5,
-			5, 6, 3,
-			// FACE 2
-			1, 4, 5,
-			5, 0, 1,
-			// FACE 3
-			7, 2, 3,
-			3, 6, 7,
-			// FACE 5
-			6, 5, 4,
-			4, 7, 6,
-			// FACE 4
-			2, 1, 0,
-			0, 3, 2 };
-
-		static GLuint abo = 0;
-		static GLuint eabo = 0;
-		GLuint vbo = 0;
-		GLint vloc = -1;
-		GLint tloc = -1;
-		GLuint program = 0;
-		GLint uCubeTexture = -1;
-		GLint uWorldMatrix = -1;
-		GLint uCameraMatrix = -1;
-		GLint uProjectionMatrix = -1;
-		GLint uSunE0 = -1;
-		GLint uSunDirTo = -1;
-		GLint uGroundE0 = -1;
-		GLint uIsHemisphere = -1;
-		GLint uToneMapScale = -1;
-		GLint uToneMapExposure = -1;
-		GLint uToneMapGamma = -1;
-
-		// FIXME: Are we using rendererContext?
-		RendererProgramPtr p;// = rendererContext.FindProgram("skybox", "skybox");
-		if (p) {
-			program = p->getProgram();
-			uCubeTexture = p->getUniformLocation("uCubeTexture");
-			uWorldMatrix = p->getUniformLocation("WorldMatrix");
-			uCameraMatrix = p->getUniformLocation("CameraMatrix");
-			uProjectionMatrix = p->getUniformLocation("ProjectionMatrix");
-			uSunE0 = p->getUniformLocation("SunE0");
-			uGroundE0 = p->getUniformLocation("GroundE0");
-			uSunDirTo = p->getUniformLocation("SunDirTo");
-			uIsHemisphere = p->getUniformLocation("IsHemisphere");
-			uToneMapScale = p->getUniformLocation("ToneMapScale");
-			uToneMapExposure = p->getUniformLocation("ToneMapExposure");
-			uToneMapGamma = p->getUniformLocation("ToneMapGamma");
-		}
-
-		if (program == 0)
-			return;
-
-		vloc = glGetAttribLocation(program, "aPosition");
-		tloc = glGetAttribLocation(program, "aTexCoord");
-
-		if (abo == 0) {
-			glGenBuffers(1, &abo);
-			glGenBuffers(1, &eabo);
-			glBindBuffer(GL_ARRAY_BUFFER, abo);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(buffer), buffer, GL_STATIC_DRAW);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eabo);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-		}
-
-		glUseProgram(program);
-		if (uToneMapScale >= 0)
-			glUniform1f(uToneMapScale, 2.5f * powf(2.0f, ssg.environment.toneMapScale));
-		if (uToneMapExposure >= 0)
-			glUniform1f(uToneMapExposure, 2.5f * powf(2.0f, ssg.environment.toneMapExposure));
-		if (uToneMapGamma >= 0)
-			glUniform1f(uToneMapGamma, ssg.environment.toneMapGamma);
-		if (uCubeTexture >= 0) {
-			FxBindTextureAndSampler(ssg.environment.pbskyColorMapUnit, GL_TEXTURE_CUBE_MAP, ssg.environment.pbskyColorMapId, ssg.environment.pbskyColorMapSamplerId);
-			glUniform1i(uCubeTexture, ssg.environment.pbskyColorMapUnit);
-		}
-		if (uProjectionMatrix >= 0) {
-			Matrix4f projectionMatrix = ssg.camera.projectionMatrix;
-			glUniformMatrix4fv(uProjectionMatrix, 1, GL_FALSE, projectionMatrix.const_ptr());
-		}
-		if (uCameraMatrix >= 0) {
-			Matrix4f viewMatrix = Interface.inversePreCameraMatrix * ssg.camera.viewMatrix;
-			viewMatrix.m14 = viewMatrix.m24 = viewMatrix.m34 = viewMatrix.m41 = viewMatrix.m42 = viewMatrix.m43 = 0.0f;
-			glUniformMatrix4fv(uCameraMatrix, 1, GL_FALSE, viewMatrix.const_ptr());
-		}
-		if (uWorldMatrix >= 0) {
-			Matrix4f worldMatrix;
-			glUniformMatrix4fv(uWorldMatrix, 1, GL_FALSE, worldMatrix.const_ptr());
-		}
-		if (uSunDirTo >= 0)
-			glUniform3fv(uSunDirTo, 1, ssg.environment.curSunDirTo.const_ptr());
-		if (uSunE0 >= 0)
-			glUniform4fv(uSunE0, 1, ssg.environment.pbsky.GetSunDiskRadiance().const_ptr());
-		if (uGroundE0 >= 0)
-			glUniform4fv(uGroundE0, 1, ssg.environment.pbsky.GetGroundRadiance().const_ptr());
-		if (uIsHemisphere >= 0)
-			glUniform1i(uIsHemisphere, ssg.environment.isHemisphere);
-
-		glBindBuffer(GL_ARRAY_BUFFER, abo);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eabo);
-		glVertexAttribPointer(vloc, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 6, (const void*)0);
-		glVertexAttribPointer(tloc, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 6, (const void*)12);
-		if (vloc >= 0)
-			glEnableVertexAttribArray(vloc);
-		if (tloc >= 0)
-			glEnableVertexAttribArray(tloc);
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0);
-		if (vloc >= 0)
-			glDisableVertexAttribArray(vloc);
-		if (tloc >= 0)
-			glDisableVertexAttribArray(tloc);
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glUseProgram(0);
-	}
 
 	void SSPHH_Application::SaveScreenshot() {
 		if (Interface.saveScreenshot) {
@@ -627,31 +400,6 @@ namespace SSPHH
 			Interface.ssphh.lastSphlRenderPath = filename;
 			glReadPixels(0, 0, (GLsizei)screenWidth, (GLsizei)screenHeight, GL_RGB, GL_UNSIGNED_BYTE, (void*)image.getPixels(0)->const_ptr());
 			image.savePPMi(filename, 1.0f, 0, 255, 0, true);
-		}
-	}
-
-	void SSPHH_Application::ProcessScenegraphTasks() {
-		if (Interface.ssg.saveScene) {
-			Interface.ssg.saveScene = false;
-			sceneFilename = "resources/scenes/test_texture_scene/";
-			sceneFilename += Interface.ssg.scenename;
-			ssg.Save(sceneFilename);
-		}
-
-		if (Interface.ssg.resetScene) {
-			Interface.ssg.resetScene = false;
-			ssg.reset();
-		}
-
-		if (Interface.ssg.createScene) {
-			Interface.ssg.createScene = false;
-		}
-
-		if (Interface.ssg.loadScene) {
-			Interface.ssg.loadScene = false;
-			sceneFilename = "resources/scenes/test_texture_scene/";
-			sceneFilename += Interface.ssg.scenename;
-			ReloadScenegraph();
 		}
 	}
 

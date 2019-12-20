@@ -111,7 +111,7 @@ namespace SSPHH
 		InitRenderConfigs();
 		LoadRenderConfigs();
 		stopwatch.Stop();
-		Hf::Log.info("%s(): reload took %4.2f milliseconds", __FUNCTION__, stopwatch.GetMillisecondsElapsed());
+		HFLOGINFO("reload took %4.2f milliseconds", stopwatch.GetMillisecondsElapsed());
 		Interface.lastRenderConfigLoadTime = stopwatch.GetMillisecondsElapsed();
 	}
 } // namespace SSPHH

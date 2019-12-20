@@ -390,11 +390,11 @@ namespace SSPHH
 		ImGui::Checkbox("Sun Cycle", &Interface.enableSunCycle);
 		ImGui::SameLine();
 		if (ImGui::SmallButton("+ 1hr")) {
-			AdvanceSunClock(3600.0, true);
+			Sun_AdvanceClock(3600.0, true);
 		}
 		ImGui::SameLine();
 		if (ImGui::SmallButton("- 1hr")) {
-			AdvanceSunClock(-3600.0, true);
+			Sun_AdvanceClock(-3600.0, true);
 		}
 
 		ImGui::Separator();
@@ -705,11 +705,11 @@ namespace SSPHH
 					ImGui::TextColored(Colors.Yellow, "Sun: ");
 				ImGui::SameLine();
 				if (ImGui::SmallButton("+ 1hr")) {
-					AdvanceSunClock(3600.0, true);
+					Sun_AdvanceClock(3600.0, true);
 				}
 				ImGui::SameLine();
 				if (ImGui::SmallButton("- 1hr")) {
-					AdvanceSunClock(-3600.0, true);
+					Sun_AdvanceClock(-3600.0, true);
 				}
 
 				double turbidity = ssg.environment.pbsky.GetTurbidity();
@@ -2063,7 +2063,7 @@ namespace SSPHH
 			imguiCoronaGenerateSCN();
 		}
 		if (ImGui::Button("HOSEK-WILKIE")) {
-			RegenCoronaSky();
+			Sky_RegenCoronaSky();
 		}
 		ImGui::SameLine();
 		ImGui::Text("Create/use Corona Hosek-Wilkie sky.");

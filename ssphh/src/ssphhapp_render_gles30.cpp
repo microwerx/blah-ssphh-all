@@ -4,7 +4,7 @@
 namespace SSPHH
 {
 	void SSPHH_Application::SetupRenderGLES30() {
-		OptimizeClippingPlanes();
+		SSG_OptimizeClippingPlanes();
 		UpdateSPHLs();
 		UploadSPHLs();
 	}
@@ -65,7 +65,7 @@ namespace SSPHH
 		if (Interface.drawSkyBox) {
 			FxSetErrorMessage(__FILE__, __LINE__, "skybox");
 			glEnable(GL_DEPTH_TEST);
-			RenderSkyBox();
+			Sky_Render();
 			glDisable(GL_DEPTH_TEST);
 			FxSetErrorMessage("ssphh.cpp", __LINE__, __FUNCTION__);
 			while (glGetError()) HFLOGWARN("Draw SkyBox ERROR!");
