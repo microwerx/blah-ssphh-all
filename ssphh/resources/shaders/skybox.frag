@@ -78,5 +78,5 @@ void main()
 	// if (ToneMapGamma > 0.0)
 	// 	finalColor = pow(finalColor, vec3(1.0 / ToneMapGamma));	
 
-    gl_FragColor = vec4(vTexCoord + finalColor, 1.0);
+    gl_FragColor = vec4(finalColor, 1.0);
 }

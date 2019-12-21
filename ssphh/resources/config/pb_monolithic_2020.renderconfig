@@ -32,26 +32,6 @@ sampler GL_TEXTURE_MAG_FILTER GL_LINEAR
 
 # ==== Textures ====
 
-#texture enviroCubeTexture
-#texture GL_TEXTURE_CUBE_MAP
-#texture GL_TEXTURE_CUBE_MAP_POSITIVE_X "cube_pos_x.png"
-#texture GL_TEXTURE_CUBE_MAP_POSITIVE_Y "cube_pos_y.png"
-#texture GL_TEXTURE_CUBE_MAP_POSITIVE_Z "cube_pos_z.png"
-#texture GL_TEXTURE_CUBE_MAP_NEGATIVE_X "cube_neg_x.png"
-#texture GL_TEXTURE_CUBE_MAP_NEGATIVE_Y "cube_neg_y.png"
-#texture GL_TEXTURE_CUBE_MAP_NEGATIVE_Z "cube_neg_z.png"
-#texture GL_GENERATE_MIPMAP
-
-#texture enviroCubeTexture2
-#texture GL_TEXTURE_CUBE_MAP
-#texture GL_TEXTURE_CUBE_MAP_POSITIVE_X "free_cube_map_positive_x.png"
-#texture GL_TEXTURE_CUBE_MAP_POSITIVE_Y "free_cube_map_positive_y.png"
-#texture GL_TEXTURE_CUBE_MAP_POSITIVE_Z "free_cube_map_positive_z.png"
-#texture GL_TEXTURE_CUBE_MAP_NEGATIVE_X "free_cube_map_negative_x.png"
-#texture GL_TEXTURE_CUBE_MAP_NEGATIVE_Y "free_cube_map_negative_y.png"
-#texture GL_TEXTURE_CUBE_MAP_NEGATIVE_Z "free_cube_map_negative_z.png"
-#texture GL_GENERATE_MIPMAP
-
 texture2D test2d
 texture2D sampler default2dSampler
 texture2D uniform MapKd
@@ -79,12 +59,12 @@ textureCube sampler defaultCubeSampler
 
 # ==== Programs ====
 
-program zonly
+program zonly_program
 vertshader zonly.vert
 fragshader zonly.frag
 vertattrib 0 aPosition
 
-program gles30
+program pbr_program
 vertshader gles30.vert
 fragshader gles30.frag
 vertattrib 0 aPosition
@@ -93,7 +73,7 @@ vertattrib 2 aTexCoord
 vertattrib 3 aColor
 vertattrib 4 aAttrib
 
-program sphl
+program sphl_program
 vertshader sphl300.vert
 fragshader sphl300.frag
 vertattrib 0 aPosition
@@ -119,7 +99,7 @@ geomshader cube_shadow_gl330.geom
 fragshader cube_shadow_gl330.frag
 vertattrib 0 aPosition
 
-# ==== Render Configurations ====
+# ==== Framebuffers ====
 
 fbo sunShadow
 fbo dimensions @DEFAULTWIDTH @DEFAULTHEIGHT
@@ -128,8 +108,19 @@ fbo attach GL_TEXTURE_2D GL_COLOR_ATTACHMENT0 GL_RGBA32F            MapSunColor
 
 fbo moonShadow
 fbo dimensions 512 512
-fbo attach GL_TEXTURE_2D GL_DEPTH_ATTACHMENT  GL_DEPTH_COMPONENT16 MapMoonShadow
-fbo attach GL_TEXTURE_2D GL_COLOR_ATTACHMENT0 GL_RGBA32F           MapMoonColor
+fbo attach GL_TEXTURE_2D GL_DEPTH_ATTACHMENT  GL_DEPTH_COMPONENT16  MapMoonShadow
+fbo attach GL_TEXTURE_2D GL_COLOR_ATTACHMENT0 GL_RGBA32F            MapMoonColor
+
+# `linearfbo` is used to render the final image. We lay down the skybox first
+# and then draw the scene on top of it followed by any visualization graphics.
+# This is used as input to the post processing shader for gamma adjustment. The
+# ImGui is drawn last on the screen.
+fbo linear_fbo
+fbo dimensions @SCREENWIDTH @SCREENHEIGHT
+fbo attach GL_TEXTURE_2D GL_DEPTH_ATTACHMENT  GL_DEPTH_COMPONENT32F MapDepthBuffer
+fbo attach GL_TEXTURE_2D GL_COLOR_ATTACHMENT0 GL_RGBA32F            MapColorBuffer
+
+# ==== Render Configurations ====
 
 renderconfig sunShadow
 renderconfig writefbo sunShadow
@@ -143,56 +134,32 @@ renderconfig program zonly
 renderconfig camera moonInverseTransform
 renderconfig projection orthoSquare
 
-renderconfig pbr_shader
-renderconfig program gles30
-renderconfig readfbo sunShadow
-renderconfig readfbo moonShadow
-renderconfig camera defaultInverseTransform
-renderconfig camera perspectiveScreen
-renderconfig clearcolor 1.0 0.0 1.0 1.0
-
+# this render config is for drawing the skybox
 renderconfig skybox_rc
 renderconfig program skybox_program
-renderconfig camera defaultInverseTransform
-renderconfig camera perspectiveScreen
+renderconfig clearcolor 1.0 0.0 1.0 1.0
+renderconfig viewport @SCREENWIDTH @SCREENHEIGHT
+# renderconfig perspective 45 1 100
+renderconfig camera default
+
+renderconfig pbr_rc
+renderconfig program pbr_program
+# renderconfig writefbo linear_fbo
+renderconfig readfbo sunShadow
+renderconfig readfbo moonShadow
+renderconfig camera default
 renderconfig clearcolor 1.0 0.0 1.0 1.0
 
-# program DefaultSlowProgram
-# vertshader default_slow_es30.vert
-# fragshader default_slow_es30.frag
-# vertattrib 0 vtxPosition
-# vertattrib 1 vtxNormal
-# vertattrib 2 vtxTexCoord
-# vertattrib 3 vtxColor
-# vertattrib 4 vtxAttrib
+renderconfig sphl_rc
+renderconfig program sphl_program
+# renderconfig writefbo linear_fbo
+renderconfig viewport @SCREENWIDTH @SCREENHEIGHT
+renderconfig camera default
 
-# program DefaultFastProgram
-# vertshader default_fast_vs.glsl
-# fragshader default_fast_fs.glsl
-# vertattrib 0 vtxPosition
-# vertattrib 1 vtxNormal
-# vertattrib 2 vtxTexCoord
-# vertattrib 3 vtxColor
-# vertattrib 4 vtxAttrib
-# vertattrib 6 vtxTangent
-# vertattrib 7 vtxBinormal
-
-# program DefaultZProgram
-# vertshader default_z_vs.glsl
-# fragshader default_z_fs.glsl
-# vertattrib 0 vtxPosition
-
-# renderbuffer "rb_color0" GL_RGBA @DEFAULTWIDTH @DEFAULTHEIGHT
-# fbo "renderToTexture"
-# fbo attach GL_RENDERBUFFER GL_COLOR_ATTACHMENT0 rb_color0
-
-# renderconfig sphl
-
-# renderconfig skybox
-
-# renderconfig glut
-
-# renderconfig cube_shadow
+renderconfig postprocess_rc
+renderconfig program postprocess_program
+renderconfig readfbo linearfbo
+renderconfig viewport @SCREENWIDTH @SCREENHEIGHT
 
 # ==== UniformLists ====
 
@@ -203,22 +170,27 @@ uniformMatrix4f sunMatrix @SUNMATRIX
 
 # ==== Renderers ====
 
-renderer gles30
-renderer renderconfig pbr_shader
-
 renderer gles30Shadow
 renderer renderconfig zonly
 
 renderer gles30CubeMap
 renderer renderconfig 
 
-renderer sph_renderer
-renderer renderconfig sph_shader
-
 renderer skybox
 renderer renderconfig skybox_rc
 renderer skybox pbskyEXR
-renderer camera SSG
+# in the future, we could specify pbsky to use built in one
+# renderer skybox pbsky
+# renderer skybox coronasky
+
+renderer pbr
+renderer renderconfig pbr_rc
+
+renderer sphl
+renderer renderconfig sphl_rc
+
+renderer postprocess
+renderer renderconfig postprocess_rc
 
 # ==== Render Commands ====
 

@@ -21,8 +21,10 @@ varying vec3 vTexCoord;
 
 void main()
 {
-        vColor = aColor;
-        vTexCoord = aTexCoord;
-        vNormal = mat3(WorldMatrix) * aNormal;
-        gl_Position = (ProjectionMatrix * CameraMatrix * WorldMatrix * aPosition);
+	mat3 NormalMatrix = mat3(CameraMatrix) * mat3(WorldMatrix);
+	mat4 MVP = ProjectionMatrix * mat4(NormalMatrix);
+	vColor = aColor;
+	vTexCoord = aTexCoord;
+	vNormal = mat3(WorldMatrix) * aNormal;
+	gl_Position = MVP * aPosition;
 }
