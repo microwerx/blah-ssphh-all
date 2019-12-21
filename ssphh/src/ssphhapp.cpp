@@ -383,8 +383,6 @@ namespace SSPHH
 	void SSPHH_Application::SaveScreenshot() {
 		if (Interface.saveScreenshot) {
 			Interface.saveScreenshot = false;
-			glFinish();
-
 			Image3ub image((int)screenWidth, (int)screenHeight);
 
 			std::string filename = GetPathTracerSphlRenderName(
@@ -395,8 +393,14 @@ namespace SSPHH
 				Interface.ssphh.MaxDegrees);
 			filename += ".ppm";
 			Interface.ssphh.lastSphlRenderPath = filename;
+			Hf::StopWatch stopwatch;
+			glFinish();
 			glReadPixels(0, 0, (GLsizei)screenWidth, (GLsizei)screenHeight, GL_RGB, GL_UNSIGNED_BYTE, (void*)image.getPixels(0)->const_ptr());
+			HFLOGINFO("glReadPixels took %3.2f milliseconds", stopwatch.GetMillisecondsElapsed());
+			stopwatch.Start();
 			image.savePPMi(filename, 1.0f, 0, 255, 0, true);
+			stopwatch.Stop();
+			HFLOGINFO("savePPMi took %3.2f milliseconds", stopwatch.GetMillisecondsElapsed());
 		}
 	}
 
