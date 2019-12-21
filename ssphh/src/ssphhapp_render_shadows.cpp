@@ -18,8 +18,8 @@ namespace SSPHH
 		rectShadow.projectionMatrix = ssg.environment.sunShadowProjectionMatrix;
 		rectShadow.cameraMatrix = ssg.environment.sunShadowViewMatrix;
 		rectShadow.cameraPosition = ssg.environment.sunShadowMapOrigin;
-		rectShadow.znear = ssg.environment.sunShadowMapNearZ;
-		rectShadow.zfar = ssg.environment.sunShadowMapFarZ;
+		rectShadow.viewportZNear = ssg.environment.sunShadowMapNearZ;
+		rectShadow.viewportZFar = ssg.environment.sunShadowMapFarZ;
 		rectShadow.clearColor.reset(1.0f, 0.0f, 1.0f, 1.0f);
 		rectShadow.clearColorBuffer = true;
 		rectShadow.renderToFBO = true;
@@ -87,7 +87,7 @@ namespace SSPHH
 			auto& spl = ssg.pointLights[i];
 			auto& scs = ssg.pointLights[i].scs;
 			
-			scs.zfar = cubeShadow.zfar;
+			scs.zfar = cubeShadow.viewportZFar;
 			cubeShadow.fbo_gen_color = false;
 
 			cubeShadow.renderToFBO = false;
@@ -104,7 +104,7 @@ namespace SSPHH
 			auto& sphl = ssgUserData->ssphhLights[i];
 			auto& scs = sphl.depthSphlMap;
 
-			scs.zfar = cubeShadow.zfar;
+			scs.zfar = cubeShadow.viewportZFar;
 			if (Interface.ssphh.enableShadowColorMap) {
 				sphl.colorSphlMap.createTextureCube();
 				cubeShadow.clearColor.reset(0.2f, 0.4f, 0.6f, 1.0f);

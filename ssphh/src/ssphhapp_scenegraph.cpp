@@ -69,10 +69,10 @@ namespace SSPHH
 		znear = std::max(0.1f, distanceToBoxCenter - boxRadius);
 		zfar = distanceToBoxCenter + 2 * boxRadius; // min(1000.0f, distanceToBoxCenter + boxRadius);
 
-		rendererContext.rendererConfigs["default"].znear = znear;
-		rendererContext.rendererConfigs["default"].zfar = zfar;
-		rendererContext.rendererConfigs["rectShadow"].znear = std::max(0.1f, ssg.environment.sunShadowMapNearZ);
-		rendererContext.rendererConfigs["rectShadow"].zfar = std::min(1000.0f, ssg.environment.sunShadowMapFarZ);
+		//rendererContext.rendererConfigs["default"].znear = znear;
+		//rendererContext.rendererConfigs["default"].zfar = zfar;
+		//rendererContext.rendererConfigs["rectShadow"].znear = std::max(0.1f, ssg.environment.sunShadowMapNearZ);
+		//rendererContext.rendererConfigs["rectShadow"].zfar = std::min(1000.0f, ssg.environment.sunShadowMapFarZ);
 	}
 
 	void SSPHH_Application::SSG_ProcessInterfaceTasks() {
