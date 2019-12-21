@@ -106,7 +106,7 @@
 #include <viperfish_loading_window.hpp>
 #include <viperfish_stats_window.hpp>
 #include <viperfish_animation_window.hpp>
-#include <viperfish_math_window.hpp>
+#include <viperfish_animpath_window.hpp>
 #include <unicornfish.hpp>
 #include <ssphhapp.hpp>
 
@@ -126,7 +126,7 @@ Vf::WidgetPtr imgui_widget_ptr;
 Vf::LoadingWindowPtr loading_window_ptr;
 Vf::StatsWindowPtr stats_window_ptr;
 Vf::AnimationWindowPtr animation_window_ptr;
-Vf::MathWindowPtr math_window_ptr;
+Vf::AnimPathWindowPtr animpath_window_ptr;
 
 double g_distance = -10.0;
 double xrot = 0.0;
@@ -230,7 +230,7 @@ void InitApp()
 		//loading_window_ptr = Vf::MakeSharedChild<Vf::LoadingWindow>(vf_app_ptr, "Loading");
 		//stats_window_ptr = Vf::MakeSharedChild<Vf::StatsWindow>(vf_app_ptr, "Statistics");
 		animation_window_ptr = Vf::MakeSharedChild<Vf::AnimationWindow>(vf_app_ptr, "Animation");
-		math_window_ptr = Vf::MakeSharedChild<Vf::MathWindow>(vf_app_ptr, "Math");
+		animpath_window_ptr = Vf::MakeSharedChild<Vf::AnimPathWindow>(vf_app_ptr, "Animation Path");
 	}
 }
 
@@ -242,7 +242,7 @@ void KillApp()
 	loading_window_ptr.reset();
 	stats_window_ptr.reset();
 	animation_window_ptr.reset();
-	math_window_ptr.reset();
+	animpath_window_ptr.reset();
 	vf_app_ptr->Kill();
 	vf_app_ptr.reset();
 }

@@ -287,6 +287,8 @@ namespace SSPHH
 
 
 	void SSPHH_Application::OnReshape(int width, int height) {
+		int oldWidth = (int)screenWidth;
+		int oldHeight = (int)screenHeight;
 		float w = (float)width;
 		float h = (float)height;
 		screenWidth = w;
@@ -296,12 +298,14 @@ namespace SSPHH
 		// FIXME: Are we using rendererContext
 		//rendererContext.SetDeferredRect(Recti(0, 0, (int)w, (int)h));
 
-		rendererContext.rendererConfigs["default"].projectionMatrix.LoadIdentity();
-		rendererContext.rendererConfigs["default"].projectionMatrix.Perspective(ssg.camera.fov,
-																				ssg.camera.imageAspect, ssg.camera.imageNearZ, ssg.camera.imageFarZ);
+		//rendererContext.rendererConfigs["default"].projectionMatrix.LoadIdentity();
+		//rendererContext.rendererConfigs["default"].projectionMatrix.Perspective(ssg.camera.fov,
+		//																		ssg.camera.imageAspect, ssg.camera.imageNearZ, ssg.camera.imageFarZ);
 
 		screenOrthoMatrix.LoadIdentity();
 		screenOrthoMatrix.Ortho2D(0.0f, screenWidth, screenHeight, 0.0f);
+
+		rendererContext.resize(oldWidth, oldHeight, width, height);
 
 		Hf::Log.setMaxHistory(height / 30);
 	}

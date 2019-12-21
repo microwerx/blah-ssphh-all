@@ -65,6 +65,9 @@ namespace SSPHH
 	void SSPHH_Application::LoadRenderConfigs() {
 		HFLOGINFO("resetting and loading render configs...");
 		rendererContext.reset();
+		rendererContext.resize(
+			(int)screenWidth, (int)screenHeight,
+			(int)screenWidth, (int)screenHeight);
 
 		if (!rendererContext.loadConfig(renderconfig_filename)) {
 			HFLOGERROR("%s file not found.", renderconfig_filename);

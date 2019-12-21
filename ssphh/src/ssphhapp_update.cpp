@@ -1,8 +1,8 @@
 #include <ssphhapp.hpp>
 #include <hatchetfish_stopwatch.hpp>
-#include <viperfish_math_window.hpp>
+#include <viperfish_animpath_window.hpp>
 
-extern Vf::MathWindowPtr math_window_ptr;
+extern Vf::AnimPathWindowPtr animpath_window_ptr;
 
 namespace SSPHH
 {
@@ -31,9 +31,9 @@ namespace SSPHH
 			Interface.recomputeSky = false;
 		}
 
-		if (Interface.enableAnimation && math_window_ptr) {
-			if (math_window_ptr->createNewPath) {
-				math_window_ptr->createNewPath = false;
+		if (Interface.enableAnimation && animpath_window_ptr) {
+			if (animpath_window_ptr->createNewPath) {
+				animpath_window_ptr->createNewPath = false;
 				cameraAnimation.create();
 				return;
 			}
@@ -41,55 +41,55 @@ namespace SSPHH
 			std::for_each(cameraAnimation.keyframes.begin(),
 						  cameraAnimation.keyframes.end(),
 						  [&](Keyframe& kf) {
-							  kf.a = math_window_ptr->alpha;
+							  kf.a = animpath_window_ptr->alpha;
 						  });
 
-			math_window_ptr->max_keys = cameraAnimation.size();
-			if (math_window_ptr->set_key) {
-				int i = math_window_ptr->key;
-				cameraAnimation.keyframes[i].p = math_window_ptr->p1;
-				cameraAnimation.keyframes[i].q = math_window_ptr->q1;
+			animpath_window_ptr->max_keys = cameraAnimation.size();
+			if (animpath_window_ptr->set_key) {
+				int i = animpath_window_ptr->key;
+				cameraAnimation.keyframes[i].p = animpath_window_ptr->p1;
+				cameraAnimation.keyframes[i].q = animpath_window_ptr->q1;
 			}
 			else {
-				int i = math_window_ptr->key;
-				math_window_ptr->p1 = cameraAnimation.keyframes[i].p;
-				math_window_ptr->q1 = cameraAnimation.keyframes[i].q;
+				int i = animpath_window_ptr->key;
+				animpath_window_ptr->p1 = cameraAnimation.keyframes[i].p;
+				animpath_window_ptr->q1 = cameraAnimation.keyframes[i].q;
 			}
 
 			{
-				int i = math_window_ptr->key;
-				math_window_ptr->kq0 = cameraAnimation[i - 1].q;
-				math_window_ptr->kq1 = cameraAnimation[i].q;
-				math_window_ptr->kq2 = cameraAnimation[i + 1].q;
-				math_window_ptr->kq3 = cameraAnimation[i + 2].q;
-				math_window_ptr->ka = squad_a(math_window_ptr->kq0,
-											  math_window_ptr->kq1,
-											  math_window_ptr->kq2);
-				math_window_ptr->kb = squad_b(math_window_ptr->kq1,
-											  math_window_ptr->kq2,
-											  math_window_ptr->kq3);
+				int i = animpath_window_ptr->key;
+				animpath_window_ptr->kq0 = cameraAnimation[i - 1].q;
+				animpath_window_ptr->kq1 = cameraAnimation[i].q;
+				animpath_window_ptr->kq2 = cameraAnimation[i + 1].q;
+				animpath_window_ptr->kq3 = cameraAnimation[i + 2].q;
+				animpath_window_ptr->ka = squad_a(animpath_window_ptr->kq0,
+											  animpath_window_ptr->kq1,
+											  animpath_window_ptr->kq2);
+				animpath_window_ptr->kb = squad_b(animpath_window_ptr->kq1,
+											  animpath_window_ptr->kq2,
+											  animpath_window_ptr->kq3);
 			}
 
-			cameraAnimation.calcgraph(math_window_ptr);
+			cameraAnimation.calcgraph(animpath_window_ptr);
 
-			math_window_ptr->t += math_window_ptr->speed * (float)GetFrameTime();
-			if (math_window_ptr->t > cameraAnimation.size()) {
-				math_window_ptr->t -= int(math_window_ptr->t);
+			animpath_window_ptr->t += animpath_window_ptr->speed * (float)GetFrameTime();
+			if (animpath_window_ptr->t > cameraAnimation.size()) {
+				animpath_window_ptr->t -= int(animpath_window_ptr->t);
 			}
-			float t = math_window_ptr->t;
+			float t = animpath_window_ptr->t;
 
-			Vector3f p = math_window_ptr->blerp ?
+			Vector3f p = animpath_window_ptr->blerp ?
 				cameraAnimation.plerp(t) :
 				cameraAnimation.pcatmullrom(t);
-			Quaternionf q = math_window_ptr->bsquad ?
+			Quaternionf q = animpath_window_ptr->bsquad ?
 				cameraAnimation.qsquad(t) :
 				cameraAnimation.qslerp(t);
 
-			math_window_ptr->q2 = q;
-			math_window_ptr->p2 = p;
+			animpath_window_ptr->q2 = q;
+			animpath_window_ptr->p2 = p;
 			Matrix4f m;
 			m.Translate(p.x, p.y, p.z);
-			m.MultMatrix((math_window_ptr->q * q).toMatrix4());
+			m.MultMatrix((animpath_window_ptr->q * q).toMatrix4());
 			ssg.camera.viewMatrix = m.AsInverse();
 		}
 
