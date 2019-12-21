@@ -4,7 +4,7 @@ precision highp float;
 #endif
 
 // Input from OpenGL ES
-uniform samplerCube MapEnviroTexture;
+uniform samplerCube MapEnviroCube;
 uniform samplerCube uHosekWilkieTexture;
 uniform int uIsHosekWilkie;
 uniform int uIsHemisphere;
@@ -58,12 +58,12 @@ vec4 GetPBSky(vec3 L, float spread)
 			}
 			else
 			{
-				outputColor = textureCube(MapEnviroTexture, L);
+				outputColor = textureCube(MapEnviroCube, L);
 			}
 		}
 		else
 		{
-			outputColor = textureCube(MapEnviroTexture, L);
+			outputColor = textureCube(MapEnviroCube, L);
 		}
 	}
 	return outputColor;
@@ -72,10 +72,11 @@ vec4 GetPBSky(vec3 L, float spread)
 void main()
 {	
 	//vec3 finalColor = GetPBSky(vTexCoord, 0.0).rgb * ToneMapExposure;
-	vec3 finalColor = textureCube(MapEnviroTexture, vTexCoord).rgb;
+	vec3 finalColor = textureCube(MapEnviroCube, vTexCoord).rgb;
 
 	// exposure and gamma
-	finalColor = pow(finalColor, vec3(1.0 / ToneMapGamma));	
+	// if (ToneMapGamma > 0.0)
+	// 	finalColor = pow(finalColor, vec3(1.0 / ToneMapGamma));	
 
-    gl_FragColor = vec4(finalColor, 1.0);
+    gl_FragColor = vec4(vTexCoord + finalColor, 1.0);
 }

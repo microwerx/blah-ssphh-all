@@ -155,6 +155,7 @@ renderconfig skybox_rc
 renderconfig program skybox_program
 renderconfig camera defaultInverseTransform
 renderconfig camera perspectiveScreen
+renderconfig clearcolor 1.0 0.0 1.0 1.0
 
 # program DefaultSlowProgram
 # vertshader default_slow_es30.vert
@@ -216,7 +217,7 @@ renderer renderconfig sph_shader
 
 renderer skybox
 renderer renderconfig skybox_rc
-renderer skybox pbskyPPM
+renderer skybox pbskyEXR
 renderer camera SSG
 
 # ==== Render Commands ====
