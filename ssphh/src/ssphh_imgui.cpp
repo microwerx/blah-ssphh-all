@@ -966,6 +966,7 @@ namespace SSPHH
 					ImGui::InputText("Name", &sspl.name[0], 32);
 					ImGui::Separator();
 					ImGui::Text("Shadow build time: %.1fms", sspl.depthSphlMap.buildTime);
+
 					int lastNumDegrees = sspl.maxDegree;
 					ImGui::DragInt("Max Degree", &sspl.maxDegree, 0.1f, 0, 9);
 					if (lastNumDegrees != sspl.maxDegree) {

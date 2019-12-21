@@ -4,6 +4,7 @@
 namespace SSPHH
 {
 	void SSPHH_Application::SetupRenderGLES30() {
+		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
 		SSG_OptimizeClippingPlanes();
 		UpdateSPHLs();
 		UploadSPHLs();
