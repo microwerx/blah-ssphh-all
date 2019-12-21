@@ -55,7 +55,7 @@ sampler GL_TEXTURE_MAG_FILTER GL_LINEAR
 texture2D test2d
 texture2D sampler default2dSampler
 texture2D uniform MapKd
-texture2D map "test2d.png"
+texture2D map "test_texture_2d.png"
 
 textureCube pbskyEXR
 textureCube map "test_corona_skymap.exr"
@@ -68,7 +68,12 @@ textureCube uniform MapEnviroCube
 textureCube sampler defaultCubeSampler
 
 textureCube enviroSkyBox
-textureCube map "freecube.png"
+textureCube map "grace_cross.pfm"
+textureCube uniform MapEnviroCube
+textureCube sampler defaultCubeSampler
+
+textureCube grace_cross
+textureCube map "grace_cross.pfm"
 textureCube uniform MapEnviroCube
 textureCube sampler defaultCubeSampler
 
@@ -95,7 +100,7 @@ vertattrib 0 aPosition
 vertattrib 1 aNormal
 vertattrib 2 aTexCoord
 
-program skybox
+program skybox_program
 vertshader skybox.vert
 fragshader skybox.frag
 vertattrib 0 aPosition
@@ -146,8 +151,8 @@ renderconfig camera defaultInverseTransform
 renderconfig camera perspectiveScreen
 renderconfig clearcolor 1.0 0.0 1.0 1.0
 
-renderconfig sky_shader
-renderconfig program skybox
+renderconfig skybox_rc
+renderconfig program skybox_program
 renderconfig camera defaultInverseTransform
 renderconfig camera perspectiveScreen
 
@@ -209,8 +214,10 @@ renderer renderconfig
 renderer sph_renderer
 renderer renderconfig sph_shader
 
-renderer sky_shader
-renderer renderconfig sph_shader
+renderer skybox
+renderer renderconfig skybox_rc
+renderer skybox pbskyPPM
+renderer camera SSG
 
 # ==== Render Commands ====
 

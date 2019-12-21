@@ -54,7 +54,7 @@ namespace SSPHH
 		//defaultRenderConfig.shaderDebugSphl = Interface.tools.shaderDebugSphl;
 
 		while (glGetError());
-		const std::string renderername{ "gles30" };
+		const std::string renderername{ "skybox" };
 		if (rendererContext.renderers.count(renderername)) {
 			const std::string& renderconfigname = rendererContext.renderers[renderername].renderconfigname;
 			Fluxions::RenderImage(rendererContext, ssg, renderername, renderconfigname);
