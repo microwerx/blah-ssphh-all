@@ -1,28 +1,10 @@
-// SSPHH/Fluxions/Unicornfish/Viperfish/Hatchetfish/Sunfish/Damselfish/GLUT Extensions
-// Copyright (C) 2017 Jonathan Metzgar
-// All rights reserved.
-//
-// This program is free software : you can redistribute it and/or modify
-// it under the terms of the GNU Affero General Public License as
-// published by the Free Software Foundation, either version 3 of the
-// License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
-// GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with this program.If not, see <https://www.gnu.org/licenses/>.
-//
-// For any other type of licensing, please contact me at jmetzgar@outlook.com
 #version 100
 #ifdef GL_ES
 precision highp float;
 #endif
 
 // Input from OpenGL ES
-uniform samplerCube uCubeTexture;
+uniform samplerCube MapEnviroTexture;
 uniform samplerCube uHosekWilkieTexture;
 uniform int uIsHosekWilkie;
 uniform int uIsHemisphere;
@@ -32,13 +14,14 @@ uniform float ToneMapExposure;
 
 uniform vec3 SunDirTo;	// Direction of the light from the origin of the scene
 uniform vec4 SunE0;		// Sun Disk Radiance - vec4(vec3(SunE0), SunMonoE0)
+uniform vec3 MoonDirTo; // Direction of the light from the origin of the scene
+uniform vec4 MoonE0;	// Moon Disk Radiance - vec4(vec4(MoonE0), MoonMonoE0)
 uniform vec4 GroundE0;  // Ground Radiance from the reflected sun.
 
-
 // Input from Vertex Shader
-varying vec4 fsColor;
-varying vec3 fsTexCoord;
-varying vec3 fsNormal;
+varying vec4 vColor;
+varying vec3 vTexCoord;
+varying vec3 vNormal;
 
 vec4 GetPBSky(vec3 L, float spread)
 {
@@ -75,12 +58,12 @@ vec4 GetPBSky(vec3 L, float spread)
 			}
 			else
 			{
-				outputColor = textureCube(uCubeTexture, L);
+				outputColor = textureCube(MapEnviroTexture, L);
 			}
 		}
 		else
 		{
-			outputColor = textureCube(uCubeTexture, L);
+			outputColor = textureCube(MapEnviroTexture, L);
 		}
 	}
 	return outputColor;
@@ -88,8 +71,10 @@ vec4 GetPBSky(vec3 L, float spread)
 
 void main()
 {	
+	//vec3 finalColor = GetPBSky(vTexCoord, 0.0).rgb * ToneMapExposure;
+	vec3 finalColor = textureCube(MapEnviroTexture, vTexCoord).rgb;
+
 	// exposure and gamma
-	vec3 finalColor = GetPBSky(fsTexCoord, 0.0).rgb * ToneMapExposure;
 	finalColor = pow(finalColor, vec3(1.0 / ToneMapGamma));	
 
     gl_FragColor = vec4(finalColor, 1.0);
