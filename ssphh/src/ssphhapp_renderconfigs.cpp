@@ -25,7 +25,7 @@ namespace SSPHH
 		////rectShadowRenderConfig.fbo = "rectShadowFBO";
 		//rectShadowRenderConfig.writeFBOs.push_back({ "rectShadowFBO", nullptr });
 
-		//RendererFramebufferObject& rectShadowFBO = rendererContext.fbos["rectShadowFBO"];
+		//RendererFramebuffer& rectShadowFBO = rendererContext.fbos["rectShadowFBO"];
 		//rectShadowFBO.init("rectShadowFBO");
 		//rectShadowFBO.setDimensions(rectShadowRenderConfig.viewportRect.w, rectShadowRenderConfig.viewportRect.h);
 		//rectShadowFBO.addTexture2D(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, GL_RGBA8, true);

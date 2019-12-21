@@ -480,10 +480,10 @@ namespace SSPHH
 		//RendererConfig foursplitLLRenderConfig;
 		//RendererConfig foursplitLRRenderConfig;
 
-		//RendererSamplerObject defaultCubeTextureSampler;
-		//RendererSamplerObject default2DTextureSampler;
-		//RendererSamplerObject defaultShadowCubeTextureSampler;
-		//RendererSamplerObject defaultShadow2DTextureSampler;
+		//RendererSampler defaultCubeTextureSampler;
+		//RendererSampler default2DTextureSampler;
+		//RendererSampler defaultShadowCubeTextureSampler;
+		//RendererSampler defaultShadow2DTextureSampler;
 
 		//SimpleTexture enviroCubeTexture1;
 		//SimpleTexture enviroCubeTexture2;

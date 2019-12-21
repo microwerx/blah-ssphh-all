@@ -203,23 +203,23 @@ namespace SSPHH
 
 
 		//// Initialize default sampler objects
-		//RendererSamplerObject& samplerCube = rendererContext.samplers["samplerCube"];
+		//RendererSampler& samplerCube = rendererContext.samplers["samplerCube"];
 		//samplerCube.init("samplerCube");
 		//samplerCube.setMagFilter(GL_LINEAR);
 		//samplerCube.setMinFilter(GL_LINEAR);
 		//samplerCube.setWrapSTR(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
-		//RendererSamplerObject& sampler2D = rendererContext.samplers["sampler2D"];
+		//RendererSampler& sampler2D = rendererContext.samplers["sampler2D"];
 		//sampler2D.init("sampler2D");
 		//sampler2D.setMagFilter(GL_LINEAR);
 		//sampler2D.setMinFilter(GL_LINEAR);
 		//sampler2D.setWrapST(GL_REPEAT, GL_REPEAT);
-		//RendererSamplerObject& shadowCube = rendererContext.samplers["shadowCube"];
+		//RendererSampler& shadowCube = rendererContext.samplers["shadowCube"];
 		//shadowCube.init("shadowCube");
 		//shadowCube.setMagFilter(GL_LINEAR);
 		//shadowCube.setMinFilter(GL_LINEAR);
 		////shadowCube.setCompareFunction(GL_LESS);
 		////shadowCube.setCompareMode(GL_COMPARE_REF_TO_TEXTURE);
-		//RendererSamplerObject& shadow2D = rendererContext.samplers["shadow2D"];
+		//RendererSampler& shadow2D = rendererContext.samplers["shadow2D"];
 		//shadow2D.init("shadow2D");
 		//shadow2D.setMagFilter(GL_LINEAR);
 		//shadow2D.setMinFilter(GL_LINEAR);
@@ -260,6 +260,8 @@ namespace SSPHH
 		// r.Kill();
 		// r.Init();
 
+		deletenull(&ssgUserData);
+		rendererContext.kill();
 		ssg.reset();
 		////renderer.reset();
 		//for (auto& [k, renderer] : rendererContext.renderers) {
@@ -273,11 +275,6 @@ namespace SSPHH
 
 		KillUnicornfish();
 
-		if (ssgUserData) {
-			ssg.userdata = nullptr;
-			delete ssgUserData;
-			ssgUserData = nullptr;
-		}
 		//python.kill();
 		//python.join();
 
