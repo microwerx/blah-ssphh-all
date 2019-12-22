@@ -45,6 +45,41 @@ void RendererWindow::OnRenderDearImGui() {
 	}
 	ImGui::Value("texture load", lastTextureLoadTime);
 
+	if (ImGui::TreeNode("programs")) {
+		for (auto& [k, ro] : context->programs) {
+			ImGui::Text(ro.name());
+		}
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("renderers")) {
+		for (auto& [k, ro] : context->renderers) {
+			ImGui::Text(ro.name());
+		}
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("rendererconfigs")) {
+		for (auto& [k, ro] : context->rendererConfigs) {
+			ImGui::Text(ro.name());
+		}
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("texture2Ds")) {
+		for (auto& [k, t] : context->texture2Ds) {
+			ImGui::Text(t.name());
+		}
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("textureCubes")) {
+		for (auto& [k, t] : context->textureCubes) {
+			ImGui::Text(t.name());
+		}
+		ImGui::TreePop();
+	}
+
 	endWindow();
 }
 
