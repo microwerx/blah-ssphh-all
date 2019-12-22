@@ -492,13 +492,13 @@ namespace SSPHH
 		ImGui::Checkbox("Shadow color buffer", &rendererContext.rendererConfigs["default"].enableZColorBuffer);
 		ImGui::Separator();
 		ImGui::Text("ZNEAR: % .3f / ZFAR % .3f",
-					rendererContext.rendererConfigs["default"].znear,
-					rendererContext.rendererConfigs["default"].zfar);
+					rendererContext.rendererConfigs["default"].viewportZNear,
+					rendererContext.rendererConfigs["default"].viewportZFar);
 		ImGui::Separator();
 		ImGui::Text("Sun Shadows");
 		ImGui::Text("ZNEAR: % .3f / ZFAR % .3f",
-					rendererContext.rendererConfigs["rectShadow"].znear,
-					rendererContext.rendererConfigs["rectShadow"].zfar);
+					rendererContext.rendererConfigs["rectShadow"].viewportZNear,
+					rendererContext.rendererConfigs["rectShadow"].viewportZFar);
 		ImGui::SliderInt("2^N", &Interface.renderconfig.sunShadowMapSizeChoice, 6, 12);
 		ImGui::SameLine();
 		ImGui::Text("= %d", 2 << Interface.renderconfig.sunShadowMapSizeChoice);

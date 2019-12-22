@@ -47,7 +47,7 @@ void CameraAnimation::create() {
 	}
 }
 
-void CameraAnimation::calcgraph(Vf::MathWindowPtr& mw) {
+void CameraAnimation::calcgraph(Vf::AnimPathWindowPtr& mw) {
 	constexpr int nump = 32;
 	constexpr int numq = 8;
 	constexpr float scale = 20.0f;

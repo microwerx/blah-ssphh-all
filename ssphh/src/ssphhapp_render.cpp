@@ -16,11 +16,13 @@ namespace SSPHH
 		if (Interface.uf.uf_type == UfType::Broker)
 			return;
 
-		RendererConfig& rectShadowRC = rendererContext.rendererConfigs["rectShadow"];
-		bool size_equal = rectShadowRC.viewportRect.w == Interface.renderconfig.sunShadowMapSize;
-		if (!size_equal) {
-			InitRenderConfigs();
-		}
+		// FIXME: only should set these if ...
+		//RendererConfig& rectShadowRC = rendererContext.rendererConfigs["rectShadow"];
+		//bool size_equal = rectShadowRC.viewportRect.w == Interface.renderconfig.sunShadowMapSize;
+		//if (!size_equal) {
+		//	InitRenderConfigs();
+		//}
+
 		//glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 		//glClear(GL_COLOR_BUFFER_BIT);
 		//return;

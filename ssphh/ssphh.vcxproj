@@ -148,6 +148,7 @@
     <ClInclude Include="include\SphlJob.hpp" />
     <ClInclude Include="include\ssphhapp.hpp" />
     <ClInclude Include="include\ssphh_ppmcompare.hpp" />
+    <ClInclude Include="include\ssphhapp_renderconfigs.hpp" />
     <ClInclude Include="include\ssphh_unicornfish.hpp" />
     <ClInclude Include="src\pch.hpp" />
   </ItemGroup>

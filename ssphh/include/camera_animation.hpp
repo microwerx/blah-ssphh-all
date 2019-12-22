@@ -3,7 +3,7 @@
 
 #include <fluxions_gte_vector_math.hpp>
 #include <fluxions_gte_catmull_rom.hpp>
-#include <viperfish_math_window.hpp>
+#include <viperfish_animpath_window.hpp>
 
 struct Keyframe {
 	// time of keyframe
@@ -43,7 +43,7 @@ public:
 	void resize(unsigned count);
 	void clear();
 	void create();
-	void calcgraph(Vf::MathWindowPtr& mw);
+	void calcgraph(Vf::AnimPathWindowPtr& mw);
 	Vector3f pcatmullrom(float t) const;
 	Vector3f plerp(float t) const;
 	Quaternionf qslerp(float t) const;

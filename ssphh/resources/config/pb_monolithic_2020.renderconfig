@@ -32,28 +32,33 @@ sampler GL_TEXTURE_MAG_FILTER GL_LINEAR
 
 # ==== Textures ====
 
-texture2D test2d
-texture2D sampler default2dSampler
-texture2D uniform MapKd
-texture2D map "test_texture_2d.png"
+#texture2D test2d
+#texture2D sampler default2dSampler
+#texture2D uniform MapKd
+#texture2D map "test_texture_2d.png"
 
-textureCube pbskyEXR
-textureCube map "test_corona_skymap.exr"
-textureCube uniform MapEnviroCube
-textureCube sampler defaultCubeSampler
+#textureCube pbskyEXR
+#textureCube map "test_corona_skymap.exr"
+#textureCube uniform MapEnviroCube
+#textureCube sampler defaultCubeSampler
 
-textureCube pbskyPPM
-textureCube map "test_corona_skymap.ppm"
-textureCube uniform MapEnviroCube
-textureCube sampler defaultCubeSampler
+#textureCube pbskyPPM
+#textureCube map "test_corona_skymap.ppm"
+#textureCube uniform MapEnviroCube
+#textureCube sampler defaultCubeSampler
+
+#textureCube enviroSkyBox
+#textureCube map "grace_cross.pfm"
+#textureCube uniform MapEnviroCube
+#textureCube sampler defaultCubeSampler
+
+#textureCube grace_cross
+#textureCube map "grace_cross.pfm"
+#textureCube uniform MapEnviroCube
+#textureCube sampler defaultCubeSampler
 
 textureCube enviroSkyBox
-textureCube map "grace_cross.pfm"
-textureCube uniform MapEnviroCube
-textureCube sampler defaultCubeSampler
-
-textureCube grace_cross
-textureCube map "grace_cross.pfm"
+textureCube map stpeters_cross.pfm
 textureCube uniform MapEnviroCube
 textureCube sampler defaultCubeSampler
 
@@ -138,9 +143,9 @@ renderconfig projection orthoSquare
 renderconfig skybox_rc
 renderconfig program skybox_program
 renderconfig clearcolor 1.0 0.0 1.0 1.0
-renderconfig viewport @SCREENWIDTH @SCREENHEIGHT
-# renderconfig perspective 45 1 100
-renderconfig camera default
+renderconfig viewport 2048 1536
+renderconfig perspective 120 1 100
+# renderconfig camera default
 
 renderconfig pbr_rc
 renderconfig program pbr_program
@@ -178,7 +183,7 @@ renderer renderconfig
 
 renderer skybox
 renderer renderconfig skybox_rc
-renderer skybox pbskyEXR
+renderer skybox enviroSkyCube
 # in the future, we could specify pbsky to use built in one
 # renderer skybox pbsky
 # renderer skybox coronasky

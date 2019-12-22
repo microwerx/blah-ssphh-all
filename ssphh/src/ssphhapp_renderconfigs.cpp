@@ -1,10 +1,55 @@
 #include <ssphhapp.hpp>
 #include <hatchetfish_stopwatch.hpp>
+#include <ssphhapp_renderconfigs.hpp>
 
 namespace SSPHH
 {
 	const char* renderconfig_filename = "resources/config/pb_monolithic_2020.renderconfig";
+}
 
+RendererWindow::RendererWindow(const std::string& name)
+	: Vf::Window(name) {}
+
+RendererWindow::~RendererWindow() {}
+
+void RendererWindow::OnUpdate(double timeStamp) {
+	if (!ssphh_widget_ptr) return;
+	Vf::Window::OnUpdate(timeStamp);
+
+	if (context != &ssphh_widget_ptr->rendererContext)
+		context = &ssphh_widget_ptr->rendererContext;
+}
+
+void RendererWindow::OnRenderDearImGui() {
+	if (!context || !beginWindow()) return;
+	Vf::Window::OnRenderDearImGui();
+
+	if (ImGui::Button("Load Configs")) {
+		Hf::StopWatch stopwatch;
+		context->loadConfig(SSPHH::renderconfig_filename);
+		lastConfigsLoadTime = stopwatch.Stop_sf();
+	}
+	ImGui::Value("configs load", lastConfigsLoadTime);
+
+	if (ImGui::Button("Load Shaders")) {
+		Hf::StopWatch stopwatch;
+		context->loadShaders();
+		lastShadersLoadTime = stopwatch.Stop_sf();
+	}
+	ImGui::Value("shaders load", lastShadersLoadTime);
+
+	if (ImGui::Button("Load Textures")) {
+		Hf::StopWatch stopwatch;
+		context->loadTextures();
+		lastTextureLoadTime = stopwatch.Stop_sf();
+	}
+	ImGui::Value("texture load", lastTextureLoadTime);
+
+	endWindow();
+}
+
+namespace SSPHH
+{
 	void SSPHH_Application::InitRenderConfigs() {
 		HFLOGINFO("Initializing render configs");
 
