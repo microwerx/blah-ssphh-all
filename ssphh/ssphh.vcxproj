@@ -147,6 +147,7 @@
     <ClInclude Include="include\PbskyViewController.hpp" />
     <ClInclude Include="include\SphlJob.hpp" />
     <ClInclude Include="include\ssphhapp.hpp" />
+    <ClInclude Include="include\ssphhapp_render.hpp" />
     <ClInclude Include="include\ssphh_ppmcompare.hpp" />
     <ClInclude Include="include\ssphhapp_renderconfigs.hpp" />
     <ClInclude Include="include\ssphh_unicornfish.hpp" />

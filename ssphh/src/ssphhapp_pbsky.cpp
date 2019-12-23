@@ -3,18 +3,6 @@
 
 namespace SSPHH
 {
-	const std::string default_coronaskyboxcubemap_path{ "export_cubemap.png" };
-	const std::string default_pbsky_cubemap1_ppm{ "pbsky_cubemap_1.ppm" };
-	const std::string default_pbsky_cubemap2_ppm{ "pbsky_cubemap_2.ppm" };
-	const std::string default_pbsky_cubemap3_ppm{ "pbsky_cubemap_3.ppm" };
-	const std::string default_pbsky_cubemap4_ppm{ "pbsky_cubemap_4.ppm" };
-	const std::string default_pbsky_cubemap5_ppm{ "pbsky_cubemap_5.ppm" };
-	const std::string default_pbsky_cubemap6_ppm{ "pbsky_cubemap_6.ppm" };
-	const std::string default_pbsky_cylmap_ppm{ "pbsky_cylmap.ppm" };
-	const std::string default_pbsky_cylmap_exr{ "pbsky_cylmap.exr" };
-	const std::string default_pbsky_cubemap_ppm{ "pbsky_cubemap.ppm" };
-	const std::string default_pbsky_cubemap_exr{ "pbsky_cubemap.exr" };
-
 	void SSPHH_Application::Sky_InitViewController() {
 		vcPbsky = new PbskyViewController(this);
 

@@ -57,8 +57,8 @@ sampler GL_TEXTURE_MAG_FILTER GL_LINEAR
 #textureCube uniform MapEnviroCube
 #textureCube sampler defaultCubeSampler
 
-textureCube enviroSkyBox
-textureCube map stpeters_cross.pfm
+textureCube enviroSkyCube
+textureCube map test_corona_cube.exr
 textureCube uniform MapEnviroCube
 textureCube sampler defaultCubeSampler
 
@@ -145,6 +145,7 @@ renderconfig program skybox_program
 renderconfig clearcolor 1.0 0.0 1.0 1.0
 renderconfig viewport 2048 1536
 renderconfig perspective 120 1 100
+renderconfig autoresize
 # renderconfig camera default
 
 renderconfig pbr_rc
@@ -199,3 +200,4 @@ renderer renderconfig postprocess_rc
 
 # ==== Render Commands ====
 
+debug clearscreen

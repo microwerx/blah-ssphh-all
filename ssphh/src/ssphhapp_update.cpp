@@ -40,7 +40,7 @@ namespace SSPHH
 
 			std::for_each(cameraAnimation.keyframes.begin(),
 						  cameraAnimation.keyframes.end(),
-						  [&](Keyframe& kf) {
+						  [&](::Keyframe& kf) {
 							  kf.a = animpath_window_ptr->alpha;
 						  });
 

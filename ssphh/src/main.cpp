@@ -119,6 +119,7 @@
 #include <SDL2/SDL_image.h>
 #endif
 #include <ssphhapp_renderconfigs.hpp>
+#include <ssphhapp_render.hpp>
 
 extern void do_tests();
 
@@ -129,6 +130,7 @@ Vf::StatsWindowPtr stats_window_ptr;
 Vf::AnimationWindowPtr animation_window_ptr;
 Vf::AnimPathWindowPtr animpath_window_ptr;
 RendererWindowPtr renderer_window_ptr;
+RendererConfigWindowPtr renderer_config_window_ptr;
 
 double g_distance = -10.0;
 double xrot = 0.0;
@@ -234,6 +236,7 @@ void InitApp()
 		animation_window_ptr = Vf::MakeSharedChild<Vf::AnimationWindow>(vf_app_ptr, "Animation");
 		animpath_window_ptr = Vf::MakeSharedChild<Vf::AnimPathWindow>(vf_app_ptr, "Animation Path");
 		renderer_window_ptr = Vf::MakeSharedChild<RendererWindow>(vf_app_ptr, "Renderer");
+		renderer_config_window_ptr = Vf::MakeSharedChild<RendererConfigWindow>(vf_app_ptr, "Renderer Config");
 	}
 }
 
@@ -246,6 +249,8 @@ void KillApp()
 	stats_window_ptr.reset();
 	animation_window_ptr.reset();
 	animpath_window_ptr.reset();
+	renderer_config_window_ptr.reset();
+	renderer_window_ptr.reset();
 	vf_app_ptr->Kill();
 	vf_app_ptr.reset();
 }

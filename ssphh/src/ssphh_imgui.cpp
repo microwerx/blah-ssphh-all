@@ -883,7 +883,7 @@ namespace SSPHH
 				init = true;
 
 				ImGui::SetNextWindowSize(ImVec2(w, h));
-				ImGui::SetNextWindowPos(ImVec2(screenWidth - w, screenHeight - h));
+				ImGui::SetNextWindowPos(ImVec2(getWidth() - w, getHeight() - h));
 			}
 			ImGui::SetNextWindowContentWidth(w);
 			ImGui::Begin("SSPL Editor");
@@ -2048,7 +2048,7 @@ namespace SSPHH
 		if (!init) {
 			float w = 640.0f;
 			float h = 800.0f;
-			ImGui::SetNextWindowPos(ImVec2(screenWidth - w, screenHeight - h));
+			ImGui::SetNextWindowPos(ImVec2(getWidth() - w, getHeight() - h));
 			ImGui::SetNextWindowSize(ImVec2(w, h));
 			init = true;
 		}

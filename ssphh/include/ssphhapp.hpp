@@ -38,10 +38,32 @@
 #ifdef SSPHH_RENDER_CLASSIC_OPENGL
 #include <GLUT_template.hpp>
 #endif
+#include <ssphhapp_renderconfigs.hpp>
+#include <ssphhapp_render.hpp>
 #include <camera_animation.hpp>
 
 using namespace Vf;
 using namespace Fluxions;
+
+namespace SSPHH
+{
+	extern const char* default_renderconfig_path;
+	extern const char* default_scene_graph_path;
+	extern const std::string default_coronaskyboxcubemap_path;
+	extern const std::string default_pbsky_cubemap1_ppm;
+	extern const std::string default_pbsky_cubemap2_ppm;
+	extern const std::string default_pbsky_cubemap3_ppm;
+	extern const std::string default_pbsky_cubemap4_ppm;
+	extern const std::string default_pbsky_cubemap5_ppm;
+	extern const std::string default_pbsky_cubemap6_ppm;
+	extern const std::string default_pbsky_cylmap_ppm;
+	extern const std::string default_pbsky_cylmap_exr;
+	extern const std::string default_pbsky_cubemap_ppm;
+	extern const std::string default_pbsky_cubemap_exr;
+}
+
+extern RendererWindowPtr renderer_window_ptr;
+extern RendererConfigWindowPtr renderer_config_window_ptr;
 
 namespace SSPHH
 {
@@ -75,14 +97,14 @@ namespace SSPHH
 		///////////////////////////////////////////////////////////////
 
 	public:
-		GLfloat aspect = 1.0f;
-		GLfloat fovy = 45.0f;
-		// GLfloat nearVal = 0.001f;
-		// GLfloat farVal = 1000.0f;
-		GLfloat screenX = 0.0f;
-		GLfloat screenY = 0.0f;
-		GLfloat screenWidth = 0.0f;
-		GLfloat screenHeight = 0.0f;
+		//GLfloat aspect = 1.0f;
+		//GLfloat fovy = 45.0f;
+		//// GLfloat nearVal = 0.001f;
+		//// GLfloat farVal = 1000.0f;
+		//GLfloat screenX = 0.0f;
+		//GLfloat screenY = 0.0f;
+		//GLfloat screenWidth = 0.0f;
+		//GLfloat screenHeight = 0.0f;
 
 		// SCENE GRAPH METHODS
 

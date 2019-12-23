@@ -1,83 +1,122 @@
 #include <ssphhapp.hpp>
+#include <hatchetfish.hpp>
 #include <hatchetfish_stopwatch.hpp>
 #include <ssphhapp_renderconfigs.hpp>
 
-namespace SSPHH
+namespace Colors
 {
-	const char* renderconfig_filename = "resources/config/pb_monolithic_2020.renderconfig";
+	const ImVec4 Black{ 0.000f, 0.000f, 0.000f, 1.000f };
+	const ImVec4 Gray33{ 0.333f, 0.333f, 0.333f, 1.000f };
+	const ImVec4 Gray67{ 0.667f, 0.667f, 0.667f, 1.000f };
+	const ImVec4 White{ 1.000f, 1.000f, 1.000f, 1.000f };
+	const ImVec4 Red{ 1.000f, 0.000f, 0.000f, 1.000f };
+	const ImVec4 Orange{ 0.894f, 0.447f, 0.000f, 1.000f };
+	const ImVec4 Yellow{ 0.894f, 0.894f, 0.000f, 1.000f };
+	const ImVec4 Green{ 0.000f, 1.000f, 0.000f, 1.000f };
+	const ImVec4 Cyan{ 0.000f, 0.707f, 0.707f, 1.000f };
+	const ImVec4 Azure{ 0.000f, 0.447f, 0.894f, 1.000f };
+	const ImVec4 Blue{ 0.000f, 0.000f, 1.000f, 1.000f };
+	const ImVec4 Violet{ 0.447f, 0.000f, 0.894f, 1.000f };
+	const ImVec4 Rose{ 0.894f, 0.000f, 0.447f, 1.000f };
+	const ImVec4 Brown{ 0.500f, 0.250f, 0.000f, 1.000f };
+	const ImVec4 Gold{ 0.830f, 0.670f, 0.220f, 1.000f };
+	const ImVec4 ForestGreen{ 0.250f, 0.500f, 0.250f, 1.000f };
 }
 
-RendererWindow::RendererWindow(const std::string& name)
+RendererConfigWindow::RendererConfigWindow(const std::string& name)
 	: Vf::Window(name) {}
 
-RendererWindow::~RendererWindow() {}
+RendererConfigWindow::~RendererConfigWindow() {}
 
-void RendererWindow::OnUpdate(double timeStamp) {
-	if (!ssphh_widget_ptr) return;
-	Vf::Window::OnUpdate(timeStamp);
+void RendererConfigWindow::OnUpdate(double timestamp) {
+	if (!ssphh_widget_ptr) {
+		context = nullptr;
+		return;
+	}
+
+	Vf::Window::OnUpdate(timestamp);
 
 	if (context != &ssphh_widget_ptr->rendererContext)
 		context = &ssphh_widget_ptr->rendererContext;
+
+	if (!context) return;
+
+	renderConfigList.resize(context->rendererConfigs.size());
+	int i = 0;
+	for (const auto& [k, v] : context->rendererConfigs) {
+		renderConfigList[i++] = v.name();
+	}
+	if (curRendererConfigIndex >= renderConfigList.size()) curRendererConfigIndex = 0;
+	else {
+		rc = context->getRendererConfig(renderConfigList[curRendererConfigIndex]);
+	}
 }
 
-void RendererWindow::OnRenderDearImGui() {
+void RendererConfigWindow::OnRenderDearImGui() {
 	if (!context || !beginWindow()) return;
 	Vf::Window::OnRenderDearImGui();
 
-	if (ImGui::Button("Load Configs")) {
-		Hf::StopWatch stopwatch;
-		context->loadConfig(SSPHH::renderconfig_filename);
-		lastConfigsLoadTime = stopwatch.Stop_sf();
+	if (defaultParameterWidth == 100.0f) {
+		auto r = ImGui::CalcTextSize("GL_TEXTURE_CUBE_MAP_POSITIVE_X");
+		defaultParameterWidth = r.x;
 	}
-	ImGui::Value("configs load", lastConfigsLoadTime);
 
-	if (ImGui::Button("Load Shaders")) {
-		Hf::StopWatch stopwatch;
-		context->loadShaders();
-		lastShadersLoadTime = stopwatch.Stop_sf();
+	ImGui::ListBox("Renderer Configs",
+				   &curRendererConfigIndex,
+				   renderConfigList.data(),
+				   (int)renderConfigList.size(), 5);
+
+	if (!rc) { endWindow(); return; }
+	if (rc && !rc->parent()) {
+		ImGui::TextColored(Colors::Red, "RC '%s' is invalid!", rc->name());
+		endWindow(); return;
 	}
-	ImGui::Value("shaders load", lastShadersLoadTime);
-
-	if (ImGui::Button("Load Textures")) {
-		Hf::StopWatch stopwatch;
-		context->loadTextures();
-		lastTextureLoadTime = stopwatch.Stop_sf();
+	if (!rc->rc_program_ptr) {
+		ImGui::TextColored(Colors::Red, "RC '%s' rc_program_ptr is invalid!", rc->name());
+		endWindow(); return;
 	}
-	ImGui::Value("texture load", lastTextureLoadTime);
 
-	if (ImGui::TreeNode("programs")) {
-		for (auto& [k, ro] : context->programs) {
-			ImGui::Text(ro.name());
+	// FBO information ///////////////////////////////////////////////////
+
+	ImGui::TextColored(Colors::White, "RC '%s' [%s]", rc->name(), rc->parent()->name());
+	for (const auto& [k, v] : rc->writeFBOs) {
+		ImGui::Text("writefbo: %s", (v ? v->name() : "NULL"));
+	}
+	for (const auto& [k, v] : rc->readFBOs) {
+		ImGui::Text("readfbo: %s", (v ? v->name() : "NULL"));
+	}
+
+	// PROGRAM information ///////////////////////////////////////////////
+	ImGui::Text("program %s", rc->rc_program_ptr->name());
+	if (!rc->rc_program_ptr->isLinked()) {
+		ImGui::TextColored(Colors::Red, "RC '%s' program is not linked!", rc->name());
+	}
+	if (rc->rc_program_ptr->getInfoLog().size()) {
+		ImGui::TextColored(Colors::Yellow, rc->rc_program_ptr->getInfoLog().c_str());
+	}
+	for (const auto& v : rc->rc_program_ptr->attachedShaders) {
+		if (!v) continue;
+		ImGui::Text("%s %s %s",
+					Fluxions::glNameTranslator.getString(v->shaderType),
+					v->name(),
+					v->status());
+		if (v->infoLog.size()) {
+			ImGui::TextColored(Colors::Yellow, v->infoLog.c_str());
 		}
-		ImGui::TreePop();
 	}
-
-	if (ImGui::TreeNode("renderers")) {
-		for (auto& [k, ro] : context->renderers) {
-			ImGui::Text(ro.name());
-		}
-		ImGui::TreePop();
+	ImGui::Text("Active Attributes");
+	for (const auto& [k, v] : rc->rc_program_ptr->activeAttributes) {
+		ImGui::Text("%02i %s", v.index, v.GetNameOfType());
+		ImGui::SameLine(defaultParameterWidth);
+		ImGui::Text("%s", k.c_str());
 	}
-
-	if (ImGui::TreeNode("rendererconfigs")) {
-		for (auto& [k, ro] : context->rendererConfigs) {
-			ImGui::Text(ro.name());
-		}
-		ImGui::TreePop();
-	}
-
-	if (ImGui::TreeNode("texture2Ds")) {
-		for (auto& [k, t] : context->texture2Ds) {
-			ImGui::Text(t.name());
-		}
-		ImGui::TreePop();
-	}
-
-	if (ImGui::TreeNode("textureCubes")) {
-		for (auto& [k, t] : context->textureCubes) {
-			ImGui::Text(t.name());
-		}
-		ImGui::TreePop();
+	ImGui::Text("Active Uniforms");
+	for (const auto& [k, v] : rc->rc_program_ptr->activeUniforms) {
+		auto r = ImGui::CalcTextSize("GL_TEXTURE_CUBE_MAP_POSITIVE_X");
+		ImGui::SetNextItemWidth(r.x);
+		ImGui::Text("%02i %s", v.index, v.GetNameOfType());
+		ImGui::SameLine(defaultParameterWidth);
+		ImGui::Text("%s", k.c_str());
 	}
 
 	endWindow();
@@ -145,12 +184,10 @@ namespace SSPHH
 	void SSPHH_Application::LoadRenderConfigs() {
 		HFLOGINFO("resetting and loading render configs...");
 		rendererContext.reset();
-		rendererContext.resize(
-			(int)screenWidth, (int)screenHeight,
-			(int)screenWidth, (int)screenHeight);
+		rendererContext.resize(getWidthi(), getHeighti());
 
-		if (!rendererContext.loadConfig(renderconfig_filename)) {
-			HFLOGERROR("%s file not found.", renderconfig_filename);
+		if (!rendererContext.loadConfig(default_renderconfig_path)) {
+			HFLOGERROR("%s file not found.", default_renderconfig_path);
 		}
 
 		rendererContext.loadShaders();

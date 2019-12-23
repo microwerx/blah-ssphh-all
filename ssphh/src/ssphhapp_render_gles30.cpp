@@ -14,6 +14,13 @@ namespace SSPHH
 	void SSPHH_Application::RenderGLES30() {
 		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
 
+		// Implementation Plan
+		// -------------------
+		// Render Sky Box into FBO
+		// Render PBR into FBO
+		// Render VIZ into FBO
+		// Render POST with FBO to screen
+
 		SetupRenderGLES30();
 		RenderGLES30Shadows();
 		RenderGLES30Scene();

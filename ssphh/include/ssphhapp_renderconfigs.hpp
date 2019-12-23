@@ -3,22 +3,25 @@
 
 #include <viperfish_window.hpp>
 
-class RendererWindow : public Vf::Window {
+class Fluxions::RendererContext;
+
+class RendererConfigWindow : public Vf::Window {
 public:
-	RendererWindow(const std::string& name);
-	~RendererWindow() override;
+	RendererConfigWindow(const std::string& name);
+	~RendererConfigWindow() override;
 
 	void OnUpdate(double timeStamp) override;
 	void OnRenderDearImGui() override;
 
 
 private:
-	RendererContext* context{ nullptr };
-	float lastShadersLoadTime{ 0.0f };
-	float lastTextureLoadTime{ 0.0f };
-	float lastConfigsLoadTime{ 0.0f };
+	Fluxions::RendererContext* context{ nullptr };
+	int curRendererConfigIndex{ 0 };
+	std::vector<const char*> renderConfigList;
+	Fluxions::RendererConfig* rc{ nullptr };
+	float defaultParameterWidth{ 100.0f };
 };
 
-using RendererWindowPtr = std::shared_ptr<RendererWindow>;
+using RendererConfigWindowPtr = std::shared_ptr<RendererConfigWindow>;
 
 #endif

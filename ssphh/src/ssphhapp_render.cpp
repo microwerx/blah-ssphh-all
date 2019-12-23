@@ -1,13 +1,116 @@
 #include <ssphhapp.hpp>
+#include <ssphhapp_render.hpp>
+#include <hatchetfish.hpp>
+#include <hatchetfish_stopwatch.hpp>
 
+#ifdef SSPHH_RENDER_CLASSIC_OPENGL
 extern void PrintString9x15(float x, float y, int justification, const char* format, ...);
+#endif
+
+
+RendererWindow::RendererWindow(const std::string& name)
+	: Vf::Window(name) {}
+
+RendererWindow::~RendererWindow() {}
+
+void RendererWindow::OnUpdate(double timeStamp) {
+	if (!ssphh_widget_ptr) {
+		context = nullptr;
+		return;
+	}
+
+	Vf::Window::OnUpdate(timeStamp);
+
+	if (context != &ssphh_widget_ptr->rendererContext)
+		context = &ssphh_widget_ptr->rendererContext;
+}
+
+void RendererWindow::OnRenderDearImGui() {
+	if (!context || !beginWindow()) return;
+	Vf::Window::OnRenderDearImGui();
+
+	if (ImGui::Button("Reset")) context->reset();
+	ImGui::SameLine();
+	if (ImGui::Button("Defaults")) context->set_default_parameters();
+
+	ImGui::Value("Render Mode", ssphh_widget_ptr->renderMode);
+	ImGui::Value("Render Time", (float)ssphh_widget_ptr->my_hud_info.totalRenderTime);
+
+	if (ImGui::Button("Load Configs")) HFCLOCKSf(lastConfigsLoadTime, context->loadConfig(SSPHH::default_renderconfig_path))
+		ImGui::Value("configs load", lastConfigsLoadTime);
+
+	if (ImGui::Button("Load Shaders")) HFCLOCKSf(lastShadersLoadTime, context->loadShaders())
+		ImGui::Value("shaders load", lastShadersLoadTime);
+
+	if (ImGui::Button("Load Textures")) HFCLOCKSf(lastTextureLoadTime, context->loadTextures())
+		ImGui::Value("texture load", lastTextureLoadTime);
+
+	if (ImGui::TreeNode("programs")) {
+		for (auto& [k, ro] : context->programs) {
+			ImGui::Text(ro.name());
+		}
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("renderers")) {
+		for (auto& [k, ro] : context->renderers) {
+			ImGui::Text(ro.name());
+		}
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("rendererconfigs")) {
+		for (auto& [k, ro] : context->rendererConfigs) {
+			ImGui::Text(ro.name());
+		}
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("texture2Ds")) {
+		for (auto& [k, t] : context->texture2Ds) {
+			ImGui::Text(t.name());
+		}
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("textureCubes")) {
+		for (auto& [k, t] : context->textureCubes) {
+			ImGui::Text(t.name());
+		}
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("samplers")) {
+		for (auto& [k, t] : context->samplers) {
+			ImGui::Text(t.name());
+		}
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("vars")) {
+		for (auto& [k, v] : context->vars.variables) {
+			if (v.IsInteger()) ImGui::Value(k.c_str(), v.ival);
+			if (v.IsDouble()) ImGui::Value(k.c_str(), (float)v.dval);
+			if (v.IsStringOrIdentifier()) ImGui::Value(k.c_str(), v.sval.c_str());
+		}
+		ImGui::TreePop();
+	}
+
+	static int hflogCurrentItem{ 0 };
+	int hflogSize = Hf::Log.getHistoryItemsSize();
+	if (hflogSize) ImGui::ListBox("hflog", &hflogCurrentItem, Hf::Log.getHistoryItems(), hflogSize);
+
+	endWindow();
+}
 
 namespace SSPHH
 {
 	void SSPHH_Application::OnPreRender() {
 		HFLOGDEBUGFIRSTRUN();
-		glClearColor(0.0, 0.0, 0.0, 1.0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+		if (rendererContext.debugClearScreen) {
+			glClearColor(0.0, 0.0, 0.0, 1.0);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+		}
 	}
 
 	void SSPHH_Application::OnRender3D() {
@@ -36,7 +139,7 @@ namespace SSPHH
 		// r.UpdateBuffers(sg);
 		// r.Render();
 
-		double renderT0 = Hf::Log.getSecondsElapsed();
+		Hf::StopWatch stopwatch;
 		if (renderMode == 0) {
 			RenderFixedFunctionGL();
 		}
@@ -46,22 +149,22 @@ namespace SSPHH
 		else if (renderMode == 2) {
 			RenderGLES30();
 		}
-		my_hud_info.totalRenderTime = Hf::Log.getSecondsElapsed() - renderT0;
+		double dt = stopwatch.Stop_ms();
+		if (dt < 1000.0) {
+			Hf::Log.takeStat("frametime", my_hud_info.totalRenderTime);
+			my_hud_info.totalRenderTime = dt;
+		}
 
-		double renderT1 = Hf::Log.getMillisecondsElapsed();
-		double dt = renderT1 - renderT0;
-		if (dt < 1000.0)
-			Hf::Log.takeStat("frametime", dt);
 		SaveScreenshot();
 	}
 
 	void SSPHH_Application::OnRender2D() {
 		HFLOGDEBUGFIRSTRUN();
 
-		bool isCameraViewMatrixVisible = true;
+		//bool isCameraViewMatrixVisible = true;
 
-		float xpos = 0.0f;
-		float ypos = screenHeight - 15.0f * 15.0f;
+		//float xpos = 0.0f;
+		//float ypos = windowRect().h - 15.0f * 15.0f;
 
 		RenderDeferredHUD();
 
@@ -112,6 +215,7 @@ namespace SSPHH
 	}
 
 	void SSPHH_Application::RenderHUD() {
+#ifdef SSPHH_RENDER_CLASSIC_OPENGL
 		const int maxLines = 25;
 		GLfloat xpos = 0.0f;
 		GLfloat ypos = screenHeight - maxLines * 15.0f;
@@ -195,6 +299,7 @@ namespace SSPHH
 										 ssg.environment.pbsky.getSec(),
 										 ssg.environment.pbsky.getSecFract(),
 										 ssg.environment.pbsky.getLST());
+#endif
 	}
 
 

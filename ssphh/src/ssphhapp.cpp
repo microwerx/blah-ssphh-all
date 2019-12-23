@@ -56,7 +56,7 @@ namespace SSPHH
 		if (*ptr == nullptr) {
 			HFLOGWARN("Deleting nullptr");
 		}
-		delete *ptr;
+		delete* ptr;
 		*ptr = nullptr;
 	}
 
@@ -64,19 +64,30 @@ namespace SSPHH
 	using namespace Fluxions;
 	using namespace Vf;
 
-	const char* default_coronaskyboxcubemap_path = "export_cubemap.png";
-	const char* default_scene_file = "resources/scenes/maze_scene/maze.scn";
-	//const char* default_scene_file = "resources/scenes/test_texture_scene/test_terrain_scene.scn";
-	// The renderconfig default is in ssphhapp_renderconfigs.cpp
+	const char* default_scene_graph_path = "resources/scenes/maze_scene/maze.scn";
+	const char* default_renderconfig_path = "resources/config/pb_monolithic_2020.renderconfig";
+	//const char* default_coronaskyboxcubemap_path = "export_cubemap.png";
+	//const char* default_scene_graph_path = "resources/scenes/test_texture_scene/test_terrain_scene.scn";
+	const std::string default_coronaskyboxcubemap_path{ "export_cubemap.png" };
+	const std::string default_pbsky_cubemap1_ppm{ "pbsky_cubemap_1.ppm" };
+	const std::string default_pbsky_cubemap2_ppm{ "pbsky_cubemap_2.ppm" };
+	const std::string default_pbsky_cubemap3_ppm{ "pbsky_cubemap_3.ppm" };
+	const std::string default_pbsky_cubemap4_ppm{ "pbsky_cubemap_4.ppm" };
+	const std::string default_pbsky_cubemap5_ppm{ "pbsky_cubemap_5.ppm" };
+	const std::string default_pbsky_cubemap6_ppm{ "pbsky_cubemap_6.ppm" };
+	const std::string default_pbsky_cylmap_ppm{ "pbsky_cylmap.ppm" };
+	const std::string default_pbsky_cylmap_exr{ "pbsky_cylmap.exr" };
+	const std::string default_pbsky_cubemap_ppm{ "pbsky_cubemap.ppm" };
+	const std::string default_pbsky_cubemap_exr{ "pbsky_cubemap.exr" };
 
 	SSPHH_Application::SSPHH_Application()
 		: Widget("ssphhapplication") {
-		sceneFilename = default_scene_file;
+		sceneFilename = default_scene_graph_path;
 	}
 
 	SSPHH_Application::SSPHH_Application(const std::string& name)
 		: Vf::Widget(name) {
-		sceneFilename = default_scene_file;
+		sceneFilename = default_scene_graph_path;
 	}
 
 	SSPHH_Application::~SSPHH_Application() {
@@ -287,13 +298,7 @@ namespace SSPHH
 
 
 	void SSPHH_Application::OnReshape(int width, int height) {
-		int oldWidth = (int)screenWidth;
-		int oldHeight = (int)screenHeight;
-		float w = (float)width;
-		float h = (float)height;
-		screenWidth = w;
-		screenHeight = h;
-		aspect = w / h;
+		Widget::OnReshape(width, height);
 
 		// FIXME: Are we using rendererContext
 		//rendererContext.SetDeferredRect(Recti(0, 0, (int)w, (int)h));
@@ -303,10 +308,9 @@ namespace SSPHH
 		//																		ssg.camera.imageAspect, ssg.camera.imageNearZ, ssg.camera.imageFarZ);
 
 		screenOrthoMatrix.LoadIdentity();
-		screenOrthoMatrix.Ortho2D(0.0f, screenWidth, screenHeight, 0.0f);
+		screenOrthoMatrix.Ortho2D(0.0f, windowRect().width(), windowRect().height(), 0.0f);
 
-		rendererContext.resize(oldWidth, oldHeight, width, height);
-
+		rendererContext.resize(width, height);
 		Hf::Log.setMaxHistory(height / 30);
 	}
 
@@ -319,7 +323,7 @@ namespace SSPHH
 		int w = rc.viewportRect.w;
 		int h = rc.viewportRect.h;
 		glClear(GL_DEPTH_BUFFER_BIT);
-		rc.viewportRect.x = (GLsizei)(screenWidth - 256);
+		rc.viewportRect.x = getWidthi() - 256;
 		rc.viewportRect.y = 0;
 		rc.viewportRect.w = 256;
 		rc.viewportRect.h = 256;
@@ -336,58 +340,58 @@ namespace SSPHH
 	void SSPHH_Application::RenderTest2SphereCubeMap() {
 		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
 
-		Matrix4f cameraMatrix = Interface.inversePreCameraMatrix * ssg.camera.viewMatrix;
-		Vector3f cameraPosition(cameraMatrix.m14, cameraMatrix.m24, cameraMatrix.m34);
-		int s = 128;
-		RendererConfig* cubeRC = rendererContext.renderers["gles30CubeMap"].getRenderConfig();
-		if (!cubeRC) return;
+		//Matrix4f cameraMatrix = Interface.inversePreCameraMatrix * ssg.camera.viewMatrix;
+		//Vector3f cameraPosition(cameraMatrix.m14, cameraMatrix.m24, cameraMatrix.m34);
+		//int s = 128;
+		//RendererConfig* cubeRC = rendererContext.renderers["gles30CubeMap"].getRenderConfig();
+		//if (!cubeRC) return;
 
-		// FIXME: why are we setting these values here?
-		cubeRC->clearColorBuffer = false;
-		cubeRC->viewportRect.x = 0;
-		cubeRC->viewportRect.y = 0;
-		cubeRC->preCameraMatrix = Interface.inversePreCameraMatrix;
-		cubeRC->postCameraMatrix.LoadIdentity();
-		cubeRC->useZOnly = false;
-		cubeRC->useMaterials = true;
-		cubeRC->viewportRect.w = s;
-		cubeRC->viewportRect.h = s;
-		cubeRC->postCameraMatrix = ssg.spheres[1].transform;
-		cubeRC->useSceneCamera = true;
-		cubeRC->isCubeMap = true;
-		// gles30CubeMap.Render();
+		//// FIXME: why are we setting these values here?
+		//cubeRC->clearColorBuffer = false;
+		//cubeRC->viewportRect.x = 0;
+		//cubeRC->viewportRect.y = 0;
+		//cubeRC->preCameraMatrix = Interface.inversePreCameraMatrix;
+		//cubeRC->postCameraMatrix.LoadIdentity();
+		//cubeRC->useZOnly = false;
+		//cubeRC->useMaterials = true;
+		//cubeRC->viewportRect.w = s;
+		//cubeRC->viewportRect.h = s;
+		//cubeRC->postCameraMatrix = ssg.spheres[1].transform;
+		//cubeRC->useSceneCamera = true;
+		//cubeRC->isCubeMap = true;
+		//// gles30CubeMap.Render();
 	}
 
 	void SSPHH_Application::RenderTest3EnviroCubeMap() {
 		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
 
-		// FIXME: Are we using rendererContext?
-		RendererProgramPtr program;// = rendererContext.FindProgram("glut", "UnwrappedCubeMap");
-		if (program != nullptr) {
-			program->use();
-			GLint tloc = program->getAttribLocation("aTexCoord");
-			GLint vloc = program->getAttribLocation("aPosition");
-			RendererUniform orthoProjectionMatrix = Matrix4f().Ortho2D(0.0f, screenWidth, 0.0f, screenHeight);
-			RendererUniform identityMatrix = Matrix4f().LoadIdentity();
-			program->applyUniform("uCubeTexture", RendererUniform(0));
-			program->applyUniform("ProjectionMatrix", orthoProjectionMatrix);
-			program->applyUniform("CameraMatrix", identityMatrix);
-			program->applyUniform("WorldMatrix", identityMatrix);
-			FxBindTextureAndSampler(0,
-									GL_TEXTURE_CUBE_MAP,
-									rendererContext.textures["enviroSkyBox"].getTextureId(),
-									ssg.environment.enviroColorMapSamplerId);
-			FxDrawGL2UnwrappedCubeMap(0, 0, 256, vloc, tloc);
-			FxBindTextureAndSampler(0, GL_TEXTURE_CUBE_MAP, 0, 0);
-			glUseProgram(0);
-		}
+		//// FIXME: Are we using rendererContext?
+		//RendererProgramPtr program;// = rendererContext.FindProgram("glut", "UnwrappedCubeMap");
+		//if (program != nullptr) {
+		//	program->use();
+		//	GLint tloc = program->getAttribLocation("aTexCoord");
+		//	GLint vloc = program->getAttribLocation("aPosition");
+		//	RendererUniform orthoProjectionMatrix = Matrix4f().Ortho2D(0.0f, screenWidth, 0.0f, screenHeight);
+		//	RendererUniform identityMatrix = Matrix4f().LoadIdentity();
+		//	program->applyUniform("uCubeTexture", RendererUniform(0));
+		//	program->applyUniform("ProjectionMatrix", orthoProjectionMatrix);
+		//	program->applyUniform("CameraMatrix", identityMatrix);
+		//	program->applyUniform("WorldMatrix", identityMatrix);
+		//	FxBindTextureAndSampler(0,
+		//							GL_TEXTURE_CUBE_MAP,
+		//							rendererContext.textures["enviroSkyBox"].getTextureId(),
+		//							ssg.environment.enviroColorMapSamplerId);
+		//	FxDrawGL2UnwrappedCubeMap(0, 0, 256, vloc, tloc);
+		//	FxBindTextureAndSampler(0, GL_TEXTURE_CUBE_MAP, 0, 0);
+		//	glUseProgram(0);
+		//}
 	}
 
 
 	void SSPHH_Application::SaveScreenshot() {
 		if (Interface.saveScreenshot) {
 			Interface.saveScreenshot = false;
-			Image3ub image((int)screenWidth, (int)screenHeight);
+			Image3ub image(getWidthi(), getHeighti());
 
 			std::string filename = GetPathTracerSphlRenderName(
 				Interface.sceneName,
@@ -399,7 +403,7 @@ namespace SSPHH
 			Interface.ssphh.lastSphlRenderPath = filename;
 			Hf::StopWatch stopwatch;
 			glFinish();
-			glReadPixels(0, 0, (GLsizei)screenWidth, (GLsizei)screenHeight, GL_RGB, GL_UNSIGNED_BYTE, (void*)image.getPixels(0)->const_ptr());
+			glReadPixels(0, 0, getWidthi(), getHeighti(), GL_RGB, GL_UNSIGNED_BYTE, (void*)image.getPixels(0)->const_ptr());
 			HFLOGINFO("glReadPixels took %3.2f milliseconds", stopwatch.GetMillisecondsElapsed());
 			stopwatch.Start();
 			image.savePPMi(filename, 1.0f, 0, 255, 0, true);

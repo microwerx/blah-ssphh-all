@@ -7,7 +7,7 @@ PbskyViewController::PbskyViewController(SSPHH::SSPHH_Application* app) :
 PbskyViewController::~PbskyViewController() {}
 
 void PbskyViewController::init() {
-	ImGui::SetNextWindowPos(ImVec2(app_->screenWidth - w, app_->screenHeight - h));
+	ImGui::SetNextWindowPos(ImVec2(app_->windowRect().w - w, app_->windowRect().h - h));
 	ImGui::SetNextWindowSize(ImVec2(w, h));
 	firstshow = false;
 }
