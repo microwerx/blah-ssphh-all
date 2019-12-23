@@ -39,50 +39,61 @@ void RendererWindow::OnRenderDearImGui() {
 	if (ImGui::Button("Load Configs")) HFCLOCKSf(lastConfigsLoadTime, context->loadConfig(SSPHH::default_renderconfig_path))
 		ImGui::Value("configs load", lastConfigsLoadTime);
 
-	if (ImGui::Button("Load Shaders")) HFCLOCKSf(lastShadersLoadTime, context->loadShaders())
-		ImGui::Value("shaders load", lastShadersLoadTime);
+	if (ImGui::Button("Load Shaders")) HFCLOCKSf(lastShadersLoadTime, context->loadShaders());
+	ImGui::Value("shaders load", lastShadersLoadTime);
 
-	if (ImGui::Button("Load Textures")) HFCLOCKSf(lastTextureLoadTime, context->loadTextures())
-		ImGui::Value("texture load", lastTextureLoadTime);
+	if (ImGui::Button("Load Textures")) HFCLOCKSf(lastTextureLoadTime, context->loadTextures());
+	ImGui::Value("texture load", lastTextureLoadTime);
+
+	static float lastFramebufferTime{ 0 };
+	if (ImGui::Button("Make Framebuffers")) HFCLOCKSf(lastFramebufferTime, context->makeFramebuffers());
+	ImGui::Value("framebuffer time", lastFramebufferTime);
 
 	if (ImGui::TreeNode("programs")) {
 		for (auto& [k, ro] : context->programs) {
-			ImGui::Text(ro.name());
+			ImGui::Text("%s [%s, %s]", ro.name(), ro.status(), (ro.usable() ? "usable" : "not usable"));
 		}
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("renderers")) {
 		for (auto& [k, ro] : context->renderers) {
-			ImGui::Text(ro.name());
+			ImGui::Text("%s [%s, %s]", ro.name(), ro.status(), (ro.usable() ? "usable" : "not usable"));
 		}
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("rendererconfigs")) {
 		for (auto& [k, ro] : context->rendererConfigs) {
-			ImGui::Text(ro.name());
+			ImGui::Text("%s [%s, %s]", ro.name(), ro.status(), (ro.usable() ? "usable" : "not usable"));
+		}
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("fbos")) {
+		for (auto& [k, ro] : context->fbos) {
+			ImGui::Text("%s [%s, %s]", ro.name(), ro.status(), (ro.usable() ? "usable" : "not usable"));
 		}
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("texture2Ds")) {
-		for (auto& [k, t] : context->texture2Ds) {
-			ImGui::Text(t.name());
+		for (auto& [k, ro] : context->texture2Ds) {
+			ImGui::Text("%s [%s, %s]", ro.name(), ro.status(), (ro.usable() ? "usable" : "not usable"));
 		}
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("textureCubes")) {
-		for (auto& [k, t] : context->textureCubes) {
-			ImGui::Text(t.name());
+		for (auto& [k, ro] : context->textureCubes) {
+			ImGui::Text("%s [%s, %s]", ro.name(), ro.status(), (ro.usable() ? "usable" : "not usable"));
 		}
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("samplers")) {
-		for (auto& [k, t] : context->samplers) {
-			ImGui::Text(t.name());
+		for (auto& [k, ro] : context->samplers) {
+			ImGui::Text("%s [%s, %s]", ro.name(), ro.status(), (ro.usable() ? "usable" : "not usable"));
 		}
 		ImGui::TreePop();
 	}

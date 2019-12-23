@@ -80,10 +80,19 @@ void RendererConfigWindow::OnRenderDearImGui() {
 
 	ImGui::TextColored(Colors::White, "RC '%s' [%s]", rc->name(), rc->parent()->name());
 	for (const auto& [k, v] : rc->writeFBOs) {
-		ImGui::Text("writefbo: %s", (v ? v->name() : "NULL"));
+		ImGui::Text("writefbo: %s %s", (v ? v->name() : "NULL"), (v ? v->status() : "no status"));
+		if (v) {
+			for (const auto& fbo : v->renderTargets) {
+				ImGui::Text("target: %s/%s/%s",
+							Fluxions::glNameTranslator.getString(fbo.first),
+							Fluxions::glNameTranslator.getString(fbo.second.attachment),
+							Fluxions::glNameTranslator.getString(fbo.second.target));
+			}
+		}
 	}
+
 	for (const auto& [k, v] : rc->readFBOs) {
-		ImGui::Text("readfbo: %s", (v ? v->name() : "NULL"));
+		ImGui::Text("readfbo: %s %s", (v ? v->name() : "NULL"), (v ? v->status() : "no status"));
 	}
 
 	// PROGRAM information ///////////////////////////////////////////////

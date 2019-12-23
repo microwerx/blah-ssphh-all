@@ -150,7 +150,7 @@ renderconfig autoresize
 
 renderconfig pbr_rc
 renderconfig program pbr_program
-# renderconfig writefbo linear_fbo
+renderconfig writefbo linear_fbo
 renderconfig readfbo sunShadow
 renderconfig readfbo moonShadow
 renderconfig camera default
