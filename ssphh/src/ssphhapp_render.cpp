@@ -29,7 +29,11 @@ void RendererWindow::OnRenderDearImGui() {
 	if (!context || !beginWindow()) return;
 	Vf::Window::OnRenderDearImGui();
 
-	if (ImGui::Button("Reset")) context->reset();
+	if (ImGui::Button("Reset")) {
+		context->reset();
+		endWindow();
+		return;
+	}
 	ImGui::SameLine();
 	if (ImGui::Button("Defaults")) context->set_default_parameters();
 

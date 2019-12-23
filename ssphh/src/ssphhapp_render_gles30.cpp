@@ -21,21 +21,48 @@ namespace SSPHH
 		// Render VIZ into FBO
 		// Render POST with FBO to screen
 
-		SetupRenderGLES30();
-		RenderGLES30Shadows();
-		RenderGLES30Scene();
+		//SetupRenderGLES30();
+		//RenderGLES30Shadows();
+		//RenderGLES30Scene();
 
-		RenderGLES30SPHLs();
-		RenderGL11Hierarchies();
+		//RenderGLES30SPHLs();
+		//RenderGL11Hierarchies();
 
-		if (counter == 1)
-			RenderTest1SunShadows();
-		if (counter == 2)
-			RenderTest2SphereCubeMap();
-		if (counter == 3)
-			RenderTest3EnviroCubeMap();
+		//if (counter == 1)
+		//	RenderTest1SunShadows();
+		//if (counter == 2)
+		//	RenderTest2SphereCubeMap();
+		//if (counter == 3)
+		//	RenderTest3EnviroCubeMap();
+
+		RenderGLES30_SkyBox();
+		RenderGLES30_PostProcess();
 
 		FxSetDefaultErrorMessage();
+	}
+
+	void SSPHH_Application::RenderGLES30_SkyBox() {
+		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
+
+		const std::string renderername{ "skybox" };
+		if (rendererContext.renderers.count(renderername)) {
+			const std::string& renderconfigname = rendererContext.renderers[renderername].renderconfigname;
+			Fluxions::RenderImage(rendererContext, ssg, renderername, renderconfigname);
+		}
+
+		while (glGetError() != GL_NO_ERROR) HFLOGWARN("OpenGL Error");
+	}
+
+	void SSPHH_Application::RenderGLES30_PostProcess() {
+		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
+
+		const std::string renderername{ "postprocess" };
+		if (rendererContext.renderers.count(renderername)) {
+			const std::string& renderconfigname = rendererContext.renderers[renderername].renderconfigname;
+			Fluxions::RenderImage(rendererContext, ssg, renderername, renderconfigname);
+		}
+
+		while (glGetError() != GL_NO_ERROR) HFLOGWARN("OpenGL Error");
 	}
 
 

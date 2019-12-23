@@ -527,6 +527,8 @@ namespace SSPHH
 		void RenderGLES30Shadows();
 		void RenderGLES30SPHLs();
 		void RenderGL11Hierarchies();
+		void RenderGLES30_SkyBox();
+		void RenderGLES30_PostProcess();
 
 		void RenderTest1SunShadows();
 		void RenderTest2SphereCubeMap();

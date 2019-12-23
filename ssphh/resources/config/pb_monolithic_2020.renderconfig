@@ -2,6 +2,8 @@
 
 @DEFAULTWIDTH 1024
 @DEFAULTHEIGHT 1024
+@SCREENWIDTH 1280
+@SCREENHEIGHT 720
 
 # ==== Paths ====
 
@@ -32,10 +34,11 @@ sampler GL_TEXTURE_MAG_FILTER GL_LINEAR
 
 # ==== Textures ====
 
-#texture2D test2d
-#texture2D sampler default2dSampler
-#texture2D uniform MapKd
-#texture2D map "test_texture_2d.png"
+texture2D test2d
+texture2D sampler default2dSampler
+texture2D uniform MapKd
+# texture2D map "test_texture_2d.png"
+texture2D map stpeters_probe.pfm
 
 #textureCube pbskyEXR
 #textureCube map "test_corona_skymap.exr"
@@ -64,10 +67,10 @@ textureCube sampler defaultCubeSampler
 
 # ==== Programs ====
 
-program zonly_program
-vertshader zonly.vert
-fragshader zonly.frag
-vertattrib 0 aPosition
+# program zonly_program
+# vertshader zonly.vert
+# fragshader zonly.frag
+# vertattrib 0 aPosition
 
 program pbr_program
 vertshader gles30.vert
@@ -78,12 +81,12 @@ vertattrib 2 aTexCoord
 vertattrib 3 aColor
 vertattrib 4 aAttrib
 
-program sphl_program
-vertshader sphl300.vert
-fragshader sphl300.frag
-vertattrib 0 aPosition
-vertattrib 1 aNormal
-vertattrib 2 aTexCoord
+# program sphl_program
+# vertshader sphl300.vert
+# fragshader sphl300.frag
+# vertattrib 0 aPosition
+# vertattrib 1 aNormal
+# vertattrib 2 aTexCoord
 
 program skybox_program
 vertshader skybox.vert
@@ -92,60 +95,67 @@ vertattrib 0 aPosition
 vertattrib 1 aNormal
 vertattrib 2 aTexCoord
 
-program UnwrappedCubeMap
-vertshader glut_unwrapped_cubemap.vert
-fragshader glut_unwrapped_cubemap.frag
-vertattrib 0 aPosition
-vertattrib 1 aTexCoord
+# program UnwrappedCubeMap
+# vertshader glut_unwrapped_cubemap.vert
+# fragshader glut_unwrapped_cubemap.frag
+# vertattrib 0 aPosition
+# vertattrib 1 aTexCoord
 
-program cube_shadow
-vertshader cube_shadow_gl330.vert
-geomshader cube_shadow_gl330.geom
-fragshader cube_shadow_gl330.frag
-vertattrib 0 aPosition
+# program cube_shadow
+# vertshader cube_shadow_gl330.vert
+# geomshader cube_shadow_gl330.geom
+# fragshader cube_shadow_gl330.frag
+# vertattrib 0 aPosition
+
+program postprocess_program
+vertshader postprocess.vert
+fragshader postprocess.frag
 
 # ==== Framebuffers ====
 
-fbo sunShadow
-fbo dimensions @DEFAULTWIDTH @DEFAULTHEIGHT
-fbo attach GL_TEXTURE_2D GL_DEPTH_ATTACHMENT  GL_DEPTH_COMPONENT32F MapSunShadow
-fbo attach GL_TEXTURE_2D GL_COLOR_ATTACHMENT0 GL_RGBA32F            MapSunColor
+# fbo sunShadow
+# fbo dimensions @DEFAULTWIDTH @DEFAULTHEIGHT
+# fbo attach GL_TEXTURE_2D GL_DEPTH_ATTACHMENT  GL_DEPTH_COMPONENT32F MapSunShadow
+# fbo attach GL_TEXTURE_2D GL_COLOR_ATTACHMENT0 GL_RGBA32F            MapSunColor
 
-fbo moonShadow
-fbo dimensions 512 512
-fbo attach GL_TEXTURE_2D GL_DEPTH_ATTACHMENT  GL_DEPTH_COMPONENT16  MapMoonShadow
-fbo attach GL_TEXTURE_2D GL_COLOR_ATTACHMENT0 GL_RGBA32F            MapMoonColor
+# fbo moonShadow
+# fbo dimensions 512 512
+# fbo attach GL_TEXTURE_2D GL_DEPTH_ATTACHMENT  GL_DEPTH_COMPONENT16  MapMoonShadow
+# fbo attach GL_TEXTURE_2D GL_COLOR_ATTACHMENT0 GL_RGBA32F            MapMoonColor
 
-# `linearfbo` is used to render the final image. We lay down the skybox first
+# `linear_fbo` is used to render the final image. We lay down the skybox first
 # and then draw the scene on top of it followed by any visualization graphics.
 # This is used as input to the post processing shader for gamma adjustment. The
 # ImGui is drawn last on the screen.
 fbo linear_fbo
 fbo dimensions @SCREENWIDTH @SCREENHEIGHT
-fbo attach GL_TEXTURE_2D GL_DEPTH_ATTACHMENT  GL_DEPTH_COMPONENT32F MapDepthBuffer
+fbo attach GL_TEXTURE_2D GL_DEPTH_ATTACHMENT  GL_DEPTH_COMPONENT16  MapDepthBuffer
 fbo attach GL_TEXTURE_2D GL_COLOR_ATTACHMENT0 GL_RGBA32F            MapColorBuffer
 
 # ==== Render Configurations ====
 
-renderconfig sunShadow
-renderconfig writefbo sunShadow
-renderconfig program zonly
-renderconfig camera sunInverseTransform
-renderconfig projection orthoSquare
+# renderconfig sunShadow
+# renderconfig writefbo sunShadow
+# renderconfig program zonly
+# renderconfig camera sunInverseTransform
+# renderconfig projection orthoSquare
 
-renderconfig moonShadow
-renderconfig writefbo moonShadow
-renderconfig program zonly
-renderconfig camera moonInverseTransform
-renderconfig projection orthoSquare
+# renderconfig moonShadow
+# renderconfig writefbo moonShadow
+# renderconfig program zonly
+# renderconfig camera moonInverseTransform
+# renderconfig projection orthoSquare
 
 # this render config is for drawing the skybox
 renderconfig skybox_rc
 renderconfig program skybox_program
+renderconfig writefbo linear_fbo
+renderconfig textureCube enviroSkyCube MapEnviroCube
 renderconfig clearcolor 1.0 0.0 1.0 1.0
 renderconfig viewport 2048 1536
 renderconfig perspective 120 1 100
 renderconfig autoresize
+renderconfig draw skybox
 # renderconfig camera default
 
 renderconfig pbr_rc
@@ -155,17 +165,20 @@ renderconfig readfbo sunShadow
 renderconfig readfbo moonShadow
 renderconfig camera default
 renderconfig clearcolor 1.0 0.0 1.0 1.0
+renderconfig draw scene
 
-renderconfig sphl_rc
-renderconfig program sphl_program
-# renderconfig writefbo linear_fbo
-renderconfig viewport @SCREENWIDTH @SCREENHEIGHT
-renderconfig camera default
+# renderconfig sphl_rc
+# renderconfig program sphl_program
+# # renderconfig writefbo linear_fbo
+# renderconfig viewport @SCREENWIDTH @SCREENHEIGHT
+# renderconfig camera default
 
 renderconfig postprocess_rc
 renderconfig program postprocess_program
-renderconfig readfbo linearfbo
-renderconfig viewport @SCREENWIDTH @SCREENHEIGHT
+renderconfig readfbo linear_fbo
+renderconfig viewport 100 100 1024 1024
+renderconfig texture2D test2d MapKd
+renderconfig draw post
 
 # ==== UniformLists ====
 
