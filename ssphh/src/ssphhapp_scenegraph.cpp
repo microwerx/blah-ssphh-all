@@ -46,12 +46,11 @@ namespace SSPHH
 			return;
 		}
 
-		FilePathInfo fpi(sceneFilename);
-		Interface.sceneName = fpi.fname;
 		ssg.Load(sceneFilename);
+		Interface.sceneName = ssg.name;
 		//ssg.BuildBuffers();
 
-		rendererContext.renderers["gles30CubeMap"].setSceneGraph(&ssg);
+		//rendererContext.renderers["gles30CubeMap"].setSceneGraph(&ssg);
 	}
 
 	void SSPHH_Application::SSG_OptimizeClippingPlanes() {

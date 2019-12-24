@@ -19,15 +19,16 @@ vec3 filmicCompress(vec3 linearColor) {
 }
 
 void main() {
-	vec3 color = texture2D(MapColorBuffer, vTexCoord.st).rgb;
+	vec3 color = texture2D(MapDepthBuffer, vTexCoord.st).rgb;
 	
-	if (length(color) <= 0.2) {
-		color = texture2D(MapKd, vTexCoord.st).rgb;
-	}
+	// if (length(color) <= 0.2) {
+	// 	color = texture2D(MapKd, vTexCoord.st).rgb;
+	// }
 
-	if (length(color) <= 0.0) {
-		color = vec3(0.0, 1.0, 1.0);
-	}
+	// if (length(color) <= 0.0) {
+	// 	color = vec3(0.0, 1.0, 1.0);
+	// }
+	color += vec3(0.1, 0.0, 0.0);
 	
 	float exposure = 2.5 * pow(2.0, ToneMapExposure);
 	color *= exposure;

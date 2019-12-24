@@ -61,7 +61,7 @@ texture2D map stpeters_probe.pfm
 #textureCube sampler defaultCubeSampler
 
 textureCube enviroSkyCube
-textureCube map test_corona_cube.exr
+textureCube map test_61_cube.png
 textureCube uniform MapEnviroCube
 textureCube sampler defaultCubeSampler
 
@@ -73,13 +73,8 @@ textureCube sampler defaultCubeSampler
 # vertattrib 0 aPosition
 
 program pbr_program
-vertshader gles30.vert
-fragshader gles30.frag
-vertattrib 0 aPosition
-vertattrib 1 aNormal
-vertattrib 2 aTexCoord
-vertattrib 3 aColor
-vertattrib 4 aAttrib
+vertshader basic_gles30.vert
+fragshader basic_gles30.frag
 
 # program sphl_program
 # vertshader sphl300.vert
@@ -128,7 +123,7 @@ fragshader postprocess.frag
 # This is used as input to the post processing shader for gamma adjustment. The
 # ImGui is drawn last on the screen.
 fbo linear_fbo
-fbo dimensions @SCREENWIDTH @SCREENHEIGHT
+fbo dimensions @DEFAULTWIDTH @DEFAULTHEIGHT
 fbo attach GL_TEXTURE_2D GL_DEPTH_ATTACHMENT  GL_DEPTH_COMPONENT16  MapDepthBuffer
 fbo attach GL_TEXTURE_2D GL_COLOR_ATTACHMENT0 GL_RGBA32F            MapColorBuffer
 

@@ -169,6 +169,14 @@ void RendererConfigWindow::OnRenderDearImGui() {
 		ImGui::SliderFloat("Filmic Shadows", &rc->renderPostFilmicShadows, 0.0f, 1.0f);
 	}
 
+	if (ImGui::TreeNode("Metrics")) {
+		ImGui::Value("Render Time: ", rc->metrics_total_ms);
+		ImGui::Value("Skybox Time: ", rc->metrics_skybox_ms);
+		ImGui::Value("Scene Graph Time: ", rc->metrics_scene_ms);
+		ImGui::Value("Post Time: ", rc->metrics_posttime_ms);
+		ImGui::TreePop();
+	}
+
 	endWindow();
 }
 
