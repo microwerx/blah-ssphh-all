@@ -126,7 +126,7 @@ fragshader postprocess.frag
 fbo linear_fbo
 fbo dimensions @DEFAULTWIDTH @DEFAULTHEIGHT
 fbo attach GL_TEXTURE_2D GL_DEPTH_ATTACHMENT  GL_DEPTH_COMPONENT16  MapDepthBuffer
-fbo attach GL_TEXTURE_2D GL_COLOR_ATTACHMENT0 GL_RGBA32F            MapColorBuffer
+fbo attach GL_TEXTURE_2D GL_COLOR_ATTACHMENT0 GL_RGBA16F            MapColorBuffer
 
 # ==== Render Configurations ====
 
