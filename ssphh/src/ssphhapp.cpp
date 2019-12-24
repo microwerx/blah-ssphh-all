@@ -64,10 +64,10 @@ namespace SSPHH
 	using namespace Fluxions;
 	using namespace Vf;
 
-	const char* default_scene_graph_path = "resources/scenes/maze_scene/maze.scn";
+	const char* default_scene_graph_path = "resources/scenes/test_texture_scene/test_terrain_scene.scn";
+	//const char* default_scene_graph_path = "resources/scenes/maze_scene/maze.scn";
 	const char* default_renderconfig_path = "resources/config/pb_monolithic_2020.renderconfig";
 	//const char* default_coronaskyboxcubemap_path = "export_cubemap.png";
-	//const char* default_scene_graph_path = "resources/scenes/test_texture_scene/test_terrain_scene.scn";
 	const std::string default_coronaskyboxcubemap_path{ "export_cubemap.png" };
 	const std::string default_pbsky_cubemap1_ppm{ "pbsky_cubemap_1.ppm" };
 	const std::string default_pbsky_cubemap2_ppm{ "pbsky_cubemap_2.ppm" };
@@ -319,22 +319,22 @@ namespace SSPHH
 	void SSPHH_Application::RenderTest1SunShadows() {
 		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
 
-		RendererConfig& rc = rendererContext.rendererConfigs["rectShadow"];
-		int w = rc.viewportRect.w;
-		int h = rc.viewportRect.h;
-		glClear(GL_DEPTH_BUFFER_BIT);
-		rc.viewportRect.x = getWidthi() - 256;
-		rc.viewportRect.y = 0;
-		rc.viewportRect.w = 256;
-		rc.viewportRect.h = 256;
-		rc.clearColorBuffer = false;
-		rc.renderToFBO = false;
-		// TODO: fix Advanced render
-		// ssg.AdvancedRender(rc);
-		rc.viewportRect.w = w;
-		rc.viewportRect.h = h;
-		rc.viewportRect.x = 0;
-		rc.viewportRect.y = 0;
+		//RendererConfig& rc = rendererContext.rendererConfigs["rectShadow"];
+		//int w = rc.viewportRect.w;
+		//int h = rc.viewportRect.h;
+		//glClear(GL_DEPTH_BUFFER_BIT);
+		//rc.viewportRect.x = getWidthi() - 256;
+		//rc.viewportRect.y = 0;
+		//rc.viewportRect.w = 256;
+		//rc.viewportRect.h = 256;
+		//rc.clearColorBuffer = false;
+		//rc.renderToFBO = false;
+		//// TODO: fix Advanced render
+		//// ssg.AdvancedRender(rc);
+		//rc.viewportRect.w = w;
+		//rc.viewportRect.h = h;
+		//rc.viewportRect.x = 0;
+		//rc.viewportRect.y = 0;
 	}
 
 	void SSPHH_Application::RenderTest2SphereCubeMap() {

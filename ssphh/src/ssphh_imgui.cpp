@@ -1359,13 +1359,15 @@ namespace SSPHH
 		if (ssgUserData->ssphhLights.empty() && ssgUserData->ssphhLights.size() <= which)
 			return;
 
-		RendererTextureObject& enviroSkyBoxTexture = rendererContext.textures["enviroSkyBox"];
-		enviroSkyBoxTexture.loadTextureCoronaCubeMap("export_cubemap.png", true);
+		RendererTextureCube& enviroSkyBoxTexture = rendererContext.textureCubes["enviroSkyBox"];
+		enviroSkyBoxTexture.loadMap("export_cubemap.png", true);
+		//enviroSkyBoxTexture.loadTextureCoronaCubeMap("export_cubemap.png", true);
 
 		SphlSampler sphlSampler;
 		sphlSampler.resize(64, 32);
 		sphlSampler.saveSampleMap("sample_stratification.ppm", 4);
-		sphlSampler.sampleCubeMap(enviroSkyBoxTexture.getImage(), ssgUserData->ssphhLights[which].msph);
+		// TODO: Need to write a CubeMapToSphl routine
+		// sphlSampler.sampleCubeMap(enviroSkyBoxTexture.getImage(), ssgUserData->ssphhLights[which].msph);
 
 		ssgUserData->ssphhLights[which].dirty = true;
 	}

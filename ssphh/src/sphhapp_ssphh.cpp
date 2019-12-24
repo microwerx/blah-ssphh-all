@@ -89,153 +89,153 @@ namespace SSPHH
 	void SSPHH_Application::RenderGLES30SPHLs() {
 		if (!Interface.ssphh.enableShowSPHLs)
 			return;
-		//RendererContext gl;
-		RendererConfig& rc = rendererContext.rendererConfigs["default"];
-		// FIXME: Are we using rendererContext?
-		rc.shaderProgram.reset();// = rendererContext.FindProgram("sphl", "sphl");
-		rc.clearDepthBuffer = false;
-		rc.clearColorBuffer = false;
-		rc.enableBlend = false;
-		rc.blendFuncSrcFactor = GL_SRC_ALPHA;
-		rc.blendFuncDstFactor = GL_ONE;
+		////RendererContext gl;
+		//RendererConfig& rc = rendererContext.rendererConfigs["default"];
+		//// FIXME: Are we using rendererContext?
+		//rc.rc_program_ptr->reset();// = rendererContext.FindProgram("sphl", "sphl");
+		//rc.clearDepthBuffer = false;
+		//rc.clearColorBuffer = false;
+		//rc.enableBlend = false;
+		//rc.blendFuncSrcFactor = GL_SRC_ALPHA;
+		//rc.blendFuncDstFactor = GL_ONE;
 
-		if (!rc.shaderProgram) {
-			//Hf::Log.info("%s(): sphl shader not found", __FUNCTION__);
-			return;
-		}
+		//if (!rc.shaderProgram) {
+		//	//Hf::Log.info("%s(): sphl shader not found", __FUNCTION__);
+		//	return;
+		//}
 
-		GLint vloc = rc.shaderProgram->getAttribLocation("aPosition");
-		GLint tloc = rc.shaderProgram->getAttribLocation("aTexCoord");
+		//GLint vloc = rc.shaderProgram->getAttribLocation("aPosition");
+		//GLint tloc = rc.shaderProgram->getAttribLocation("aTexCoord");
 
-		// BEGIN RENDER SPH
-		RendererGLES30&sph_renderer = rendererContext.renderers["sph_renderer"];
-		sph_renderer.setRenderConfig(&rc);
-		//auto program1 = rc.shaderProgram = rendererContext.FindProgram("sphl", "sphl");
-		//auto program2 = rc.shaderProgram = rendererContext.FindProgram("glut", "cubemap");
-		sph_renderer.saveGLState();
-		if (sph_renderer.applyRenderConfig()) {
-			glActiveTexture(GL_TEXTURE0);
-			for (auto& it : sphls) {
-				auto& sphl = it.second;
+		//// BEGIN RENDER SPH
+		//RendererGLES30&sph_renderer = rendererContext.renderers["sph_renderer"];
+		//sph_renderer.setRenderConfig(&rc);
+		////auto program1 = rc.shaderProgram = rendererContext.FindProgram("sphl", "sphl");
+		////auto program2 = rc.shaderProgram = rendererContext.FindProgram("glut", "cubemap");
+		//sph_renderer.saveGLState();
+		//if (sph_renderer.applyRenderConfig()) {
+		//	glActiveTexture(GL_TEXTURE0);
+		//	for (auto& it : sphls) {
+		//		auto& sphl = it.second;
 
-				if (!sphl.enabled)
-					continue;
+		//		if (!sphl.enabled)
+		//			continue;
 
-				// glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, sphl.lightProbeTexIds[0]);
+		//		// glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, sphl.lightProbeTexIds[0]);
 
-				rc.shaderProgram->applyUniform("SPHL_LightProbeMode", (RendererUniform)0);
-				rc.shaderProgram->applyUniform("SPHL_NumDegrees", (RendererUniform)2);
-				rc.shaderProgram->applyUniform("SPHL_Coefs", RendererUniform(GL_FLOAT_VEC4, 9, GL_FALSE, (GLubyte*)sphl.coefs));
-				rc.shaderProgram->applyUniform("SPHL_LightProbe", (RendererUniform)0);
+		//		rc.shaderProgram->applyUniform("SPHL_LightProbeMode", (RendererUniform)0);
+		//		rc.shaderProgram->applyUniform("SPHL_NumDegrees", (RendererUniform)2);
+		//		rc.shaderProgram->applyUniform("SPHL_Coefs", RendererUniform(GL_FLOAT_VEC4, 9, GL_FALSE, (GLubyte*)sphl.coefs));
+		//		rc.shaderProgram->applyUniform("SPHL_LightProbe", (RendererUniform)0);
 
-				Matrix4f worldMatrix;
-				worldMatrix.Translate(sphl.position.x, sphl.position.y, sphl.position.z);
-				rendererContext.renderers["sph_renderer"].renderMesh(sphl.sph_model, worldMatrix);
+		//		Matrix4f worldMatrix;
+		//		worldMatrix.Translate(sphl.position.x, sphl.position.y, sphl.position.z);
+		//		rendererContext.renderers["sph_renderer"].renderMesh(sphl.sph_model, worldMatrix);
 
-				if (!Interface.ssphh.enableBasicShowSPHLs) {
-					Matrix4f identityMatrix;
-					rc.shaderProgram->applyUniform("SPHL_LightProbeMode", (RendererUniform)1);
-					rc.shaderProgram->applyUniform("WorldMatrix", (RendererUniform)identityMatrix);
-					// Render light probe cube maps
-					float angles[3] = { 270.0f, 135.0f, 45.0f };
-					for (auto& a : angles)
-						a *= FX_F32_DEGREES_TO_RADIANS;
-					float R = 1.0f;
-					float S = 0.5f;
-					Matrix4f lpWorldMatrix[3];
-					rc.shaderProgram->use();
-					for (int i = 0; i < 3; i++) {
+		//		if (!Interface.ssphh.enableBasicShowSPHLs) {
+		//			Matrix4f identityMatrix;
+		//			rc.shaderProgram->applyUniform("SPHL_LightProbeMode", (RendererUniform)1);
+		//			rc.shaderProgram->applyUniform("WorldMatrix", (RendererUniform)identityMatrix);
+		//			// Render light probe cube maps
+		//			float angles[3] = { 270.0f, 135.0f, 45.0f };
+		//			for (auto& a : angles)
+		//				a *= FX_F32_DEGREES_TO_RADIANS;
+		//			float R = 1.0f;
+		//			float S = 0.5f;
+		//			Matrix4f lpWorldMatrix[3];
+		//			rc.shaderProgram->use();
+		//			for (int i = 0; i < 3; i++) {
 
-						// glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, sphl.lightProbeTexIds[i]);
-						//if (i == 0)
-						//	glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, enviroSkyBoxTexture.GetTextureId());
-						//else if (i == 1)
-						//	glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, ssg.environment.pbskyColorMapId);
-						//else if (i == 2)
+		//				// glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, sphl.lightProbeTexIds[i]);
+		//				//if (i == 0)
+		//				//	glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, enviroSkyBoxTexture.GetTextureId());
+		//				//else if (i == 1)
+		//				//	glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, ssg.environment.pbskyColorMapId);
+		//				//else if (i == 2)
 
-						FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, sphl.lightProbeTexIds[i]);
+		//				FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, sphl.lightProbeTexIds[i]);
 
-						//sph_renderer.RenderMesh(sphl.lightProbeModel, lpWorldMatrix[i]);
-						FxDrawGL2CubeMap(
-							sphl.position.x + R * cos(angles[i]),
-							sphl.position.y + R * sin(angles[i]),
-							sphl.position.z,
-							S, vloc, tloc);
-					}
-				}
-			}
+		//				//sph_renderer.RenderMesh(sphl.lightProbeModel, lpWorldMatrix[i]);
+		//				FxDrawGL2CubeMap(
+		//					sphl.position.x + R * cos(angles[i]),
+		//					sphl.position.y + R * sin(angles[i]),
+		//					sphl.position.z,
+		//					S, vloc, tloc);
+		//			}
+		//		}
+		//	}
 
-			FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-			glActiveTexture(GL_TEXTURE0);
-		}
+		//	FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+		//	glActiveTexture(GL_TEXTURE0);
+		//}
 
-		if (0) //(!Interface.ssphh.enableBasicShowSPHLs)
-		{
-			for (auto& sphl : ssgUserData->ssphhLights) {
-				double S = 0.25;
-				double R = 1.0;
-				FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, sphl.ptrcLightProbeTexture.getTexture());
-				FxDrawGL2CubeMap(
-					sphl.position.x + R * 0.707 + S * 1,
-					sphl.position.y - R * 0.707,
-					sphl.position.z,
-					S, vloc, tloc);
-				FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, sphl.msphLightProbeTexture.getTexture());
-				FxDrawGL2CubeMap(
-					sphl.position.x + R * 0.707 + S * 3,
-					sphl.position.y - R * 0.707,
-					sphl.position.z,
-					S, vloc, tloc);
-				FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, sphl.hierLightProbeTexture.getTexture());
-				FxDrawGL2CubeMap(
-					sphl.position.x + R * 0.707 + S * 5,
-					sphl.position.y - R * 0.707,
-					sphl.position.z,
-					S, vloc, tloc);
+		//if (0) //(!Interface.ssphh.enableBasicShowSPHLs)
+		//{
+		//	for (auto& sphl : ssgUserData->ssphhLights) {
+		//		double S = 0.25;
+		//		double R = 1.0;
+		//		FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, sphl.ptrcLightProbeTexture.getTexture());
+		//		FxDrawGL2CubeMap(
+		//			sphl.position.x + R * 0.707 + S * 1,
+		//			sphl.position.y - R * 0.707,
+		//			sphl.position.z,
+		//			S, vloc, tloc);
+		//		FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, sphl.msphLightProbeTexture.getTexture());
+		//		FxDrawGL2CubeMap(
+		//			sphl.position.x + R * 0.707 + S * 3,
+		//			sphl.position.y - R * 0.707,
+		//			sphl.position.z,
+		//			S, vloc, tloc);
+		//		FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, sphl.hierLightProbeTexture.getTexture());
+		//		FxDrawGL2CubeMap(
+		//			sphl.position.x + R * 0.707 + S * 5,
+		//			sphl.position.y - R * 0.707,
+		//			sphl.position.z,
+		//			S, vloc, tloc);
 
-				//auto i = 0;
-				//for (auto & hier : sphl.hierarchies)
-				//{
-				//	GLuint texture = 0;
+		//		//auto i = 0;
+		//		//for (auto & hier : sphl.hierarchies)
+		//		//{
+		//		//	GLuint texture = 0;
 
-				//	texture = hier.debugLightProbe.texture.GetTexture();
-				//	glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, texture);
-				//	FxDrawGL2CubeMap(
-				//		sphl.position.x + R * 0.707 + S * (i * 2 + 1),
-				//		sphl.position.y - R * 0.707 - S * 2,
-				//		sphl.position.z,
-				//		S, vloc, tloc);
+		//		//	texture = hier.debugLightProbe.texture.GetTexture();
+		//		//	glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+		//		//	FxDrawGL2CubeMap(
+		//		//		sphl.position.x + R * 0.707 + S * (i * 2 + 1),
+		//		//		sphl.position.y - R * 0.707 - S * 2,
+		//		//		sphl.position.z,
+		//		//		S, vloc, tloc);
 
-				//	texture = hier.debugSphLightProbe.texture.GetTexture();
-				//	glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, texture);
-				//	FxDrawGL2CubeMap(
-				//		sphl.position.x + R * 0.707 + S * (i * 2 + 1),
-				//		sphl.position.y - R * 0.707 - S * 4,
-				//		sphl.position.z,
-				//		S, vloc, tloc);
+		//		//	texture = hier.debugSphLightProbe.texture.GetTexture();
+		//		//	glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+		//		//	FxDrawGL2CubeMap(
+		//		//		sphl.position.x + R * 0.707 + S * (i * 2 + 1),
+		//		//		sphl.position.y - R * 0.707 - S * 4,
+		//		//		sphl.position.z,
+		//		//		S, vloc, tloc);
 
-				//	texture = ssgUserData->ssphhLights[hier.index].ptrcLightProbeTexture.GetTexture();
-				//	glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, texture);
-				//	FxDrawGL2CubeMap(
-				//		sphl.position.x + R * 0.707 + S * (i * 2 + 1),
-				//		sphl.position.y - R * 0.707 - S * 6,
-				//		sphl.position.z,
-				//		S, vloc, tloc);
+		//		//	texture = ssgUserData->ssphhLights[hier.index].ptrcLightProbeTexture.GetTexture();
+		//		//	glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+		//		//	FxDrawGL2CubeMap(
+		//		//		sphl.position.x + R * 0.707 + S * (i * 2 + 1),
+		//		//		sphl.position.y - R * 0.707 - S * 6,
+		//		//		sphl.position.z,
+		//		//		S, vloc, tloc);
 
-				//	texture = ssgUserData->ssphhLights[hier.index].msphLightProbeTexture.GetTexture();
-				//	glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, texture);
-				//	FxDrawGL2CubeMap(
-				//		sphl.position.x + R * 0.707 + S * (i * 2 + 1),
-				//		sphl.position.y - R * 0.707 - S * 8,
-				//		sphl.position.z,
-				//		S, vloc, tloc);
-				//	i++;
-				//}
+		//		//	texture = ssgUserData->ssphhLights[hier.index].msphLightProbeTexture.GetTexture();
+		//		//	glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+		//		//	FxDrawGL2CubeMap(
+		//		//		sphl.position.x + R * 0.707 + S * (i * 2 + 1),
+		//		//		sphl.position.y - R * 0.707 - S * 8,
+		//		//		sphl.position.z,
+		//		//		S, vloc, tloc);
+		//		//	i++;
+		//		//}
 
-				FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-			}
-		}
-		sph_renderer.restoreGLState();
+		//		FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+		//	}
+		//}
+		//sph_renderer.restoreGLState();
 	}
 
 	void SSPHH_Application::RenderGL11Hierarchies() {
@@ -272,22 +272,22 @@ namespace SSPHH
 						l = 0.5f;
 
 					SimpleVertex v1, v2;
-					v1.color = HLSToRGBf(h, l, s).ToColor4();
-					v1.position = ssgUserData->ssphhLights[i].position.xyz();
-					v2.color = v1.color;
-					v2.position = ssgUserData->ssphhLights[j].position.xyz();
+					v1.aColor = HLSToRGBf(h, l, s).ToColor4();
+					v1.aPosition = ssgUserData->ssphhLights[i].position.xyz();
+					v2.aColor = v1.aColor;
+					v2.aPosition = ssgUserData->ssphhLights[j].position.xyz();
 
-					v1.position += Vector3f(0.0f, -0.5f, 0.0f);
-					v2.position += Vector3f(0.0f, 0.5f, 0.0f);
+					v1.aPosition += Vector3f(0.0f, -0.5f, 0.0f);
+					v2.aPosition += Vector3f(0.0f, 0.5f, 0.0f);
 
 					vertices.push_back(v1);
 					vertices.push_back(v2);
 				}
 				SimpleVertex v1, v2;
-				v1.color = sphl.E0 * sphl.getCoefficientColor(0, 0);
-				v2.color = v1.color;
-				v1.position = sphl.position.xyz() - Vector3f(0.0f, 0.5f, 0.0f);
-				v2.position = sphl.position.xyz() + Vector3f(0.0f, 0.5f, 0.0f);
+				v1.aColor = sphl.E0 * sphl.getCoefficientColor(0, 0);
+				v2.aColor = v1.aColor;
+				v1.aPosition = sphl.position.xyz() - Vector3f(0.0f, 0.5f, 0.0f);
+				v2.aPosition = sphl.position.xyz() + Vector3f(0.0f, 0.5f, 0.0f);
 				vertices.push_back(v1);
 				vertices.push_back(v2);
 			}
@@ -296,8 +296,8 @@ namespace SSPHH
 			glEnable(GL_LINE_SMOOTH);
 			glBegin(GL_LINES);
 			for (auto& v : vertices) {
-				glColor4fv(v.color.const_ptr());
-				glVertex3fv(v.position.const_ptr());
+				glColor4fv(v.aColor.const_ptr());
+				glVertex3fv(v.aPosition.const_ptr());
 			}
 			glEnd();
 			//glLineWidth(1.0f);

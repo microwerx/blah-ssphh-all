@@ -61,7 +61,8 @@ texture2D map stpeters_probe.pfm
 #textureCube sampler defaultCubeSampler
 
 textureCube enviroSkyCube
-textureCube map test_61_cube.png
+textureCube map test_corona_cube.exr
+# textureCube map galileo_cross.exr
 textureCube uniform MapEnviroCube
 textureCube sampler defaultCubeSampler
 
@@ -146,20 +147,27 @@ renderconfig skybox_rc
 renderconfig program skybox_program
 renderconfig writefbo linear_fbo
 renderconfig textureCube enviroSkyCube MapEnviroCube
-renderconfig clearcolor 1.0 0.0 1.0 1.0
-renderconfig viewport 2048 1536
+# renderconfig clearcolor 1.0 0.0 1.0 1.0
+# renderconfig viewport 0 256 512 512
 renderconfig perspective 120 1 100
 renderconfig autoresize
 renderconfig draw skybox
+# renderconfig pretransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+# renderconfig posttransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 # renderconfig camera default
 
 renderconfig pbr_rc
 renderconfig program pbr_program
 renderconfig writefbo linear_fbo
-renderconfig readfbo sunShadow
-renderconfig readfbo moonShadow
-renderconfig camera default
-renderconfig clearcolor 1.0 0.0 1.0 1.0
+# renderconfig readfbo sunShadow
+# renderconfig readfbo moonShadow
+renderconfig viewport 0 0 1024 1024
+renderconfig autoresize
+renderconfig perspective 120 1 100
+renderconfig depthtest GL_LEQUAL
+# renderconfig camera default
+renderconfig cleardepth
+renderconfig texture2D test2d MapKd
 renderconfig draw scene
 
 # renderconfig sphl_rc
@@ -171,7 +179,7 @@ renderconfig draw scene
 renderconfig postprocess_rc
 renderconfig program postprocess_program
 renderconfig readfbo linear_fbo
-renderconfig viewport 100 100 1024 1024
+renderconfig viewport 1920 1080
 renderconfig texture2D test2d MapKd
 renderconfig draw post
 

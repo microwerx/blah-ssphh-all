@@ -528,6 +528,7 @@ namespace SSPHH
 		void RenderGLES30SPHLs();
 		void RenderGL11Hierarchies();
 		void RenderGLES30_SkyBox();
+		void RenderGLES30_SceneGraph();
 		void RenderGLES30_PostProcess();
 
 		void RenderTest1SunShadows();
