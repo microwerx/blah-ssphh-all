@@ -38,6 +38,34 @@ namespace SSPHH
 				return;
 			}
 
+			if (animpath_window_ptr->clear_animation) {
+				cameraAnimation.clear();
+				return;
+			}
+
+			if (animpath_window_ptr->save_animation) {
+				animpath_window_ptr->save_animation = false;
+				std::ofstream fout("animation.txt");
+				cameraAnimation.write(fout);
+				return;
+			}
+
+			if (animpath_window_ptr->load_animation) {
+				animpath_window_ptr->load_animation = false;
+				cameraAnimation.clear();
+				std::ifstream fin("animation.txt");
+				while (fin) {
+					std::string line;
+					std::getline(fin, line);
+					std::istringstream istr(line);
+					std::string token;
+					istr >> token;
+					if (token.empty()) continue;
+					cameraAnimation.read(token, istr);
+				}
+				return;
+			}
+
 			cameraAnimation.set_alpha(animpath_window_ptr->alpha);
 
 			animpath_window_ptr->max_keys = cameraAnimation.size();
