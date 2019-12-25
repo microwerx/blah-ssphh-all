@@ -38,11 +38,7 @@ namespace SSPHH
 				return;
 			}
 
-			std::for_each(cameraAnimation.keyframes.begin(),
-						  cameraAnimation.keyframes.end(),
-						  [&](::Keyframe& kf) {
-							  kf.a = animpath_window_ptr->alpha;
-						  });
+			cameraAnimation.set_alpha(animpath_window_ptr->alpha);
 
 			animpath_window_ptr->max_keys = cameraAnimation.size();
 			if (animpath_window_ptr->set_key) {

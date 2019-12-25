@@ -232,7 +232,7 @@ void InitApp()
 		imgui_widget_ptr = Vf::MakeSharedDecorator<Vf::DearImGuiWidget>(vf_app_ptr, "DearImGui");
 		ssphh_widget_ptr = Vf::MakeSharedChild<SSPHH::SSPHH_Application>(vf_app_ptr, "ssphh");
 		//loading_window_ptr = Vf::MakeSharedChild<Vf::LoadingWindow>(vf_app_ptr, "Loading");
-		//stats_window_ptr = Vf::MakeSharedChild<Vf::StatsWindow>(vf_app_ptr, "Statistics");
+		stats_window_ptr = Vf::MakeSharedChild<Vf::StatsWindow>(vf_app_ptr, "Statistics");
 		animation_window_ptr = Vf::MakeSharedChild<Vf::AnimationWindow>(vf_app_ptr, "Animation");
 		animpath_window_ptr = Vf::MakeSharedChild<Vf::AnimPathWindow>(vf_app_ptr, "Animation Path");
 		renderer_window_ptr = Vf::MakeSharedChild<RendererWindow>(vf_app_ptr, "Renderer");
