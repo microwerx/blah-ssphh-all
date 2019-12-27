@@ -147,9 +147,9 @@
     <ClInclude Include="include\PbskyViewController.hpp" />
     <ClInclude Include="include\SphlJob.hpp" />
     <ClInclude Include="include\ssphhapp.hpp" />
-    <ClInclude Include="include\ssphhapp_render.hpp" />
+    <ClInclude Include="include\renderer_window.hpp" />
     <ClInclude Include="include\ssphh_ppmcompare.hpp" />
-    <ClInclude Include="include\ssphhapp_renderconfigs.hpp" />
+    <ClInclude Include="include\renderer_config_window.hpp" />
     <ClInclude Include="include\ssphh_unicornfish.hpp" />
     <ClInclude Include="src\pch.hpp" />
   </ItemGroup>
@@ -181,8 +181,9 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.hpp</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.hpp</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\opengl_utilities.cpp" />
     <ClCompile Include="src\PbskyViewController.cpp" />
+    <ClCompile Include="src\renderer_config_window.cpp" />
+    <ClCompile Include="src\renderer_window.cpp" />
     <ClCompile Include="src\sphhapp_ssphh.cpp" />
     <ClCompile Include="src\SphlJob.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.hpp</PrecompiledHeaderFile>

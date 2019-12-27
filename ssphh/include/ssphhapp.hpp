@@ -25,7 +25,6 @@
 #include <damselfish_python.hpp>
 #include <viperfish_mouse.hpp>
 #include <viperfish_widget.hpp>
-//#include <fluxions_pbsky.hpp>
 #include <fluxions_sphl.hpp>
 #include <imgui.h>
 #include <ssphh_ppmcompare.hpp>
@@ -33,14 +32,9 @@
 #include <fluxions_ssg_ssphh_renderer_plugin.hpp>
 #include <fluxions_simple_ssphh.hpp>
 #include <PbskyViewController.hpp>
-
-//#define SSPHH_RENDER_CLASSIC_OPENGL 1
-#ifdef SSPHH_RENDER_CLASSIC_OPENGL
-#include <GLUT_template.hpp>
-#endif
-#include <ssphhapp_renderconfigs.hpp>
-#include <ssphhapp_render.hpp>
 #include <camera_animation.hpp>
+#include <renderer_window.hpp>
+#include <renderer_config_window.hpp>
 
 using namespace Vf;
 using namespace Fluxions;

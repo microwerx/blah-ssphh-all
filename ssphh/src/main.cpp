@@ -33,35 +33,7 @@
 #pragma comment(lib, "winmm.lib")		// Windows MultiMedia library
 #pragma comment(lib, "user32.lib")		// Windows User library
 
-#ifndef FLUXIONS_NO_SDL
-#ifdef _DEBUG
-#pragma comment(lib, "SDL2d.lib")
-#pragma comment(lib, "SDL2_image.lib")
-#pragma comment(lib, "SDL2_mixer.lib")
-#else
-#pragma comment(lib, "SDL2.lib")
-#pragma comment(lib, "SDL2_image.lib")
-#pragma comment(lib, "SDL2_mixer.lib")
-#endif
-#endif
-
 #pragma comment(lib, "fluxions.lib")
-
-#ifndef FLUXIONS_NO_OPENEXR
-#ifdef _DEBUG
-#pragma comment(lib, "Half-2_3_d.lib")
-#pragma comment(lib, "IlmImf-2_3_d.lib")
-#else
-#pragma comment(lib, "Half-2_3.lib")
-#pragma comment(lib, "IlmImf-2_3.lib")
-#endif // _DEBUG
-//#pragma comment(lib, "Iex-2_3")
-//#pragma comment(lib, "IexMath-2_3")
-//#pragma comment(lib, "IlmImfUtil-2_3")
-//#pragma comment(lib, "IlmThread-2_3")
-//#pragma comment(lib, "Imath-2_3")
-#endif
-
 
 //#ifdef _WIN32
 //#pragma comment(lib, "libsodium.lib")
@@ -71,36 +43,45 @@
 //#endif
 
 #ifdef _DEBUG
-//#pragma comment(lib, "libzmq-mt-gd-4_3_3.lib")
+#pragma comment(lib, "libzmq-mt-gd-4_3_3.lib")
 #pragma comment(lib, "glew32d.lib")
+#ifdef USE_GLFW
 #pragma comment(lib, "glfw3dll.lib")
+#endif
+#ifdef USE_FREEGLUT
+#pragma comment(lib, "freeglut_staticd.lib")
+#endif
+#ifndef FLUXIONS_NO_OPENEXR
+#pragma comment(lib, "Half-2_3_d.lib")
+#pragma comment(lib, "IlmImf-2_3_d.lib")
+#endif
+#ifndef FLUXIONS_NO_SDL
+#pragma comment(lib, "SDL2d.lib")
+#pragma comment(lib, "SDL2_image.lib")
+#pragma comment(lib, "SDL2_mixer.lib")
+#endif
 #else
 #pragma comment(lib, "libzmq-mt-4_3_3.lib")
 #pragma comment(lib, "glew32.lib")
+#ifdef USE_GLFW
 #pragma comment(lib, "glfw3dll.lib")
-#endif // _DEBUG
-
-
-#ifdef SSPHH_USE_FREEGLUT
-#ifdef _DEBUG
-#pragma comment(lib, "freeglut_staticd.lib")
-#else
+#endif
+#ifdef USE_FREEGLUT
 #pragma comment(lib, "freeglut_static.lib")
+#endif
+#ifndef FLUXIONS_NO_OPENEXR
+#pragma comment(lib, "Half-2_3.lib")
+#pragma comment(lib, "IlmImf-2_3.lib")
+#endif
+#ifndef FLUXIONS_NO_SDL
+#pragma comment(lib, "SDL2.lib")
+#pragma comment(lib, "SDL2_image.lib")
+#pragma comment(lib, "SDL2_mixer.lib")
+#endif
 #endif // _DEBUG
-#endif // SSPHH_USE_FREEGLUT
-
 #endif // _WIN32
 
-#include <functional>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <fluxions.hpp>
-#include <iostream>
-#include <map>
-#include <vector>
-#include <string>
-#include <regex>
 #include <viperfish.hpp>
 #include <viperfish_root_window.hpp>
 #include <viperfish_loading_window.hpp>
@@ -109,6 +90,8 @@
 #include <viperfish_animpath_window.hpp>
 #include <unicornfish.hpp>
 #include <ssphhapp.hpp>
+#include <renderer_config_window.hpp>
+#include <renderer_window.hpp>
 
 #include <DragDrop.hpp>
 #include <GLFW_template.hpp>
@@ -118,8 +101,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #endif
-#include <renderer_config_window.hpp>
-#include <renderer_window.hpp>
 
 extern void do_tests();
 
@@ -141,21 +122,20 @@ void KillApp();
 
 namespace Fluxions
 {
-	extern int test_fluxions_simple_property(int argc, char **argv);
+	extern int test_fluxions_simple_property(int argc, char** argv);
 }
 
 namespace Df
 {
-	extern int test_PythonInterpreter(int argc, char **argv);
+	extern int test_PythonInterpreter(int argc, char** argv);
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char** argv) {
 	do_tests();
 
 	Uf::Init();
 
-	std::map<std::string, std::string> options = Fluxions::MakeOptionsFromArgs(argc, (const char **)argv);
+	std::map<std::string, std::string> options = Fluxions::MakeOptionsFromArgs(argc, (const char**)argv);
 
 	if (options.count("version")) {
 		printf("SSPHH by Jonathan Metzgar\nCopyright (C) 2017-2020 Jonathan Metzgar\n\n");
@@ -208,8 +188,7 @@ int main(int argc, char **argv)
 // This function is called prior to the main loop of the application.
 // OpenGL is already initialized prior to this call.
 //
-void InitApp()
-{
+void InitApp() {
 	Fluxions::Init();
 	Fluxions::EnableGLDebugFunc();
 	constexpr int testwidgets = 0;
@@ -240,8 +219,7 @@ void InitApp()
 	}
 }
 
-void KillApp()
-{
+void KillApp() {
 	Fluxions::Kill();
 	imgui_widget_ptr.reset();
 	ssphh_widget_ptr.reset();

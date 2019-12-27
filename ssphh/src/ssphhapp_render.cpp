@@ -1,5 +1,4 @@
 #include <ssphhapp.hpp>
-#include <ssphhapp_render.hpp>
 #include <hatchetfish.hpp>
 #include <hatchetfish_stopwatch.hpp>
 

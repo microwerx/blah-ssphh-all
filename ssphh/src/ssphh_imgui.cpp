@@ -18,6 +18,7 @@
 // For any other type of licensing, please contact me at jmetzgar@outlook.com
 
 #include "pch.hpp"
+#include <viperfish_dear_imgui.hpp>
 #include <ssphhapp.hpp>
 #include <unicornfish_corona_scene_file.hpp>
 #include <unicornfish_corona_job.hpp>
@@ -42,17 +43,17 @@ auto DeleteFile = unlink;
 
 Uf::CoronaSceneFile coronaScene;
 
-struct COLORS
-{
-	ImVec4 Red = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
-	ImVec4 Green = ImVec4(0.0f, 1.0f, 0.0f, 1.0f);
-	ImVec4 Blue = ImVec4(0.0f, 0.0f, 1.0f, 1.0f);
-	ImVec4 Yellow = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);
-	ImVec4 Cyan = ImVec4(0.0f, 1.0f, 1.0f, 1.0f);
-	ImVec4 Magenta = ImVec4(1.0f, 0.0f, 1.0f, 1.0f);
-	ImVec4 Black = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
-	ImVec4 White = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-} Colors;
+//struct COLORS
+//{
+//	ImVec4 Red = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
+//	ImVec4 Green = ImVec4(0.0f, 1.0f, 0.0f, 1.0f);
+//	ImVec4 Blue = ImVec4(0.0f, 0.0f, 1.0f, 1.0f);
+//	ImVec4 Yellow = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);
+//	ImVec4 Cyan = ImVec4(0.0f, 1.0f, 1.0f, 1.0f);
+//	ImVec4 Magenta = ImVec4(1.0f, 0.0f, 1.0f, 1.0f);
+//	ImVec4 Black = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+//	ImVec4 White = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+//} Colors;
 
 static const std::string DebugShaderChoices[21] = {
 	" 0 - Default",
@@ -382,11 +383,11 @@ namespace SSPHH
 			Interface.cameraOrbit.z += 1.0f;
 		}
 
-		ImGui::TextColored(Colors.Yellow, "Sun: ");
-		ImGui::TextColored(Colors.Yellow, "%0.4fi %0.4fj %0.4fk", ssg.environment.curSunDirTo.x, ssg.environment.curSunDirTo.y, ssg.environment.curSunDirTo.z);
-		ImGui::TextColored(Colors.Yellow, "Shadow map time: %.3fms", ssg.environment.sunShadowMapTime);
-		ImGui::TextColored(Colors.Yellow, "Sun: %3.1f %3.1f %3.1f", ssg.environment.curSunDiskRadiance.r, ssg.environment.curSunDiskRadiance.g, ssg.environment.curSunDiskRadiance.b);
-		ImGui::TextColored(Colors.Red, "Gnd: %3.1f %3.1f %3.1f", ssg.environment.curGroundRadiance.r, ssg.environment.curGroundRadiance.g, ssg.environment.curGroundRadiance.b);
+		ImGui::TextColored(Colors::Yellow, "Sun: ");
+		ImGui::TextColored(Colors::Yellow, "%0.4fi %0.4fj %0.4fk", ssg.environment.curSunDirTo.x, ssg.environment.curSunDirTo.y, ssg.environment.curSunDirTo.z);
+		ImGui::TextColored(Colors::Yellow, "Shadow map time: %.3fms", ssg.environment.sunShadowMapTime);
+		ImGui::TextColored(Colors::Yellow, "Sun: %3.1f %3.1f %3.1f", ssg.environment.curSunDiskRadiance.r, ssg.environment.curSunDiskRadiance.g, ssg.environment.curSunDiskRadiance.b);
+		ImGui::TextColored(Colors::Red, "Gnd: %3.1f %3.1f %3.1f", ssg.environment.curGroundRadiance.r, ssg.environment.curGroundRadiance.g, ssg.environment.curGroundRadiance.b);
 		ImGui::Checkbox("Sun Cycle", &Interface.enableSunCycle);
 		ImGui::SameLine();
 		if (ImGui::SmallButton("+ 1hr")) {
@@ -618,7 +619,7 @@ namespace SSPHH
 					SEPARATOR_NEWLINE
 				}
 
-				ImGui::TextColored(Colors.Red, "Camera: ");
+				ImGui::TextColored(Colors::Red, "Camera: ");
 				ImGui::DragFloat("FOV: ", &Interface.ssg.cameraFOV);
 				Matrix4f m = ssg.camera.viewMatrix;
 				ImGui::Text(
@@ -702,7 +703,7 @@ namespace SSPHH
 				ImGui::Text("ZNEAR: %1.4f / ZFAR: %4.1f", ssg.camera.imageNearZ, ssg.camera.imageFarZ);
 				NEWLINE_SEPARATOR
 
-					ImGui::TextColored(Colors.Yellow, "Sun: ");
+					ImGui::TextColored(Colors::Yellow, "Sun: ");
 				ImGui::SameLine();
 				if (ImGui::SmallButton("+ 1hr")) {
 					Sun_AdvanceClock(3600.0, true);
@@ -1246,7 +1247,7 @@ namespace SSPHH
 					mtllib_collapsed = &Interface.mtls.mtllibsCollapsed[mtllib_key];
 					if (mtllib_collapsed == nullptr)
 						continue;
-					ImGui::TextColored(Colors.Red, "MtlLib %i %s", mtllib.first, mtllib.second.fpi.fullfname.c_str());
+					ImGui::TextColored(Colors::Red, "MtlLib %i %s", mtllib.first, mtllib.second.fpi.fullfname.c_str());
 					ImGui::SameLine();
 					ImGui::Checkbox(mtllib_key.c_str(), mtllib_collapsed);
 					if (*mtllib_collapsed) {
@@ -1276,7 +1277,7 @@ namespace SSPHH
 							if (mtl_collapsed == nullptr)
 								continue;
 
-							ImGui::TextColored(Colors.Yellow, "Material Name: %i", mtl.first);
+							ImGui::TextColored(Colors::Yellow, "Material Name: %i", mtl.first);
 							ImGui::SameLine();
 							ImGui::Checkbox(mtl_name.c_str(), mtl_collapsed);
 							if (*mtl_collapsed) {
@@ -2009,10 +2010,10 @@ namespace SSPHH
 				ssphhUf.Stop();
 				ssphhUf.Join();
 			}
-			ImGui::TextColored(Colors.Cyan, "CLIENT: %s", ssphhUf.GetUIMessage(Unicornfish::NodeType::Client).c_str());
-			ImGui::TextColored(Colors.Magenta, "BROKER: %s", ssphhUf.GetUIMessage(Unicornfish::NodeType::Broker).c_str());
-			ImGui::TextColored(Colors.Yellow, "WORKER: %s", ssphhUf.GetUIMessage(Unicornfish::NodeType::Worker).c_str());
-			ImGui::TextColored(Colors.Green, "GI STATUS: %s", Interface.ssphh.gi_status.c_str());
+			ImGui::TextColored(Colors::Cyan, "CLIENT: %s", ssphhUf.GetUIMessage(Unicornfish::NodeType::Client).c_str());
+			ImGui::TextColored(Colors::Rose, "BROKER: %s", ssphhUf.GetUIMessage(Unicornfish::NodeType::Broker).c_str());
+			ImGui::TextColored(Colors::Yellow, "WORKER: %s", ssphhUf.GetUIMessage(Unicornfish::NodeType::Worker).c_str());
+			ImGui::TextColored(Colors::Green, "GI STATUS: %s", Interface.ssphh.gi_status.c_str());
 		}
 		else {
 			if (ImGui::Button("STOP")) {
@@ -2189,7 +2190,7 @@ namespace SSPHH
 
 		ImGui::PushItemWidth(100);
 		ImGui::PushID(1);
-		ImGui::TextColored(Colors.Magenta, "VIZ");
+		ImGui::TextColored(Colors::Rose, "VIZ");
 		ImGui::SameLine();
 		ImGui::SliderInt("MaxRayDepth", &Interface.ssphh.VIZ_MaxRayDepth, 0, 25);
 		ImGui::SameLine();
@@ -2198,7 +2199,7 @@ namespace SSPHH
 		ImGui::Checkbox("Regen", &Interface.ssphh.VIZ_IgnoreCache);
 		ImGui::PopID();
 		ImGui::PushID(2);
-		ImGui::TextColored(Colors.Cyan, "GEN");
+		ImGui::TextColored(Colors::Cyan, "GEN");
 		ImGui::SameLine();
 		ImGui::SliderInt("MaxRayDepth", &Interface.ssphh.GEN_MaxRayDepth, 0, 25);
 		ImGui::SameLine();
@@ -2207,7 +2208,7 @@ namespace SSPHH
 		ImGui::Checkbox("Regen", &Interface.ssphh.GEN_IgnoreCache);
 		ImGui::PopID();
 		ImGui::PushID(3);
-		ImGui::TextColored(Colors.Yellow, "REF");
+		ImGui::TextColored(Colors::Yellow, "REF");
 		ImGui::SameLine();
 		ImGui::SliderInt("MaxRayDepth", &Interface.ssphh.REF_MaxRayDepth, 0, 25);
 		ImGui::SameLine();
