@@ -19,11 +19,10 @@
 #include "pch.hpp"
 #include <ssphhapp.hpp>
 #include <unicornfish.hpp>
-
+#include <ssphhapp.hpp>
 
 using namespace Fluxions;
 
-extern std::shared_ptr<SSPHH::SSPHH_Application> ssphh_widget_ptr;
 Unicornfish ssphhUf;
 
 void Unicornfish::StartClient(const std::string & endpoint)

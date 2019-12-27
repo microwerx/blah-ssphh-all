@@ -118,8 +118,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #endif
-#include <ssphhapp_renderconfigs.hpp>
-#include <ssphhapp_render.hpp>
+#include <renderer_config_window.hpp>
+#include <renderer_window.hpp>
 
 extern void do_tests();
 
@@ -158,7 +158,7 @@ int main(int argc, char **argv)
 	std::map<std::string, std::string> options = Fluxions::MakeOptionsFromArgs(argc, (const char **)argv);
 
 	if (options.count("version")) {
-		printf("SSPHH by Jonathan Metzgar\nCopyright (C) 2017 Jonathan Metzgar\n\n");
+		printf("SSPHH by Jonathan Metzgar\nCopyright (C) 2017-2020 Jonathan Metzgar\n\n");
 		printf("This program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\n");
 		printf("This program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\n");
 		printf("You should have received a copy of the GNU General Public License\nalong with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n");
