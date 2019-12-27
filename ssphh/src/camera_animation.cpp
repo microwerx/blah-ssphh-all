@@ -3,13 +3,25 @@
 void CameraAnimation::calcgraph(Vf::AnimPathWindowPtr& mw) {
 	constexpr int nump = 32;
 	constexpr int numq = 8;
-	constexpr float scale = 20.0f;
+
 	mw->circles.resize(size());
 	mw->points.resize(size() * nump);
 	mw->lines.resize(size() * numq);
 
+	Fluxions::BoundingBoxf bbox;
+	for (auto& kf : keyframes) {
+		bbox += kf.p();
+	}
+	const float scale = 200.0f / bbox.MaxSize();
+	const float ox = bbox.MinX() - 0.1f * scale;
+	const float oy = bbox.MinZ() - 0.1f * scale;
+
 	bool lerp = mw->blerp;
 	bool squad = mw->bsquad;
+
+	mw->offsetX = ox;
+	mw->offsetY = oy;
+	mw->scale = scale;
 
 	for (int j = 0; j < keyframes.size(); j++) {
 		for (int i = 0; i < nump; i++) {
@@ -17,12 +29,12 @@ void CameraAnimation::calcgraph(Vf::AnimPathWindowPtr& mw) {
 			float t = j + float(i) / nump;
 			Vector3f p = lerp ? plerp(t) : pcatmullrom(t);
 
-			mw->points[k].x = p.x * scale;
-			mw->points[k].y = p.z * scale;
+			mw->points[k].x = (p.x - ox) * scale;
+			mw->points[k].y = (p.z - oy) * scale;
 
 			if (i == 0) {
-				mw->circles[j].x = p.x * scale;
-				mw->circles[j].y = p.z * scale;
+				mw->circles[j].x = (p.x - ox) * scale;
+				mw->circles[j].y = (p.z - oy) * scale;
 			}
 		}
 		for (int i = 0; i < numq; i++) {
@@ -34,10 +46,10 @@ void CameraAnimation::calcgraph(Vf::AnimPathWindowPtr& mw) {
 			Z.normalize();
 			if (i == 0) Z *= 2.5f;
 			else Z *= 1.5;
-			mw->lines[k].first.x = p.x * scale;
-			mw->lines[k].first.y = p.z * scale;
-			mw->lines[k].second.x = (p.x + Z.x) * scale;
-			mw->lines[k].second.y = (p.z + Z.z) * scale;
+			mw->lines[k].first.x = (p.x - ox) * scale;
+			mw->lines[k].first.y = (p.z - oy) * scale;
+			mw->lines[k].second.x = (p.x - ox + Z.x) * scale;
+			mw->lines[k].second.y = (p.z - oy + Z.z) * scale;
 		}
 	}
 }

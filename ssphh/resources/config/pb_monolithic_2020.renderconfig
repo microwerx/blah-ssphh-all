@@ -211,8 +211,8 @@ renderer renderconfig pbr_rc
 renderer sphl
 renderer renderconfig sphl_rc
 
-renderer postprocess
-renderer renderconfig postprocess_rc
+# renderer postprocess
+# renderer renderconfig postprocess_rc
 
 # ==== Render Commands ====
 

@@ -71,28 +71,28 @@ namespace SSPHH
 			animpath_window_ptr->max_keys = cameraAnimation.size();
 			if (animpath_window_ptr->set_key) {
 				int i = animpath_window_ptr->key;
-				cameraAnimation.keyframes[i].p = animpath_window_ptr->p1;
-				cameraAnimation.keyframes[i].q = animpath_window_ptr->q1;
+				cameraAnimation.keyframes[i].setPosition(animpath_window_ptr->p1);
+				cameraAnimation.keyframes[i].setQuaternion(animpath_window_ptr->q1);
 			}
 			else {
 				int i = animpath_window_ptr->key;
-				animpath_window_ptr->p1 = cameraAnimation.keyframes[i].p;
-				animpath_window_ptr->q1 = cameraAnimation.keyframes[i].q;
+				animpath_window_ptr->p1 = cameraAnimation.keyframes[i].p();
+				animpath_window_ptr->q1 = cameraAnimation.keyframes[i].q();
 			}
 
-			{
-				int i = animpath_window_ptr->key;
-				animpath_window_ptr->kq0 = cameraAnimation[i - 1].q;
-				animpath_window_ptr->kq1 = cameraAnimation[i].q;
-				animpath_window_ptr->kq2 = cameraAnimation[i + 1].q;
-				animpath_window_ptr->kq3 = cameraAnimation[i + 2].q;
-				animpath_window_ptr->ka = squad_a(animpath_window_ptr->kq0,
-											  animpath_window_ptr->kq1,
-											  animpath_window_ptr->kq2);
-				animpath_window_ptr->kb = squad_b(animpath_window_ptr->kq1,
-											  animpath_window_ptr->kq2,
-											  animpath_window_ptr->kq3);
-			}
+			//{
+			//	int i = animpath_window_ptr->key;
+			//	animpath_window_ptr->kq0 = cameraAnimation[i - 1].q();
+			//	animpath_window_ptr->kq1 = cameraAnimation[i].q();
+			//	animpath_window_ptr->kq2 = cameraAnimation[i + 1].q();
+			//	animpath_window_ptr->kq3 = cameraAnimation[i + 2].q();
+			//	animpath_window_ptr->ka = squad_a(animpath_window_ptr->kq0,
+			//								  animpath_window_ptr->kq1,
+			//								  animpath_window_ptr->kq2);
+			//	animpath_window_ptr->kb = squad_b(animpath_window_ptr->kq1,
+			//								  animpath_window_ptr->kq2,
+			//								  animpath_window_ptr->kq3);
+			//}
 
 			cameraAnimation.calcgraph(animpath_window_ptr);
 
