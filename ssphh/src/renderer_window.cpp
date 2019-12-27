@@ -49,6 +49,16 @@ void RendererWindow::OnRenderDearImGui() {
 	if (ImGui::Button("Make Framebuffers")) HFCLOCKSf(lastFramebufferTime, context->makeFramebuffers());
 	ImGui::Value("framebuffer time", lastFramebufferTime);
 
+	ImGui::Separator();
+
+	ImGui::TextColored(Colors::Azure, "Passes");
+	ImGui::Checkbox("Sky Box", &ssphh_widget_ptr->Interface.drawSkyBox);
+	ImGui::Checkbox("PBR", &ssphh_widget_ptr->Interface.drawPBR);
+	ImGui::Checkbox("VIZ", &ssphh_widget_ptr->Interface.drawVIZ);
+	ImGui::Checkbox("POST", &ssphh_widget_ptr->Interface.drawPOST);
+
+	ImGui::Separator();
+
 	if (ImGui::TreeNode("programs")) {
 		for (auto& [k, ro] : context->programs) {
 			ImGui::Text("%s [%s, %s]", ro.name(), ro.status(), (ro.usable() ? "usable" : "not usable"));

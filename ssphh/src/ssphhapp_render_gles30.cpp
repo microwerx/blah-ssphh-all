@@ -35,9 +35,21 @@ namespace SSPHH
 		//if (counter == 3)
 		//	RenderTest3EnviroCubeMap();
 
-		RenderGLES30_SkyBox();
-		RenderGLES30_SceneGraph();
-		RenderGLES30_PostProcess();
+		if (Interface.drawSkyBox) {
+			RenderGLES30_SkyBox();
+		}
+		
+		if (Interface.drawPBR) {
+			RenderGLES30_SceneGraph();
+		}
+
+		if (Interface.drawVIZ) {
+			RenderGLES30_VIZ();
+		}
+		
+		if (Interface.drawPOST) {
+			RenderGLES30_PostProcess();
+		}
 
 		FxSetDefaultErrorMessage();
 	}
@@ -58,6 +70,18 @@ namespace SSPHH
 		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
 
 		const std::string renderername{ "pbr" };
+		if (rendererContext.renderers.count(renderername)) {
+			const std::string& renderconfigname = rendererContext.renderers[renderername].renderconfigname;
+			Fluxions::RenderImage(rendererContext, ssg, renderername, renderconfigname);
+		}
+
+		while (glGetError() != GL_NO_ERROR) HFLOGWARN("OpenGL Error");
+	}
+
+	void SSPHH_Application::RenderGLES30_VIZ() {
+		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
+
+		const std::string renderername{ "viz" };
 		if (rendererContext.renderers.count(renderername)) {
 			const std::string& renderconfigname = rendererContext.renderers[renderername].renderconfigname;
 			Fluxions::RenderImage(rendererContext, ssg, renderername, renderconfigname);

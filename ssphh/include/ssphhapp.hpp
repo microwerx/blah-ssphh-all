@@ -153,6 +153,9 @@ namespace SSPHH
 			bool enableSunCycle = false;
 			bool usePBSKY = true;
 			bool drawSkyBox = true;
+			bool drawPBR = true;
+			bool drawVIZ = true;
+			bool drawPOST = true;
 			bool saveScreenshot = false;
 			bool captureShadows = false;
 
@@ -523,6 +526,7 @@ namespace SSPHH
 		void RenderGL11Hierarchies();
 		void RenderGLES30_SkyBox();
 		void RenderGLES30_SceneGraph();
+		void RenderGLES30_VIZ();
 		void RenderGLES30_PostProcess();
 
 		void RenderTest1SunShadows();

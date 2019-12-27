@@ -77,6 +77,10 @@ program pbr_program
 vertshader basic_gles30.vert
 fragshader basic_gles30.frag
 
+program viz_program
+vertshader basic_gles30.vert
+fragshader basic_gles30.frag
+
 # program sphl_program
 # vertshader sphl300.vert
 # fragshader sphl300.frag
@@ -170,6 +174,13 @@ renderconfig cleardepth
 renderconfig texture2D test2d MapKd
 renderconfig draw scene
 
+renderconfig viz_rc
+renderconfig program viz_program
+renderconfig autoresize
+renderconfig perspective 120 1 100
+renderconfig depthtest GL_LEQUAL
+renderconfig draw viz
+
 # renderconfig sphl_rc
 # renderconfig program sphl_program
 # # renderconfig writefbo linear_fbo
@@ -207,6 +218,9 @@ renderer skybox enviroSkyCube
 
 renderer pbr
 renderer renderconfig pbr_rc
+
+renderer viz
+renderer renderconfig viz_rc
 
 renderer sphl
 renderer renderconfig sphl_rc

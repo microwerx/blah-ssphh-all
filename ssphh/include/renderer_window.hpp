@@ -13,7 +13,6 @@ public:
 	void OnUpdate(double timeStamp) override;
 	void OnRenderDearImGui() override;
 
-
 private:
 	Fluxions::RendererContext* context{ nullptr };
 	float lastShadersLoadTime{ 0.0f };

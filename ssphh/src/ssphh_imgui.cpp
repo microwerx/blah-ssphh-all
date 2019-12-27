@@ -782,9 +782,9 @@ namespace SSPHH
 			ImGui::Checkbox("Point Lights", &Interface.ssg.showPointLights);
 			if (Interface.ssg.showPointLights) {
 				int i = 0;
-				for (auto& spl : ssg.pointLights) {
+				for (auto& [k, spl] : ssg.pointLights) {
 					std::ostringstream ostr;
-					ImGui::Text("Name(%d): %s", i, spl.name.c_str());
+					ImGui::Text("Name(%d): %s", i, spl.name());
 					ImGui::DragFloat("E0", &spl.E0, 0.1f, 0.0f, 5.0f);
 					ImGui::DragFloat("Falloff Radius", &spl.falloffRadius, 1.0f, 0.0f, 1000.0f);
 					ImGui::DragFloat3("Position", spl.position.ptr(), 0.1f, -10.0f, 10.0f);

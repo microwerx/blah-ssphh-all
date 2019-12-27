@@ -8,13 +8,13 @@ void CameraAnimation::calcgraph(Vf::AnimPathWindowPtr& mw) {
 	mw->points.resize(size() * nump);
 	mw->lines.resize(size() * numq);
 
-	Fluxions::BoundingBoxf bbox;
+	Fluxions::BoundingBoxf kfbbox;
 	for (auto& kf : keyframes) {
-		bbox += kf.p();
+		kfbbox += kf.p();
 	}
-	const float scale = 200.0f / bbox.MaxSize();
-	const float ox = bbox.MinX() - 0.1f * scale;
-	const float oy = bbox.MinZ() - 0.1f * scale;
+	const float scale = 200.0f / kfbbox.MaxSize();
+	const float ox = kfbbox.MinX() - 0.1f * scale;
+	const float oy = kfbbox.MinZ() - 0.1f * scale;
 
 	bool lerp = mw->blerp;
 	bool squad = mw->bsquad;
