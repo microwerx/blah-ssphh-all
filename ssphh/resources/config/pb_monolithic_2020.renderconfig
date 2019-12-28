@@ -40,6 +40,11 @@ texture2D uniform MapKd
 texture2D map "test_texture_2d.png"
 # texture2D map stpeters_probe.pfm
 
+texture2D coronaGroundTruth
+texture2D sampler default2dSampler
+texture2D uniform MapCorona
+texture2D map test_texture_2d.png "corona_export/corona_ground_truth.exr"
+
 #textureCube pbskyEXR
 #textureCube map "test_corona_skymap.exr"
 #textureCube uniform MapEnviroCube
@@ -149,7 +154,7 @@ fbo attach GL_TEXTURE_2D GL_COLOR_ATTACHMENT0 GL_RGBA16F            MapColorBuff
 # this render config is for drawing the skybox
 renderconfig skybox_rc
 renderconfig program skybox_program
-# renderconfig writefbo linear_fbo
+renderconfig writefbo linear_fbo
 renderconfig textureCube enviroSkyCube MapEnviroCube
 # renderconfig clearcolor 1.0 0.0 1.0 1.0
 # renderconfig viewport 0 256 512 512
@@ -191,7 +196,8 @@ renderconfig postprocess_rc
 renderconfig program postprocess_program
 renderconfig readfbo linear_fbo
 renderconfig viewport 1920 1080
-renderconfig texture2D test2d MapKd
+renderconfig texture2D test2d            MapKd
+renderconfig texture2D coronaGroundTruth MapCorona
 renderconfig draw post
 
 # ==== UniformLists ====
@@ -225,8 +231,8 @@ renderer renderconfig viz_rc
 renderer sphl
 renderer renderconfig sphl_rc
 
-# renderer postprocess
-# renderer renderconfig postprocess_rc
+renderer postprocess
+renderer renderconfig postprocess_rc
 
 # ==== Render Commands ====
 
