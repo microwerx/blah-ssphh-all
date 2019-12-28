@@ -1,0 +1,51 @@
+path camera
+t 0
+a 0
+p -5 3 -9
+lookat 0 0 0
+azel -140 0 0
+
+t 1
+a 0
+p -10 3 -3
+lookat 0 0 0 
+azel -90 0 0
+
+t 2
+a 0
+p -10 3 3 
+lookat 0 0 0 
+azel -90 0 0
+
+t 3
+a 0
+p -10 3 9
+lookat 0 0 0 
+azel -90 0 0
+
+t 4
+a 0
+p -10 3 14
+lookat 0 0 0 
+azel -45 0 0
+
+t 5
+a 0
+p 0 3 18
+lookat 0 0 0 
+azel 0 0 0
+
+t 6
+a 0
+p 3 5 9
+azel 45 -30 0
+
+t 7
+a 0
+p 3 5 0
+azel 90 -30 0
+
+t 8
+a 1
+p 1 4 -10
+azel 130 -20 0
