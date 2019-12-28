@@ -2,29 +2,6 @@
 #include <ssphhapp.hpp>
 #include <scene_graph_window.hpp>
 
-namespace Vf
-{
-	void ImGuiMatrix4f(const Matrix4f& m) {
-		ImGui::Text("[ % 1.3f % 1.3f % 1.3f % 3.2f ]", m.m11, m.m12, m.m13, m.m14);
-		ImGui::Text("[ % 1.3f % 1.3f % 1.3f % 3.2f ]", m.m21, m.m22, m.m23, m.m24);
-		ImGui::Text("[ % 1.3f % 1.3f % 1.3f % 3.2f ]", m.m31, m.m32, m.m33, m.m34);
-		ImGui::Text("[ % 1.3f % 1.3f % 1.3f % 3.2f ]", m.m41, m.m42, m.m43, m.m44);
-	}
-
-	void ImGuiBoundingBox(const BoundingBoxf& bbox) {
-		ImGui::Text("Min:  [ % 3.2f % 3.2f % 3.2f ]", bbox.minBounds.x, bbox.minBounds.y, bbox.minBounds.z);
-		ImGui::Text("Max:  [ % 3.2f % 3.2f % 3.2f ]", bbox.maxBounds.x, bbox.maxBounds.y, bbox.maxBounds.z);
-		ImGui::Text("Size: [ %3.2f %3.2f %3.2f ]", bbox.Size().x, bbox.Size().y, bbox.Size().z);
-	}
-}
-
-const char* makeNodeName(SimpleSceneGraphNode* n) {
-	static std::ostringstream ostr;
-	ostr.clear();
-	ostr << n->name() << "[" << n->type() << "]: [" << n->status() << "]";
-	return ostr.str().c_str();
-}
-
 SceneGraphWindow::SceneGraphWindow(const std::string& name)
 	: Vf::Window(name) {}
 

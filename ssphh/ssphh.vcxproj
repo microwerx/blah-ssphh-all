@@ -143,15 +143,21 @@
     <ClInclude Include="include\DragDrop.hpp" />
     <ClInclude Include="include\GLFW_template.hpp" />
     <ClInclude Include="include\GLUT_template.hpp" />
+    <ClInclude Include="include\help_window.hpp" />
     <ClInclude Include="include\jellyfish.hpp" />
     <ClInclude Include="include\PbskyViewController.hpp" />
+    <ClInclude Include="include\scene_editor_window.hpp" />
     <ClInclude Include="include\scene_graph_window.hpp" />
     <ClInclude Include="include\SphlJob.hpp" />
     <ClInclude Include="include\ssphhapp.hpp" />
     <ClInclude Include="include\renderer_window.hpp" />
+    <ClInclude Include="include\ssphh_menu.hpp" />
     <ClInclude Include="include\ssphh_ppmcompare.hpp" />
     <ClInclude Include="include\renderer_config_window.hpp" />
     <ClInclude Include="include\ssphh_unicornfish.hpp" />
+    <ClInclude Include="include\ssphh_window.hpp" />
+    <ClInclude Include="include\tool_window.hpp" />
+    <ClInclude Include="include\unicornfish_window.hpp" />
     <ClInclude Include="src\pch.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +178,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.hpp</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.hpp</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="src\help_window.cpp" />
     <ClCompile Include="src\jellyfish.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.hpp</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.hpp</PrecompiledHeaderFile>
@@ -185,6 +192,7 @@
     <ClCompile Include="src\PbskyViewController.cpp" />
     <ClCompile Include="src\renderer_config_window.cpp" />
     <ClCompile Include="src\renderer_window.cpp" />
+    <ClCompile Include="src\scene_editor_window.cpp" />
     <ClCompile Include="src\scene_graph_window.cpp" />
     <ClCompile Include="src\sphhapp_ssphh.cpp" />
     <ClCompile Include="src\SphlJob.cpp">
@@ -211,6 +219,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.hpp</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.hpp</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="src\ssphh_menu.cpp" />
     <ClCompile Include="src\ssphh_tests.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.hpp</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.hpp</PrecompiledHeaderFile>
@@ -263,10 +272,13 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.hpp</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.hpp</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="src\ssphh_window.cpp" />
     <ClCompile Include="src\tests.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.hpp</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.hpp</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="src\tool_window.cpp" />
+    <ClCompile Include="src\unicornfish_window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\default_slow_es30.frag" />

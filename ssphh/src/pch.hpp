@@ -25,34 +25,7 @@
 #ifndef STDAFX_H
 #define STDAFX_H
 
-//#include "targetver.h"
-
-#include <stdio.h>
-
-#ifdef _WIN32
-#include <tchar.h>
-#endif
-
-// TODO: reference additional headers your program requires here
-#include <algorithm>
-#include <fstream>
-#include <inttypes.h>
-#include <iomanip>
-#include <iostream>
-#include <list>
-#include <map>
-#include <memory>
-#include <numeric>
-#include <regex>
-#include <sstream>
-#include <string>
-#include <utility>
-#include <vector>
-
-#include <future>
-#include <mutex>
-#include <thread>
-
-#include <fluxions.hpp>
+#include <fluxions_stdcxx.hpp>
+#include <ssphhapp.hpp>
 
 #endif // STDAFX_H

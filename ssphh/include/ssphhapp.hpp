@@ -56,8 +56,8 @@ namespace SSPHH
 	extern const std::string default_pbsky_cubemap_exr;
 }
 
-extern RendererWindowPtr renderer_window_ptr;
-extern RendererConfigWindowPtr renderer_config_window_ptr;
+//extern RendererWindowPtr renderer_window_ptr;
+//extern RendererConfigWindowPtr renderer_config_window_ptr;
 
 namespace SSPHH
 {
@@ -555,6 +555,7 @@ namespace SSPHH
 
 	public:
 		HUDInfo my_hud_info;
+		std::map<std::string, Vf::WidgetPtr> hotkeyWindows;
 		//Df::PythonInterpreter python;
 
 		std::vector<std::string> cmd_args; // to pull in the argc, argv from main()

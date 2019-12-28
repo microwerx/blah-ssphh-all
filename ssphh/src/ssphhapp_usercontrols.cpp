@@ -305,34 +305,49 @@ namespace SSPHH
 				Sun_AdvanceClock(3600.0, true);
 			}
 
-			if (key == "F1")
-				Interface.showHelp = !Interface.showHelp;
-			if (key == "F2")
-				Interface.showMainHUD = !Interface.showMainHUD;
-			if (key == "F3")
-				Interface.showHUD = !Interface.showHUD;
-			if (key == "F4")
-				Interface.showDeferredHUD = !Interface.showDeferredHUD;
-			if (key == "F5")
-				Interface.recomputeSky = !Interface.recomputeSky;
-			if (key == "F6")
-				Sky_RegenCoronaSky();
-			if (key == "F7")
-				Interface.ssphh.enableShowSPHLs = !Interface.ssphh.enableShowSPHLs;
-			if (key == "F8")
-				Interface.showImGui = !Interface.showImGui;
+			if (key == "F1") hotkeyWindows["F1"]->ToggleVisible();
+			if (key == "F2") hotkeyWindows["F2"]->ToggleVisible();
+			if (key == "F3") hotkeyWindows["F3"]->ToggleVisible();
+			if (key == "F4") hotkeyWindows["F4"]->ToggleVisible();
+			if (key == "F5") hotkeyWindows["F5"]->ToggleVisible();
+			if (key == "F6") hotkeyWindows["F6"]->ToggleVisible();
+			if (key == "F7") hotkeyWindows["F7"]->ToggleVisible();
+			if (key == "F8") hotkeyWindows["F8"]->ToggleVisible();
+			if (key == "F9") hotkeyWindows["F9"]->ToggleVisible();
 			if (key == "F10") {
-				Interface.showImGui = !Interface.showImGui;
-				HFLOGDEBUG("%s ImGui", Interface.showImGui ? "showing" : "hiding");
+				hotkeyWindows["F10"]->ToggleVisible();
+				Interface.showImGui = hotkeyWindows["F10"]->isVisible();
 			}
+			if (key == "F11") hotkeyWindows["F11"]->ToggleVisible();
+			if (key == "F12") hotkeyWindows["F12"]->ToggleVisible();
 
-			if (key == "F11") {
-				Sky_SaveHosekWilkieTextures();
-			}
+			//Interface.showHelp = !Interface.showHelp;
+			//if (key == "F2")
+			//	Interface.showMainHUD = !Interface.showMainHUD;
+			//if (key == "F3")
+			//	Interface.showHUD = !Interface.showHUD;
+			//if (key == "F4")
+			//	Interface.showDeferredHUD = !Interface.showDeferredHUD;
+			//if (key == "F5")
+			//	Interface.recomputeSky = !Interface.recomputeSky;
+			//if (key == "F6")
+			//	Sky_RegenCoronaSky();
+			//if (key == "F7")
+			//	Interface.ssphh.enableShowSPHLs = !Interface.ssphh.enableShowSPHLs;
+			//if (key == "F8")
+			//	Interface.showImGui = !Interface.showImGui;
+			//if (key == "F10") {
+			//	Interface.showImGui = !Interface.showImGui;
+			//	HFLOGDEBUG("%s ImGui", Interface.showImGui ? "showing" : "hiding");
+			//}
 
-			if (key == "F12") {
-				incr_wrap(renderMode, MAX_RENDER_MODES - 1);
-			}
+			//if (key == "F11") {
+			//	Sky_SaveHosekWilkieTextures();
+			//}
+
+			//if (key == "F12") {
+			//	incr_wrap(renderMode, MAX_RENDER_MODES - 1);
+			//}
 		}
 	}
 

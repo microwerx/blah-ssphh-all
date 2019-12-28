@@ -99,21 +99,35 @@
 #include <viperfish_animpath_window.hpp>
 #include <unicornfish.hpp>
 #include <ssphhapp.hpp>
+#include <help_window.hpp>
+#include <scene_graph_window.hpp>
+#include <ssphh_window.hpp>
 #include <renderer_config_window.hpp>
 #include <renderer_window.hpp>
-#include <scene_graph_window.hpp>
+#include <tool_window.hpp>
+#include <unicornfish_window.hpp>
+#include <scene_editor_window.hpp>
+#include <ssphh_menu.hpp>
 
 extern void do_tests();
 
+SSPHHPtr ssphh_widget_ptr;
 Vf::WidgetPtr vf_app_ptr;
 Vf::WidgetPtr imgui_widget_ptr;
 Vf::LoadingWindowPtr loading_window_ptr;
-Vf::StatsWindowPtr stats_window_ptr;
-Vf::AnimationWindowPtr animation_window_ptr;
-Vf::AnimPathWindowPtr animpath_window_ptr;
-RendererWindowPtr renderer_window_ptr;
-RendererConfigWindowPtr renderer_config_window_ptr;
-SceneGraphWindowPtr scene_graph_window_ptr;
+
+/* F1  */ HelpWindowPtr help_window_ptr;
+/* F2  */ Vf::StatsWindowPtr stats_window_ptr;
+/* F3  */ SceneGraphWindowPtr scene_graph_window_ptr;
+/* F4  */ SceneEditorWindowPtr scene_editor_window_ptr;
+/* F5  */ SSPHHWindowPtr ssphh_window_ptr;
+/* F6  */ Vf::AnimPathWindowPtr animpath_window_ptr;
+/* F7  */ Vf::AnimationWindowPtr animation_window_ptr;
+/* F8  */ RendererConfigWindowPtr renderer_config_window_ptr;
+/* F9  */ RendererWindowPtr renderer_window_ptr;
+/* F10 */ SsphhMenuPtr ssphh_menu_ptr;
+/* F11 */ ToolWindowPtr tool_window_ptr;
+/* F12 */ UnicornfishWindowPtr unicornfish_window_ptr;
 
 double g_distance = -10.0;
 double xrot = 0.0;
@@ -213,26 +227,60 @@ void InitApp() {
 		imgui_widget_ptr = Vf::MakeSharedDecorator<Vf::DearImGuiWidget>(vf_app_ptr, "DearImGui");
 		ssphh_widget_ptr = Vf::MakeSharedChild<SSPHH::SSPHH_Application>(vf_app_ptr, "ssphh");
 		//loading_window_ptr = Vf::MakeSharedChild<Vf::LoadingWindow>(vf_app_ptr, "Loading");
+
+		help_window_ptr = Vf::MakeSharedChild<HelpWindow>(vf_app_ptr, "Help");
 		stats_window_ptr = Vf::MakeSharedChild<Vf::StatsWindow>(vf_app_ptr, "Statistics");
-		animation_window_ptr = Vf::MakeSharedChild<Vf::AnimationWindow>(vf_app_ptr, "Animation");
-		animpath_window_ptr = Vf::MakeSharedChild<Vf::AnimPathWindow>(vf_app_ptr, "Animation Path");
-		renderer_window_ptr = Vf::MakeSharedChild<RendererWindow>(vf_app_ptr, "Renderer");
-		renderer_config_window_ptr = Vf::MakeSharedChild<RendererConfigWindow>(vf_app_ptr, "Renderer Config");
 		scene_graph_window_ptr = Vf::MakeSharedChild<SceneGraphWindow>(vf_app_ptr, "Scene Graph");
+		scene_editor_window_ptr = Vf::MakeSharedChild<SceneEditorWindow>(vf_app_ptr, "Scene Editor");
+		ssphh_window_ptr = Vf::MakeSharedChild<SsphhWindow>(vf_app_ptr, "SSPHH Algorithm");
+		animpath_window_ptr = Vf::MakeSharedChild<Vf::AnimPathWindow>(vf_app_ptr, "Animation Path");
+		animation_window_ptr = Vf::MakeSharedChild<Vf::AnimationWindow>(vf_app_ptr, "Animation");
+		renderer_config_window_ptr = Vf::MakeSharedChild<RendererConfigWindow>(vf_app_ptr, "Renderer Config");
+		renderer_window_ptr = Vf::MakeSharedChild<RendererWindow>(vf_app_ptr, "Renderer");
+		ssphh_menu_ptr = Vf::MakeSharedChild<SsphhMenu>(vf_app_ptr, "Renderer");
+		tool_window_ptr = Vf::MakeSharedChild<ToolWindow>(vf_app_ptr, "Tools");
+		unicornfish_window_ptr = Vf::MakeSharedChild<UnicornfishWindow>(vf_app_ptr, "Unicornfish");
+
+		ssphh_widget_ptr->hotkeyWindows["F1"] = help_window_ptr;
+		ssphh_widget_ptr->hotkeyWindows["F2"] = stats_window_ptr;
+		ssphh_widget_ptr->hotkeyWindows["F3"] = scene_graph_window_ptr;
+		ssphh_widget_ptr->hotkeyWindows["F4"] = scene_editor_window_ptr;
+		ssphh_widget_ptr->hotkeyWindows["F5"] = ssphh_window_ptr;
+		ssphh_widget_ptr->hotkeyWindows["F6"] = animpath_window_ptr;
+		ssphh_widget_ptr->hotkeyWindows["F7"] = animation_window_ptr;
+		ssphh_widget_ptr->hotkeyWindows["F8"] = renderer_config_window_ptr;
+		ssphh_widget_ptr->hotkeyWindows["F9"] = renderer_window_ptr;
+		ssphh_widget_ptr->hotkeyWindows["F10"] = ssphh_menu_ptr;
+		ssphh_widget_ptr->hotkeyWindows["F11"] = tool_window_ptr;
+		ssphh_widget_ptr->hotkeyWindows["F12"] = unicornfish_window_ptr;
+
+		for (auto& [k, w] : ssphh_widget_ptr->hotkeyWindows) {
+			w->Hide();
+		}
 	}
 }
 
 void KillApp() {
+	ssphh_widget_ptr->hotkeyWindows.clear();
+
+	vf_app_ptr->Kill();
 	Fluxions::Kill();
+
 	loading_window_ptr.reset();
+	help_window_ptr.reset();
 	stats_window_ptr.reset();
-	animation_window_ptr.reset();
+	scene_graph_window_ptr.reset();
+	scene_editor_window_ptr.reset();
+	ssphh_window_ptr.reset();
 	animpath_window_ptr.reset();
+	animation_window_ptr.reset();
 	renderer_config_window_ptr.reset();
 	renderer_window_ptr.reset();
-	scene_graph_window_ptr.reset();
+	ssphh_menu_ptr.reset();
+	tool_window_ptr.reset();
+	unicornfish_window_ptr.reset();
+
 	imgui_widget_ptr.reset();
 	ssphh_widget_ptr.reset();
-	vf_app_ptr->Kill();
 	vf_app_ptr.reset();
 }

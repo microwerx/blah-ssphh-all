@@ -27,7 +27,6 @@ namespace Fluxions
 	extern bool debugging;
 } // namespace Fluxions
 
-SSPHHPtr ssphh_widget_ptr;
 extern std::vector<std::string> g_args;
 
 #ifdef USE_GLUT
@@ -175,7 +174,6 @@ namespace SSPHH
 		//rendererContext.rendererConfigs["foursplitUR"].init("foursplitUR");
 		//rendererContext.rendererConfigs["foursplitLL"].init("foursplitLL");
 		//rendererContext.rendererConfigs["foursplitLR"].init("foursplitLR");
-
 
 		// TODO: I would like to make the following code work:
 		//
