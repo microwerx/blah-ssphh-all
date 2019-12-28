@@ -273,9 +273,9 @@ namespace SSPHH
 
 					SimpleVertex v1, v2;
 					v1.aColor = HLSToRGBf(h, l, s).ToColor4();
-					v1.aPosition = ssgUserData->ssphhLights[i].position.xyz();
+					v1.aPosition = ssgUserData->ssphhLights[i].position;
 					v2.aColor = v1.aColor;
-					v2.aPosition = ssgUserData->ssphhLights[j].position.xyz();
+					v2.aPosition = ssgUserData->ssphhLights[j].position;
 
 					v1.aPosition += Vector3f(0.0f, -0.5f, 0.0f);
 					v2.aPosition += Vector3f(0.0f, 0.5f, 0.0f);
@@ -286,8 +286,8 @@ namespace SSPHH
 				SimpleVertex v1, v2;
 				v1.aColor = sphl.E0 * sphl.getCoefficientColor(0, 0);
 				v2.aColor = v1.aColor;
-				v1.aPosition = sphl.position.xyz() - Vector3f(0.0f, 0.5f, 0.0f);
-				v2.aPosition = sphl.position.xyz() + Vector3f(0.0f, 0.5f, 0.0f);
+				v1.aPosition = sphl.position - Vector3f(0.0f, 0.5f, 0.0f);
+				v2.aPosition = sphl.position + Vector3f(0.0f, 0.5f, 0.0f);
 				vertices.push_back(v1);
 				vertices.push_back(v2);
 			}

@@ -897,7 +897,7 @@ namespace SSPHH
 			int whichToDelete = -1;
 			for (auto& sspl : ssgUserData->ssphhLights) {
 				std::ostringstream id;
-				id << "MS" << std::setfill('0') << std::setw(2) << i << " '" << sspl.name << "'";
+				id << "MS" << std::setfill('0') << std::setw(2) << i << " '" << sspl.name() << "'";
 				const void* ptr = &sspl;
 #ifdef _WIN32
 				//va_list args = nullptr;
@@ -964,7 +964,7 @@ namespace SSPHH
 						sspl.randomizePosition = true;
 					}
 
-					ImGui::InputText("Name", &sspl.name[0], 32);
+					ImGui::Text("Name %s", sspl.name(), 32);
 					ImGui::Separator();
 					ImGui::Text("Shadow build time: %.1fms", sspl.depthSphlMap.buildTime);
 
@@ -973,12 +973,12 @@ namespace SSPHH
 					if (lastNumDegrees != sspl.maxDegree) {
 						sspl.changeDegrees(sspl.maxDegree);
 					}
-					Vector4f position0 = sspl.position;
-					ImGui::DragFloat4("Position", sspl.position.ptr(), stepSize, -100.0f, 100.0f);
+					Vector3f position0 = sspl.position;
+					ImGui::DragFloat3("Position", sspl.position.ptr(), stepSize, -100.0f, 100.0f);
 					if (position0 != sspl.position) {
 						sspl.depthSphlMap.dirty = true;
 					}
-					sspl.position.w = Fluxions::clamp(sspl.position.w, 0.0f, 1.0f);
+					//sspl.position.w = Fluxions::clamp(sspl.position.w, 0.0f, 1.0f);
 					ImGui::DragFloat("E0", &sspl.E0, stepSize, 0.0f, 10000.0f);
 					ImGui::DragFloat("Falloff Radius", &sspl.falloffRadius, stepSize, 0.0f, 1000.0f);
 
@@ -1317,8 +1317,8 @@ namespace SSPHH
 		SimpleSSPHHLight& sphl = ssgUserData->ssphhLights.back();
 		std::ostringstream name;
 		name << "New SSPL " << ssgUserData->ssphhLights.size();
-		sphl.name = name.str();
-		sphl.name.reserve(32);
+		sphl.setName(name.str());
+		//sphl.name.reserve(32);
 		sphl.changeDegrees(DefaultSphlDegree);
 
 		for (auto& sphl : ssgUserData->ssphhLights) {

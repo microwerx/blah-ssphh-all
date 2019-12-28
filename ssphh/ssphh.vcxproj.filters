@@ -84,6 +84,9 @@
     <ClInclude Include="include\jellyfish.hpp">
       <Filter>Header Files\other</Filter>
     </ClInclude>
+    <ClInclude Include="include\scene_graph_window.hpp">
+      <Filter>Header Files\tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -187,6 +190,9 @@
     </ClCompile>
     <ClCompile Include="src\tests.cpp">
       <Filter>Source Files\other</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene_graph_window.cpp">
+      <Filter>Source Files\tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

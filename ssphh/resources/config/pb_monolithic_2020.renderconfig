@@ -37,8 +37,8 @@ sampler GL_TEXTURE_MAG_FILTER GL_LINEAR
 texture2D test2d
 texture2D sampler default2dSampler
 texture2D uniform MapKd
-# texture2D map "test_texture_2d.png"
-texture2D map stpeters_probe.pfm
+texture2D map "test_texture_2d.png"
+# texture2D map stpeters_probe.pfm
 
 #textureCube pbskyEXR
 #textureCube map "test_corona_skymap.exr"

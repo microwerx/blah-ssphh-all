@@ -81,6 +81,15 @@
 #endif // _DEBUG
 #endif // _WIN32
 
+#include <DragDrop.hpp>
+#include <GLFW_template.hpp>
+#include <GLUT_template.hpp>
+
+#ifndef FLUXIONS_NO_SDL
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#endif
+
 #include <fluxions.hpp>
 #include <viperfish.hpp>
 #include <viperfish_root_window.hpp>
@@ -92,15 +101,7 @@
 #include <ssphhapp.hpp>
 #include <renderer_config_window.hpp>
 #include <renderer_window.hpp>
-
-#include <DragDrop.hpp>
-#include <GLFW_template.hpp>
-#include <GLUT_template.hpp>
-
-#ifndef FLUXIONS_NO_SDL
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#endif
+#include <scene_graph_window.hpp>
 
 extern void do_tests();
 
@@ -112,6 +113,7 @@ Vf::AnimationWindowPtr animation_window_ptr;
 Vf::AnimPathWindowPtr animpath_window_ptr;
 RendererWindowPtr renderer_window_ptr;
 RendererConfigWindowPtr renderer_config_window_ptr;
+SceneGraphWindowPtr scene_graph_window_ptr;
 
 double g_distance = -10.0;
 double xrot = 0.0;
@@ -216,19 +218,21 @@ void InitApp() {
 		animpath_window_ptr = Vf::MakeSharedChild<Vf::AnimPathWindow>(vf_app_ptr, "Animation Path");
 		renderer_window_ptr = Vf::MakeSharedChild<RendererWindow>(vf_app_ptr, "Renderer");
 		renderer_config_window_ptr = Vf::MakeSharedChild<RendererConfigWindow>(vf_app_ptr, "Renderer Config");
+		scene_graph_window_ptr = Vf::MakeSharedChild<SceneGraphWindow>(vf_app_ptr, "Scene Graph");
 	}
 }
 
 void KillApp() {
 	Fluxions::Kill();
-	imgui_widget_ptr.reset();
-	ssphh_widget_ptr.reset();
 	loading_window_ptr.reset();
 	stats_window_ptr.reset();
 	animation_window_ptr.reset();
 	animpath_window_ptr.reset();
 	renderer_config_window_ptr.reset();
 	renderer_window_ptr.reset();
+	scene_graph_window_ptr.reset();
+	imgui_widget_ptr.reset();
+	ssphh_widget_ptr.reset();
 	vf_app_ptr->Kill();
 	vf_app_ptr.reset();
 }

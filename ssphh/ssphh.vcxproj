@@ -145,6 +145,7 @@
     <ClInclude Include="include\GLUT_template.hpp" />
     <ClInclude Include="include\jellyfish.hpp" />
     <ClInclude Include="include\PbskyViewController.hpp" />
+    <ClInclude Include="include\scene_graph_window.hpp" />
     <ClInclude Include="include\SphlJob.hpp" />
     <ClInclude Include="include\ssphhapp.hpp" />
     <ClInclude Include="include\renderer_window.hpp" />
@@ -184,6 +185,7 @@
     <ClCompile Include="src\PbskyViewController.cpp" />
     <ClCompile Include="src\renderer_config_window.cpp" />
     <ClCompile Include="src\renderer_window.cpp" />
+    <ClCompile Include="src\scene_graph_window.cpp" />
     <ClCompile Include="src\sphhapp_ssphh.cpp" />
     <ClCompile Include="src\SphlJob.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.hpp</PrecompiledHeaderFile>
