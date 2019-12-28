@@ -353,3 +353,4 @@ output/
 x64/
 sample_stratification.ppm
 *.ppm
+!.gitignore
