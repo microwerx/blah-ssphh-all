@@ -198,7 +198,7 @@ renderconfig postprocess_rc
 renderconfig program postprocess_program
 renderconfig readfbo linear_fbo
 renderconfig autoresize
-renderconfig texture2D test2d            MapBlendImage
+renderconfig texture2D test2d            MapBlendFadeImage
 renderconfig texture2D coronaGroundTruth MapBlendReference
 renderconfig draw post
 

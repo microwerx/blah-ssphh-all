@@ -35,6 +35,10 @@ void ToolWindow::OnRenderDearImGui() {
 	ImGui::SliderFloat("Compare Reference", &ssg->environment.CompareBlend.a, 0.0f, 1.0f);
 	ImGui::ColorEdit3("Fade Color", ssg->environment.FadeColor.ptr());
 	ImGui::SliderFloat("Fade Dissolve", &ssg->environment.FadeColor.a, 0.0f, 1.0f);
-
+	ImGui::SliderFloat("Ref Exposure", &ssg->environment.ReferenceOps.r, -12.0f, 12.0f);
+	ImGui::SliderFloat("Ref Gamma", &ssg->environment.ReferenceOps.g, 0.0f, 2.2f);
+	ImGui::SliderFloat("Ref F.Highlights", &ssg->environment.ReferenceOps.b, 0.0f, 1.0f);
+	ImGui::SliderFloat("Ref F.Shadows", &ssg->environment.ReferenceOps.a, 0.0f, 1.0f);
+	ImGui::SliderFloat4("Flips", ssg->environment.Flips.ptr(), 0.0f, 1.0f);
 	endWindow();
 }

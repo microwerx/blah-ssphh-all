@@ -19,11 +19,13 @@ layout(std140) uniform EnvironmentBlock {
 	vec4 Moon;			// {rgb} = disk radiance, {a} = solid angle
 	vec4 CompareBlend;	// {r} = fade image, {g} = fade color, {b} = fade reference, {a} = image difference
 	vec4 FadeColor;	    // {rgb} = color, {a} = fade dissolve
+	vec4 ReferenceOps;	// {r} = exposure, {g} = gamma, {b} = filmic highlight, {a} = filmic shadows
+	vec4 Flips;			// {r} = flip X, {g} = flip Y, {b} = flip FadeImage, {a} flip RefImage
 };
 
 uniform sampler2D MapDepthBuffer;
 uniform sampler2D MapColorBuffer;
-uniform sampler2D MapBlendImage;
+uniform sampler2D MapBlendFadeImage;
 uniform sampler2D MapBlendReference;
 
 #define ToneMapExposure ToneMap.r
@@ -35,6 +37,10 @@ uniform sampler2D MapBlendReference;
 #define FadeReference    CompareBlend.b
 #define ImageDifference  CompareBlend.a
 #define FadeDissolve     FadeToColor.a
+#define FlipX            Flips.x
+#define FlipY			 Flips.y
+#define FlipFadeImage    Flips.z
+#define FlipReference    Flips.w
 
 vec3 srcColor;
 vec3 imgColor;
@@ -54,22 +60,22 @@ vec3 filmicShadows(vec3 linearColor) {
 	return linearColor;
 }
 
-vec3 calcToneMap(vec3 color) {
-	float exposure = 2.5 * pow(2.0, ToneMapExposure);
-	color *= exposure;
+vec3 calcToneMap(vec3 color, float exposure, float gamma, float highlights, float shadows) {
+	float e = 2.5 * pow(2.0, exposure);
+	color *= e;
 
-	if (ToneMapGamma > 0.0) {
-		color = pow(color, vec3(1.0 / ToneMapGamma));	
+	if (gamma > 0.0) {
+		color = pow(color, vec3(1.0 / gamma));	
 	}
 
-	if (ToneMapFilmicHighlight > 0.0) {
+	if (highlights > 0.0) {
 		vec3 fcolor = filmicCompress(color);
-		color = mix(color, fcolor, ToneMapFilmicHighlight);
+		color = mix(color, fcolor, highlights);
 	}
 
-	if (ToneMapFilmicShadows > 0.0) {
+	if (shadows > 0.0) {
 		vec3 fcolor = filmicShadows(color);
-		color = mix(color, fcolor, ToneMapFilmicShadows);
+		color = mix(color, fcolor, shadows);
 	}
 	return color;
 }
@@ -81,19 +87,32 @@ vec3 compareReference() {
 	return vec3(min(1.0, colorDifference), 0.0, 0.0);
 }
 
+vec3 readTextures() {
+	vec2 srcflip = vTexCoord.st;
+	if (FlipX > 0.5) { srcflip.s = 1.0 - srcflip.s; }
+	if (FlipY > 0.5) { srcflip.t = 1.0 - srcflip.t; }
+	vec2 imgflip = FlipFadeImage > 0.5 ? vec2(srcflip.s, 1.0 - srcflip.t)
+									   : srcflip.st;
+	vec2 refflip = FlipReference > 0.5 ? vec2(srcflip.s, 1.0 - srcflip.t)
+									   : srcflip.st;
+	srcColor = texture(MapColorBuffer, srcflip).rgb;
+	imgColor = texture(MapBlendFadeImage, imgflip).rgb;
+	refColor = texture(MapBlendReference, refflip).rgb;
+	return srcColor;
+}
+
 out vec4 oColor;
 
 void main() {
-	vec2 stflip = vec2(vTexCoord.s, 1.0 - vTexCoord.t);
-	srcColor = texture(MapColorBuffer, vTexCoord.st).rgb;
-	imgColor = texture(MapBlendImage, stflip).rgb;
-	refColor = texture(MapBlendReference, stflip).rgb;
-
-	vec3 color = srcColor;
+	vec3 color = readTextures();
 	if (FadeImage > 0.0) color = mix(color, imgColor, FadeImage);
 	if (FadeSolid > 0.0) color = mix(color, FadeColor.rgb, FadeSolid);
-	if (FadeReference > 0.0) color = mix(color, refColor, FadeReference);
-	color = calcToneMap(color);
+
+	color = calcToneMap(color, ToneMapExposure, ToneMapGamma, ToneMapFilmicHighlight, ToneMapFilmicShadows);
+	if (FadeReference > 0.0) {
+		refColor = calcToneMap(refColor, ReferenceOps.r, ReferenceOps.g, ReferenceOps.b, ReferenceOps.a);
+		color = mix(color, refColor, FadeReference);
+	}
 
 	if (ImageDifference > 0.0) {
 		color = mix(color, compareReference(), ImageDifference);
