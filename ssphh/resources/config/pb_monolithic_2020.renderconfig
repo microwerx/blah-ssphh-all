@@ -196,7 +196,7 @@ renderconfig draw viz
 renderconfig postprocess_rc
 renderconfig program postprocess_program
 renderconfig readfbo linear_fbo
-renderconfig viewport 1920 1080
+renderconfig autoresize
 renderconfig texture2D test2d            MapBlendImage
 renderconfig texture2D coronaGroundTruth MapBlendReference
 renderconfig draw post
