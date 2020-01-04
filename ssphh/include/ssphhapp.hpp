@@ -20,8 +20,6 @@
 #define SSPHH_HPP
 
 #include <fluxions.hpp>
-#include <fluxions_renderer_context.hpp>
-#include <hatchetfish.hpp>
 #include <damselfish_python.hpp>
 #include <viperfish_mouse.hpp>
 #include <viperfish_widget.hpp>
@@ -33,8 +31,6 @@
 #include <fluxions_simple_ssphh.hpp>
 #include <PbskyViewController.hpp>
 #include <camera_animation.hpp>
-#include <renderer_window.hpp>
-#include <renderer_config_window.hpp>
 
 using namespace Vf;
 using namespace Fluxions;
@@ -582,6 +578,8 @@ namespace SSPHH
 		const std::string& GetSceneName() const { return Interface.sceneName; }
 
 		CameraAnimation cameraAnimation;
+		void PathAnim_LoadCameraPath(const std::string& path);
+
 		InterfaceInfo Interface;
 		int counter = 0;
 		double framesPerSecond = 0.0;

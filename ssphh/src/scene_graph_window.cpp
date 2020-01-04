@@ -50,5 +50,29 @@ void SceneGraphWindow::OnRenderDearImGui() {
 		ImGui::TreePop();
 	}
 
+	//if (ImGui::TreeNode("Geometry")) {
+	//	ImGui::TreePop();
+	//}
+
+	if (ImGui::TreeNode("Materials")) {
+		for (auto& mtl : ssg->materials.mtls) {
+			if (ImGui::TreeNode(mtl.name.c_str())) {
+				ImGui::ColorEdit4("Kd", mtl.Kd.ptr());
+				ImGui::ColorEdit4("Ks", mtl.Ks.ptr());
+				ImGui::ColorEdit4("Ke", mtl.Ke.ptr());
+				ImGui::TreePop();
+			}
+		}
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("Maps")) {
+		for (auto& map : ssg->materials.maps) {
+			ImGui::Text(map.first.c_str());
+		}
+		ImGui::TreePop();
+	}
+
+
 	endWindow();
 }

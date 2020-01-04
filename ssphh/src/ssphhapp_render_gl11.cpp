@@ -40,7 +40,7 @@ namespace SSPHH
 		glEnable(GL_LIGHT0);
 		glEnable(GL_LIGHTING);
 
-		if (ssg.geometryObjects.size() == 0)
+		if (ssg.staticMeshes.size() == 0)
 			FxDrawGL1SolidTeapot(1.0);
 
 		glDisable(GL_LIGHTING);
@@ -72,19 +72,19 @@ namespace SSPHH
 		}
 
 		// Geometry
-		for (auto g = ssg.geometry.begin(); g != ssg.geometry.end(); g++) {
+		for (auto g = ssg.geometryGroups_.begin(); g != ssg.geometryGroups_.end(); g++) {
 			glPushMatrix();
 			glMultMatrixf(g->second.transform.const_ptr());
 			glMultMatrixf(g->second.addlTransform.const_ptr());
-			Vector3f center = ssg.geometryObjects[g->second.objectId].BoundingBox.Center();
+			Vector3f center = ssg.staticMeshes[g->second.objectId].BoundingBox.Center();
 
 			glPushMatrix();
 			glTranslatef(center.x, center.y, center.z);
-			FxDrawGL1WireCube(ssg.geometryObjects[g->second.objectId].BoundingBox.MaxSize());
+			FxDrawGL1WireCube(ssg.staticMeshes[g->second.objectId].BoundingBox.MaxSize());
 			glPopMatrix();
 
 			glEnable(GL_LIGHTING);
-			OBJStaticModel& osm = ssg.geometryObjects[g->second.objectId];
+			SimpleGeometryMesh& osm = ssg.staticMeshes[g->second.objectId];
 			glEnable(GL_TEXTURE_2D);
 			osm.RenderGL1();
 			glDisable(GL_TEXTURE_2D);

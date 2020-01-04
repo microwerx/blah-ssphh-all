@@ -1,6 +1,5 @@
 #include "pch.hpp"
 #include <hatchetfish.hpp>
-#include <hatchetfish_stopwatch.hpp>
 #include <renderer_window.hpp>
 #include <ssphhapp.hpp>
 

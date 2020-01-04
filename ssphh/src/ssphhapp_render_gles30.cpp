@@ -131,7 +131,7 @@ namespace SSPHH
 			Fluxions::RenderImage(rendererContext, ssg, renderername, renderconfigname);
 		}
 		//ssg.AdvancedRender(defaultRenderConfig);
-		//ssg.camera.actualViewMatrix = defaultRenderConfig.cameraMatrix;
+		//ssg.camera.actualViewMatrix = defaultRenderConfig.cameraMatrix_;
 		while (glGetError()) HFLOGWARN("AdvancedRender() ERROR!");
 
 		if (Interface.drawSkyBox) {

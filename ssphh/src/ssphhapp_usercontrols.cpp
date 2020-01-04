@@ -68,7 +68,7 @@ namespace SSPHH
 	//
 	//		if (key == 'r' || key == '\t')
 	//		{
-	//			Interface.cameraMatrix.LoadIdentity();
+	//			Interface.cameraMatrix_.LoadIdentity();
 	//			ResetScene();
 	//		}
 	//
@@ -192,6 +192,10 @@ namespace SSPHH
 			}
 		}
 
+		if (keymod == keyboard.AltKeyBit) {
+			if (key == "F6") { PathAnim_LoadCameraPath("animation.txt"); }
+		}
+
 		if (keymod == 0) {
 			if (Interface.showImGui == false && key == "Escape") {
 				LeaveMainLoop();
@@ -280,9 +284,9 @@ namespace SSPHH
 				Interface.cameraOrbit.x += 5.0f;
 
 			if (key == "[")
-				ssg.environment.toneMapExposure = Fluxions::clamp(ssg.environment.toneMapExposure - 0.5f, -12.0f, 12.0f);
+				ssg.environment.toneMapExposure() = Fluxions::clamp(ssg.environment.toneMapExposure() - 0.5f, -12.0f, 12.0f);
 			if (key == "]")
-				ssg.environment.toneMapExposure = Fluxions::clamp(ssg.environment.toneMapExposure + 0.5f, -12.0f, 12.0f);
+				ssg.environment.toneMapExposure() = Fluxions::clamp(ssg.environment.toneMapExposure ()+ 0.5f, -12.0f, 12.0f);
 			if (key == ";")
 				Interface.tools.shaderDebugChoice = Fluxions::clamp(Interface.tools.shaderDebugChoice - 1, 0, 20);
 			if (key == "'")
@@ -305,21 +309,21 @@ namespace SSPHH
 				Sun_AdvanceClock(3600.0, true);
 			}
 
-			if (key == "F1") hotkeyWindows["F1"]->ToggleVisible();
-			if (key == "F2") hotkeyWindows["F2"]->ToggleVisible();
-			if (key == "F3") hotkeyWindows["F3"]->ToggleVisible();
-			if (key == "F4") hotkeyWindows["F4"]->ToggleVisible();
-			if (key == "F5") hotkeyWindows["F5"]->ToggleVisible();
-			if (key == "F6") hotkeyWindows["F6"]->ToggleVisible();
-			if (key == "F7") hotkeyWindows["F7"]->ToggleVisible();
-			if (key == "F8") hotkeyWindows["F8"]->ToggleVisible();
-			if (key == "F9") hotkeyWindows["F9"]->ToggleVisible();
+			if (key == "F1") hotkeyWindows[key]->ToggleVisible();
+			if (key == "F2") hotkeyWindows[key]->ToggleVisible();
+			if (key == "F3") hotkeyWindows[key]->ToggleVisible();
+			if (key == "F4") hotkeyWindows[key]->ToggleVisible();
+			if (key == "F5") hotkeyWindows[key]->ToggleVisible();
+			if (key == "F6") hotkeyWindows[key]->ToggleVisible();
+			if (key == "F7") hotkeyWindows[key]->ToggleVisible();
+			if (key == "F8") hotkeyWindows[key]->ToggleVisible();
+			if (key == "F9") hotkeyWindows[key]->ToggleVisible();
 			if (key == "F10") {
-				hotkeyWindows["F10"]->ToggleVisible();
-				Interface.showImGui = hotkeyWindows["F10"]->isVisible();
+				hotkeyWindows[key]->ToggleVisible();
+				Interface.showImGui = hotkeyWindows[key]->isVisible();
 			}
-			if (key == "F11") hotkeyWindows["F11"]->ToggleVisible();
-			if (key == "F12") hotkeyWindows["F12"]->ToggleVisible();
+			if (key == "F11") hotkeyWindows[key]->ToggleVisible();
+			if (key == "F12") hotkeyWindows[key]->ToggleVisible();
 
 			//Interface.showHelp = !Interface.showHelp;
 			//if (key == "F2")

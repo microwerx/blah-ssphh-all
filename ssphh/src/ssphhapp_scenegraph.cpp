@@ -51,10 +51,10 @@ namespace SSPHH
 	}
 
 	void SSPHH_Application::SSG_OptimizeClippingPlanes() {
-		//Matrix4f cameraMatrix = defaultRenderConfig.preCameraMatrix * ssg.camera.actualViewMatrix * defaultRenderConfig.postCameraMatrix;
-		//cameraMatrix.AsInverse().col4()
+		//Matrix4f cameraMatrix_ = defaultRenderConfig.preCameraMatrix * ssg.camera.actualViewMatrix * defaultRenderConfig.postCameraMatrix;
+		//cameraMatrix_.AsInverse().col4()
 		Matrix4f cameraMatrix = ssg.camera.actualViewMatrix.AsInverse();
-		const BoundingBoxf& bbox = ssg.GetBoundingBox();
+		const BoundingBoxf& bbox = ssg.getBoundingBox();
 		const Matrix4f& frameOfReference = cameraMatrix;
 		const Vector3f& position = frameOfReference.col4().xyz();
 		float znear;

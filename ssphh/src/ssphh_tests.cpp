@@ -36,7 +36,7 @@ namespace SSPHH
 			std::ostringstream ostr;
 			ostr << ssg.name << "_sphl" << count;
 			if (!sphl.saveOBJ("output", ostr.str())) {
-				HFLOGWARN("sphl.SaveOBJ() failed to save %s", ostr.str().c_str());
+				HFLOGWARN("sphl.saveOBJ() failed to save %s", ostr.str().c_str());
 				break;
 			}
 			count++;

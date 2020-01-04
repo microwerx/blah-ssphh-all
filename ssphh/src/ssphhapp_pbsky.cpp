@@ -68,15 +68,15 @@ namespace SSPHH
 			else {
 				lightProbe.loadPPM(fpi.path);
 				//lightProbe.scaleColors(1.0f / (2.5f * powf(2.0f, ssg.environment.toneMapExposure)));
-				lightProbe.ReverseSRGB().ReverseToneMap(ssg.environment.toneMapExposure);
+				lightProbe.ReverseSRGB().ReverseToneMap(ssg.environment.toneMapExposure());
 			}
 			lightProbe.convertRectToCubeMap();
-			FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, ssg.environment.pbskyColorMapId);
-			for (int i = 0; i < 6; i++) {
-				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA32F, (GLsizei)lightProbe.width(), (GLsizei)lightProbe.height(), 0, GL_RGBA, GL_FLOAT, lightProbe.getImageData(i));
-			}
-			glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-			FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+			//FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, ssg.environment.pbskyColorMapId);
+			//for (int i = 0; i < 6; i++) {
+			//	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA32F, (GLsizei)lightProbe.width(), (GLsizei)lightProbe.height(), 0, GL_RGBA, GL_FLOAT, lightProbe.getImageData(i));
+			//}
+			//glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+			//FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 		}
 		else {
 			HFLOGERROR("Could not generate %s", fpi.path.c_str());
@@ -188,14 +188,14 @@ namespace SSPHH
 
 		glUseProgram(program);
 		if (uToneMapScale >= 0)
-			glUniform1f(uToneMapScale, 2.5f * powf(2.0f, ssg.environment.toneMapScale));
+			glUniform1f(uToneMapScale, 2.5f * powf(2.0f, ssg.environment.toneMapExposure()));
 		if (uToneMapExposure >= 0)
-			glUniform1f(uToneMapExposure, 2.5f * powf(2.0f, ssg.environment.toneMapExposure));
+			glUniform1f(uToneMapExposure, 2.5f * powf(2.0f, ssg.environment.toneMapExposure()));
 		if (uToneMapGamma >= 0)
-			glUniform1f(uToneMapGamma, ssg.environment.toneMapGamma);
+			glUniform1f(uToneMapGamma, ssg.environment.toneMapGamma());
 		if (uCubeTexture >= 0) {
-			FxBindTextureAndSampler(ssg.environment.pbskyColorMapUnit, GL_TEXTURE_CUBE_MAP, ssg.environment.pbskyColorMapId, ssg.environment.pbskyColorMapSamplerId);
-			glUniform1i(uCubeTexture, ssg.environment.pbskyColorMapUnit);
+			//FxBindTextureAndSampler(ssg.environment.pbskyColorMapUnit, GL_TEXTURE_CUBE_MAP, ssg.environment.pbskyColorMapId, ssg.environment.pbskyColorMapSamplerId);
+			//glUniform1i(uCubeTexture, ssg.environment.pbskyColorMapUnit);
 		}
 		if (uProjectionMatrix >= 0) {
 			Matrix4f projectionMatrix = ssg.camera.projectionMatrix;

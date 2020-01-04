@@ -17,7 +17,7 @@ namespace SSPHH
 		//rectShadow.preCameraMatrix.LoadIdentity();
 		//rectShadow.postCameraMatrix.LoadIdentity();
 		//rectShadow.projectionMatrix = ssg.environment.sunShadowProjectionMatrix;
-		//rectShadow.cameraMatrix = ssg.environment.sunShadowViewMatrix;
+		//rectShadow.cameraMatrix_ = ssg.environment.sunShadowViewMatrix;
 		//rectShadow.cameraPosition = ssg.environment.sunShadowMapOrigin;
 		//rectShadow.viewportZNear = ssg.environment.sunShadowMapNearZ;
 		//rectShadow.viewportZFar = ssg.environment.sunShadowMapFarZ;
@@ -93,7 +93,7 @@ namespace SSPHH
 
 		//	cubeShadow.renderToFBO = false;
 		//	cubeShadow.useSceneCamera = false;
-		//	cubeShadow.cameraMatrix.LoadIdentity();
+		//	cubeShadow.cameraMatrix_.LoadIdentity();
 		//	cubeShadow.cameraPosition = Vector4f(spl.position, 1.0f);
 
 		//	//RenderCubeShadowMap(ssg, scs, cubeShadow);
@@ -118,7 +118,7 @@ namespace SSPHH
 		//	}
 		//	cubeShadow.renderToFBO = false;
 		//	cubeShadow.useSceneCamera = false;
-		//	cubeShadow.cameraMatrix.LoadIdentity();
+		//	cubeShadow.cameraMatrix_.LoadIdentity();
 		//	cubeShadow.cameraPosition = sphl.position;
 
 		//	//RenderCubeShadowMap(ssg, sphl.depthSphlMap, cubeShadow);

@@ -313,7 +313,7 @@ namespace SSPHH
 		//glPushMatrix();
 		//glLoadIdentity();
 		//glMultMatrixf(rc.projectionMatrix.const_ptr());
-		//glMultMatrixf(rc.cameraMatrix.const_ptr());
+		//glMultMatrixf(rc.cameraMatrix_.const_ptr());
 
 		//glMatrixMode(GL_MODELVIEW);
 		//glPushMatrix();

@@ -72,7 +72,7 @@ namespace SSPHH
 
 		rendererContext.loadShaders();
 		rendererContext.loadTextures();
-		rendererContext.loadMaps(ssg.materials.GetMapPaths());
+		rendererContext.loadMaps(ssg.materials.maps);
 		rendererContext.makeFramebuffers();
 
 		//RendererConfig& defaultRenderConfig = rendererContext.rendererConfigs["default"];

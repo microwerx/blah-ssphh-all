@@ -66,8 +66,8 @@ texture2D map test_texture_2d.png "corona_export/corona_ground_truth.exr"
 #textureCube sampler defaultCubeSampler
 
 textureCube enviroSkyCube
-textureCube map test_corona_cube.exr
-# textureCube map galileo_cross.exr
+# textureCube map test_corona_cube.exr
+textureCube map galileo_cross.exr
 textureCube uniform MapEnviroCube
 textureCube sampler defaultCubeSampler
 
@@ -154,7 +154,7 @@ fbo attach GL_TEXTURE_2D GL_COLOR_ATTACHMENT0 GL_RGBA16F            MapColorBuff
 # this render config is for drawing the skybox
 renderconfig skybox_rc
 renderconfig program skybox_program
-renderconfig writefbo linear_fbo
+# renderconfig writefbo linear_fbo
 renderconfig textureCube enviroSkyCube MapEnviroCube
 # renderconfig clearcolor 1.0 0.0 1.0 1.0
 # renderconfig viewport 0 256 512 512
@@ -209,11 +209,11 @@ uniformMatrix4f sunMatrix @SUNMATRIX
 
 # ==== Renderers ====
 
-renderer gles30Shadow
-renderer renderconfig zonly
+# renderer gles30Shadow
+# renderer renderconfig zonly
 
-renderer gles30CubeMap
-renderer renderconfig 
+# renderer gles30CubeMap
+# renderer renderconfig 
 
 renderer skybox
 renderer renderconfig skybox_rc
@@ -228,11 +228,11 @@ renderer renderconfig pbr_rc
 renderer viz
 renderer renderconfig viz_rc
 
-renderer sphl
-renderer renderconfig sphl_rc
+# renderer sphl
+# renderer renderconfig sphl_rc
 
-renderer postprocess
-renderer renderconfig postprocess_rc
+# renderer postprocess
+# renderer renderconfig postprocess_rc
 
 # ==== Render Commands ====
 

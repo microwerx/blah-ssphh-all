@@ -123,7 +123,7 @@ namespace SSPHH
 		GLfloat xpos = 0.0f;
 		GLfloat ypos = screenHeight - maxLines * 15.0f;
 
-		Matrix4f cameraMatrix = Interface.preCameraMatrix * ssg.camera.viewMatrix;
+		Matrix4f cameraMatrix_ = Interface.preCameraMatrix * ssg.camera.viewMatrix;
 
 		const char* renderModes[] = {
 			"FIXED FUNCTION",
@@ -157,15 +157,15 @@ namespace SSPHH
 		FxGlutPrintBitmapStringJustified(xpos, ypos, screenWidth, 0, (void*)FX_GLUT_FONT::BITMAP_9_BY_15, "Render mode: %d %s", renderMode, renderModes[renderMode]);
 		ypos += 15.0f;
 		ypos += 15.0f;
-		FxGlutPrintBitmapStringJustified(xpos, ypos, screenWidth, 0, (void*)FX_GLUT_FONT::BITMAP_9_BY_15, "% -2.3f, % -2.3f, % -2.3f, % -2.3f", cameraMatrix.m11, cameraMatrix.m12, cameraMatrix.m13, cameraMatrix.m14);
+		FxGlutPrintBitmapStringJustified(xpos, ypos, screenWidth, 0, (void*)FX_GLUT_FONT::BITMAP_9_BY_15, "% -2.3f, % -2.3f, % -2.3f, % -2.3f", cameraMatrix_.m11, cameraMatrix_.m12, cameraMatrix_.m13, cameraMatrix_.m14);
 		ypos += 15.0f;
-		FxGlutPrintBitmapStringJustified(xpos, ypos, screenWidth, 0, (void*)FX_GLUT_FONT::BITMAP_9_BY_15, "% -2.3f, % -2.3f, % -2.3f, % -2.3f", cameraMatrix.m21, cameraMatrix.m22, cameraMatrix.m23, cameraMatrix.m24);
+		FxGlutPrintBitmapStringJustified(xpos, ypos, screenWidth, 0, (void*)FX_GLUT_FONT::BITMAP_9_BY_15, "% -2.3f, % -2.3f, % -2.3f, % -2.3f", cameraMatrix_.m21, cameraMatrix_.m22, cameraMatrix_.m23, cameraMatrix_.m24);
 		ypos += 15.0f;
-		FxGlutPrintBitmapStringJustified(xpos, ypos, screenWidth, 0, (void*)FX_GLUT_FONT::BITMAP_9_BY_15, "% -2.3f, % -2.3f, % -2.3f, % -2.3f", cameraMatrix.m31, cameraMatrix.m32, cameraMatrix.m33, cameraMatrix.m34);
+		FxGlutPrintBitmapStringJustified(xpos, ypos, screenWidth, 0, (void*)FX_GLUT_FONT::BITMAP_9_BY_15, "% -2.3f, % -2.3f, % -2.3f, % -2.3f", cameraMatrix_.m31, cameraMatrix_.m32, cameraMatrix_.m33, cameraMatrix_.m34);
 		ypos += 15.0f;
-		FxGlutPrintBitmapStringJustified(xpos, ypos, screenWidth, 0, (void*)FX_GLUT_FONT::BITMAP_9_BY_15, "% -2.3f, % -2.3f, % -2.3f, % -2.3f", cameraMatrix.m41, cameraMatrix.m42, cameraMatrix.m43, cameraMatrix.m44);
+		FxGlutPrintBitmapStringJustified(xpos, ypos, screenWidth, 0, (void*)FX_GLUT_FONT::BITMAP_9_BY_15, "% -2.3f, % -2.3f, % -2.3f, % -2.3f", cameraMatrix_.m41, cameraMatrix_.m42, cameraMatrix_.m43, cameraMatrix_.m44);
 
-		Vector4f eye = cameraMatrix * Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
+		Vector4f eye = cameraMatrix_ * Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
 		ypos += 15.0f;
 		FxGlutPrintBitmapStringJustified(xpos, ypos, screenWidth, 0, (void*)FX_GLUT_FONT::BITMAP_9_BY_15, "CAMERA: X: % -3.2f, Y: % -3.2f, Z: % -3.2f", eye.x, eye.y, eye.z);
 		Vector3f sun = ssg.environment.pbsky.GetSunVector();

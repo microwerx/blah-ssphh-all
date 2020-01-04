@@ -2,8 +2,11 @@
 
 // Uniforms
 
-uniform mat4 ProjectionMatrix;
-uniform mat4 CameraMatrix;
+layout(std140) uniform CameraBlock {
+	mat4 ProjectionMatrix;
+	mat4 CameraMatrix;
+};
+
 uniform mat4 WorldMatrix;
 
 // Inputs

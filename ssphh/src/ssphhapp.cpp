@@ -338,8 +338,8 @@ namespace SSPHH
 	void SSPHH_Application::RenderTest2SphereCubeMap() {
 		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
 
-		//Matrix4f cameraMatrix = Interface.inversePreCameraMatrix * ssg.camera.viewMatrix;
-		//Vector3f cameraPosition(cameraMatrix.m14, cameraMatrix.m24, cameraMatrix.m34);
+		//Matrix4f cameraMatrix_ = Interface.inversePreCameraMatrix * ssg.camera.viewMatrix;
+		//Vector3f cameraPosition(cameraMatrix_.m14, cameraMatrix_.m24, cameraMatrix_.m34);
 		//int s = 128;
 		//RendererConfig* cubeRC = rendererContext.renderers["gles30CubeMap"].getRenderConfig();
 		//if (!cubeRC) return;

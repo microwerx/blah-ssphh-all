@@ -26,7 +26,7 @@ namespace SSPHH
 		//}
 
 		if (Interface.recomputeSky) {
-			ssg.environment.Update(ssg.GetBoundingBox());
+			ssg.environment.Update(ssg.getBoundingBox());
 			ssg.environment.ComputePBSky();
 			Interface.recomputeSky = false;
 		}
@@ -52,17 +52,7 @@ namespace SSPHH
 
 			if (animpath_window_ptr->load_animation) {
 				animpath_window_ptr->load_animation = false;
-				cameraAnimation.clear();
-				std::ifstream fin("animation.txt");
-				while (fin) {
-					std::string line;
-					std::getline(fin, line);
-					std::istringstream istr(line);
-					std::string token;
-					istr >> token;
-					if (token.empty()) continue;
-					cameraAnimation.read(token, istr);
-				}
+				PathAnim_LoadCameraPath("animation.txt");
 				return;
 			}
 
@@ -127,7 +117,7 @@ namespace SSPHH
 
 			//Interface.preCameraMatrix
 
-			//	for (auto geoIt = ssg.geometry.begin(); geoIt != ssg.geometry.end(); geoIt++)
+			//	for (auto geoIt = ssg.geometryGroups_.begin(); geoIt != ssg.geometryGroups_.end(); geoIt++)
 			//	{
 			//		if (geoIt->second.objectName == "teapot")
 			//		{
@@ -155,10 +145,10 @@ namespace SSPHH
 		}
 
 		GLuint defaultCubeSamplerId = rendererContext.samplers["defaultCube"].getId();
-		ssg.environment.pbskyColorMapSamplerId = defaultCubeSamplerId;
-		ssg.environment.enviroColorMapSamplerId = defaultCubeSamplerId;
-		ssg.environment.sunColorMapSamplerId = defaultCubeSamplerId;
-		ssg.environment.sunDepthMapSamplerId = defaultCubeSamplerId;
+		//ssg.environment.pbskyColorMapSamplerId = defaultCubeSamplerId;
+		//ssg.environment.enviroColorMapSamplerId = defaultCubeSamplerId;
+		//ssg.environment.sunColorMapSamplerId = defaultCubeSamplerId;
+		//ssg.environment.sunDepthMapSamplerId = defaultCubeSamplerId;
 
 		stopwatch.Stop();
 		my_hud_info.onUpdateTime = stopwatch.GetMillisecondsElapsed();
@@ -166,13 +156,13 @@ namespace SSPHH
 
 		if (Interface.saveCoronaSCN) {
 			Interface.saveCoronaSCN = false;
-			coronaScene.WriteSCN("output.scn", ssg);
+			coronaScene.writeSCN("output.scn", ssg);
 		}
 
 		if (Interface.saveCoronaCubeMapSCN) {
 			Interface.saveCoronaCubeMapSCN = false;
 			Vector3f cameraPosition = ssg.camera.viewMatrix.col4().xyz();
-			coronaScene.WriteCubeMapSCN("output_cubemap.scn", ssg, cameraPosition);
+			coronaScene.writeCubeMapSCN("output_cubemap.scn", ssg, cameraPosition);
 		}
 
 		if (Interface.renderCoronaCubeMapSCN) {
@@ -337,6 +327,20 @@ namespace SSPHH
 		if (Interface.increaseLatitude || Interface.decreaseLatitude || Interface.increaseLongitude || Interface.decreaseLongitude) {
 			ssg.environment.pbsky.SetLocation(pbskyLatitude, pbskyLongitude);
 			Sun_AdvanceClock(0.0, true);
+		}
+	}
+
+	void SSPHH_Application::PathAnim_LoadCameraPath(const std::string& path) {
+		cameraAnimation.clear();
+		std::ifstream fin(path);
+		while (fin) {
+			std::string line;
+			std::getline(fin, line);
+			std::istringstream istr(line);
+			std::string token;
+			istr >> token;
+			if (token.empty()) continue;
+			cameraAnimation.read(token, istr);
 		}
 	}
 }
