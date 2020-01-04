@@ -46,7 +46,7 @@ std::string SphlJob::toJSON() noexcept
 	j_meta->set({
 		{ "position",  NewVector3(meta_position) },
 		{ "scene",     Df::JSON::NewString(meta_scene) },
-		{ "time",      Df::JSON::NewString(Hf::Log.makeDTG()) },
+		{ "time",      Df::JSON::NewString(HFLOG_DTG()) },
 		{ "sphlIndex", Df::JSON::NewNumber(meta_sphlIndex) },
 		{ "coronaJob",   Df::JSON::NewString(meta_coronaJob) }
 		});

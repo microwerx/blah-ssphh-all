@@ -80,31 +80,31 @@ int test_curl()
 {
 	using namespace Uf;
 	Curl curl;
-	double t0 = Hf::Log.getSecondsElapsed();
+	double t0 = HFLOG_SECS_ELAPSED();
 	std::string result = curl.Get("http://phd.metzgar-research.com/test_get_project.php");
-	double dt = Hf::Log.getSecondsElapsed() - t0;
-	Hf::Log.info("%s(): curl.GET worked! took %3.6f", __FUNCTION__, dt);
+	double dt = HFLOG_SECS_ELAPSED() - t0;
+	HFLOGERROR("curl.GET worked! took %3.6f", dt);
 
 	Curl::StringTimePairFuture p;
 	Curl::StringTimePair results;
 
-	t0 = Hf::Log.getSecondsElapsed();
+	t0 = HFLOG_SECS_ELAPSED();
 	p = curl.AsyncGet("http://phd.metzgar-research.com/test_get_project.php");
-	dt = Hf::Log.getSecondsElapsed() - t0;
-	Hf::Log.info("%s(): curl.AsyncGET finished! took %3.6f", __FUNCTION__, dt);
+	dt = HFLOG_SECS_ELAPSED() - t0;
+	HFLOGERROR("curl.AsyncGET finished! took %3.6f", dt);
 
 	results = p.get();
-	Hf::Log.info("%s(): curl.AsyncGET return result: %s", __FUNCTION__, results.first.c_str());
-	Hf::Log.info("%s(): curl.AsyncGET worked! took %3.6f", __FUNCTION__, results.second);
+	HFLOGERROR("curl.AsyncGET return result: %s", results.first.c_str());
+	HFLOGERROR("curl.AsyncGET worked! took %3.6f", results.second);
 
-	t0 = Hf::Log.getSecondsElapsed();
+	t0 = HFLOG_SECS_ELAPSED();
 	p = curl.AsyncGet("http://192.168.1.164/");
-	dt = Hf::Log.getSecondsElapsed() - t0;
-	Hf::Log.info("%s(): curl.AsyncGET finished! took %3.6f", __FUNCTION__, dt);
+	dt = HFLOG_SECS_ELAPSED() - t0;
+	HFLOGERROR("curl.AsyncGET finished! took %3.6f", dt);
 
 	results = p.get();
-	Hf::Log.info("%s(): curl.AsyncGET return result: %s", __FUNCTION__, results.first.c_str());
-	Hf::Log.info("%s(): curl.AsyncGET worked! took %3.6f", __FUNCTION__, results.second);
+	HFLOGERROR("curl.AsyncGET return result: %s", results.first.c_str());
+	HFLOGERROR("curl.AsyncGET worked! took %3.6f", results.second);
 	return 0;
 }
 

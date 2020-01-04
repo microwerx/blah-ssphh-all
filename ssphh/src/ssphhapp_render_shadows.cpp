@@ -10,7 +10,7 @@ namespace SSPHH
 		//RendererConfig& cubeShadow = rendererContext.rendererConfigs["cubeShadow"];
 		//RendererConfig& rectShadow = rendererContext.rendererConfigs["rectShadow"];
 
-		//double sunShadowT0 = Hf::Log.getSecondsElapsed();
+		//double sunShadowT0 = HFLOG_SECS_ELAPSED();
 		//rectShadow.renderSkyBox = false;
 		//rectShadow.viewportRect.w = Interface.renderconfig.sunShadowMapSize;
 		//rectShadow.viewportRect.h = Interface.renderconfig.sunShadowMapSize;
@@ -76,7 +76,7 @@ namespace SSPHH
 		////	FxBindTextureAndSampler(rt.unit, rt.target, 0, 0);
 		////	rt.unit = 0;
 		////}
-		//ssg.environment.sunShadowMapTime = (float)(1000.0f * (Hf::Log.getSecondsElapsed() - sunShadowT0));
+		//ssg.environment.sunShadowMapTime = (float)(1000.0f * (HFLOG_SECS_ELAPSED() - sunShadowT0));
 
 		//if (Interface.captureShadows) {
 		//	SaveTextureMap(GL_TEXTURE_2D, ssg.environment.sunColorMapId, "sun_color.ppm");

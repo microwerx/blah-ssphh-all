@@ -1465,7 +1465,7 @@ namespace SSPHH
 		// for every pair of lights i, j where i != j,
 		//     generate a SCN that represents the
 
-		double viz_t0 = Hf::Log.getSecondsElapsed();
+		double viz_t0 = HFLOG_SECS_ELAPSED();
 
 		int count = 0;
 		int numLights = (int)ssgUserData->ssphhLights.size();
@@ -1520,21 +1520,21 @@ namespace SSPHH
 		if (count)
 			ssphh.VIZ();
 
-		Interface.ssphh.lastVIZTime = Hf::Log.getSecondsElapsed() - viz_t0;
+		Interface.ssphh.lastVIZTime = HFLOG_SECS_ELAPSED() - viz_t0;
 	}
 
 	void SSPHH_Application::imguiCoronaGenerateSphlINIT() {
-		double timeElapsed = Hf::Log.getSecondsElapsed();
+		double timeElapsed = HFLOG_SECS_ELAPSED();
 		ssphh.INIT(ssg);
-		Interface.ssphh.lastINITTime = Hf::Log.getSecondsElapsed() - timeElapsed;
+		Interface.ssphh.lastINITTime = HFLOG_SECS_ELAPSED() - timeElapsed;
 		DirtySPHLs();
 	}
 
 	void SSPHH_Application::imguiCoronaGenerateSphlHIER() {
-		double timeElapsed = Hf::Log.getSecondsElapsed();
+		double timeElapsed = HFLOG_SECS_ELAPSED();
 		ssphh.VIZmix = Interface.ssphh.HierarchiesMix;
 		ssphh.HIER(Interface.ssphh.HierarchiesIncludeSelf, Interface.ssphh.HierarchiesIncludeNeighbors, Interface.ssphh.MaxDegrees);
-		Interface.ssphh.lastHIERTime = Hf::Log.getSecondsElapsed() - timeElapsed;
+		Interface.ssphh.lastHIERTime = HFLOG_SECS_ELAPSED() - timeElapsed;
 		DirtySPHLs();
 	}
 
@@ -1549,7 +1549,7 @@ namespace SSPHH
 
 		int count = 0;
 		int numLights = (int)ssgUserData->ssphhLights.size();
-		double gen_t0 = Hf::Log.getSecondsElapsed();
+		double gen_t0 = HFLOG_SECS_ELAPSED();
 		Interface.ssphh.gen_times.resize(numLights, 0.0);
 		for (int sendLight = 0; sendLight < numLights; sendLight++) {
 			if (rendererContext.rendererConfigs["default"].shaderDebugSphl >= 0 &&
@@ -1595,7 +1595,7 @@ namespace SSPHH
 			DirtySPHLs();
 		}
 
-		Interface.ssphh.lastGENTime = Hf::Log.getSecondsElapsed() - gen_t0;
+		Interface.ssphh.lastGENTime = HFLOG_SECS_ELAPSED() - gen_t0;
 	}
 
 	void SSPHH_Application::imguiCoronaCheckCache() {
@@ -1608,7 +1608,7 @@ namespace SSPHH
 	void SSPHH_Application::imguiCoronaGenerateREF() {
 		imguiCoronaCheckCache();
 		if (Interface.ssphh.enableREF) {
-			double time0 = Hf::Log.getSecondsElapsed();
+			double time0 = HFLOG_SECS_ELAPSED();
 			std::string name = Fluxions::MakeREFName(
 				Interface.sceneName,
 				false,
@@ -1631,11 +1631,11 @@ namespace SSPHH
 			else
 				job1.Start(coronaScene, ssg);
 			Interface.ssphh.lastREFPath = job1.GetOutputPath();
-			Interface.ssphh.lastREFTime = Hf::Log.getSecondsElapsed() - time0;
+			Interface.ssphh.lastREFTime = HFLOG_SECS_ELAPSED() - time0;
 		}
 
 		if (Interface.ssphh.enableREFCubeMap) {
-			double time0 = Hf::Log.getSecondsElapsed();
+			double time0 = HFLOG_SECS_ELAPSED();
 			std::string name = Fluxions::MakeREFName(
 				Interface.sceneName,
 				true,
@@ -1658,7 +1658,7 @@ namespace SSPHH
 			else
 				job2.Start(coronaScene, ssg);
 			Interface.ssphh.lastREFCubeMapPath = job2.GetOutputPath();
-			Interface.ssphh.lastREFCubeMapTime = Hf::Log.getSecondsElapsed() - time0;
+			Interface.ssphh.lastREFCubeMapTime = HFLOG_SECS_ELAPSED() - time0;
 		}
 	}
 
@@ -1881,7 +1881,7 @@ namespace SSPHH
 
 		std::ofstream fout(Interface.sceneName + "_stats.csv",
 						   Interface.ssphh.genProductsIgnoreCache ? std::ios::out : std::ios::app);
-		auto dtg = Hf::Log.makeDTG();
+		auto dtg = HFLOG_DTG();
 		fout << dtg << std::endl;
 		fout << "name,dtg,ks,mrd,pl,md,time,ptE,sphlE,d1E,d2E" << std::endl;
 		for (auto& product : times) {
@@ -1954,12 +1954,12 @@ namespace SSPHH
 		//string file2ppm = file2 + ".ppm"; string file2png = (file1 + mdbuffer) + "_sphlrender.png";
 		//if (!CopyFile(Interface.ssphh.lastREFPath.c_str(), file1ppm.c_str(), FALSE))
 		//{
-		//	Hf::Log.error("%s(): Unable to copy file %s to %s", __FUNCTION__, Interface.ssphh.lastREFPath.c_str(), file1ppm.c_str());
+		//	HFLOGERROR("Unable to copy file %s to %s", Interface.ssphh.lastREFPath.c_str(), file1ppm.c_str());
 		//	return;
 		//}
 		//if (!CopyFile(Interface.ssphh.lastSphlRenderPath.c_str(), file2ppm.c_str(), FALSE))
 		//{
-		//	Hf::Log.error("%s(): Unable to copy file %s to %s", __FUNCTION__, Interface.ssphh.lastSphlRenderPath.c_str(), file2ppm.c_str());
+		//	HFLOGERROR("Unable to copy file %s to %s", Interface.ssphh.lastSphlRenderPath.c_str(), file2ppm.c_str());
 		//	return;
 		//}
 		//char tmpbuf[256];
@@ -1970,10 +1970,10 @@ namespace SSPHH
 		//string cmdline2 = "magick  "; cmdline2 += file1ppm + "  " + file1png;
 		//string cmdline3 = "magick  "; cmdline3 += file2ppm + "  " + file2png;
 
-		//Hf::Log.info("running: %s", cmdline1.c_str());
-		//if (auto result = system(cmdline1.c_str()) != 0) Hf::Log.error("%s(): command unsuccessful (%d) %s", __FUNCTION__, result, cmdline1.c_str());
-		//if (auto result = system(cmdline2.c_str()) != 0) Hf::Log.error("%s(): command unsuccessful (%d) %s", __FUNCTION__, result, cmdline2.c_str());
-		//if (auto result = system(cmdline3.c_str()) != 0) Hf::Log.error("%s(): command unsuccessful (%d) %s", __FUNCTION__, result, cmdline3.c_str());
+		//HFLOGINFO("running: %s", cmdline1.c_str());
+		//if (auto result = system(cmdline1.c_str()) != 0) HFLOGERROR("command unsuccessful (%d) %s", result, cmdline1.c_str());
+		//if (auto result = system(cmdline2.c_str()) != 0) HFLOGERROR("command unsuccessful (%d) %s", result, cmdline2.c_str());
+		//if (auto result = system(cmdline3.c_str()) != 0) HFLOGERROR("command unsuccessful (%d) %s", result, cmdline3.c_str());
 
 		//DeleteFile(file1ppm.c_str());
 		//DeleteFile(file2ppm.c_str());
@@ -2060,219 +2060,6 @@ namespace SSPHH
 		}
 		ImGui::SetNextWindowContentWidth(640.0f);
 		ImGui::Begin("SSPHH");
-		if (ImGui::Button("MV")) {
-			init = false;
-		}
-		ImGui::SameLine();
-		ImGui::Text("Scene: %s", Interface.sceneName.c_str());
-
-		if (ImGui::Button("Generate Corona REF")) {
-			imguiCoronaGenerateSCN();
-		}
-		if (ImGui::Button("HOSEK-WILKIE")) {
-			Sky_RegenCoronaSky();
-		}
-		ImGui::SameLine();
-		ImGui::Text("Create/use Corona Hosek-Wilkie sky.");
-
-		if (ImGui::Button("REFERENCE")) {
-			imguiCoronaGenerateREF();
-		}
-		ImGui::SameLine();
-		ImGui::Text("Create reference for comparison (%.3lf sec)", Interface.ssphh.lastREFTime);
-
-		if (ImGui::Button("DELETE CACHE")) {
-			imguiCoronaDeleteCache();
-		}
-		ImGui::SameLine();
-		ImGui::Text("Delete cached light solution");
-
-		if (ImGui::Button("HIERGEN INIT")) {
-			imguiCoronaGenerateSphlINIT();
-		}
-		ImGui::SameLine();
-		ImGui::Text("Reset Hierarchies (%.3lf sec)", Interface.ssphh.lastINITTime);
-
-		if (ImGui::Button("SPHLVIZ")) {
-			imguiCoronaGenerateSphlVIZ();
-		}
-		ImGui::SameLine();
-		ImGui::Text("Generate visibility network (%.3lf sec)", Interface.ssphh.lastVIZTime);
-
-		if (ImGui::Button("SPHLGEN")) {
-			imguiCoronaGenerateSphlGEN();
-			DirtySPHLs();
-			//ssg.MakeSphlsUnclean();
-		}
-		ImGui::SameLine();
-		ImGui::Text("Generate GI solution (%.3lf sec)", Interface.ssphh.lastGENTime);
-
-		if (ImGui::Button("HIERGEN")) {
-			imguiCoronaGenerateSphlHIER();
-			DirtySPHLs();
-			//ssg.MakeSphlsUnclean();
-		}
-		ImGui::SameLine();
-		ImGui::Text("Generate Hierarchies (%.3lf sec)", Interface.ssphh.lastHIERTime);
-
-		if (ImGui::Button("SAVEOBJ")) {
-			imguiSphlSaveToOBJ();
-		}
-		ImGui::SameLine();
-		ImGui::Text("Save current SPHL(s) to OBJ/MTL");
-
-		ImGui::Separator();
-
-		ImGui::Checkbox("Sphl Editor", &Interface.tools.showSphlEditor);
-		ImGui::PushID(1234);
-		ImGui::SameLine();
-		if (ImGui::SmallButton("+")) {
-			imguiSphlAdd();
-		}
-		ImGui::SameLine();
-		if (ImGui::SmallButton("-")) {
-			imguiSphlDelete();
-		}
-		ImGui::SameLine();
-		if (ImGui::SmallButton("l-")) {
-			imguiSphlDecreaseDegrees();
-		}
-		ImGui::SameLine();
-		if (ImGui::SmallButton("l+")) {
-			imguiSphlIncreaseDegrees();
-		}
-		ImGui::SameLine();
-		if (ImGui::SmallButton("?")) {
-			imguiSphlRandomize();
-		}
-		ImGui::SameLine();
-		if (ImGui::SmallButton("Unclean!")) {
-			DirtySPHLs();
-			//ssg.MakeSphlsUnclean();
-		}
-		ImGui::SameLine();
-		if (ImGui::SmallButton("Dump Hier")) {
-			for (size_t i = 0; i < ssgUserData->ssphhLights.size(); i++) {
-				auto& sphl = ssgUserData->ssphhLights[i];
-				sphl.setHierarchyDescription();
-				Hf::Log.info("%s(): hierarchy %02d %s", __FUNCTION__, sphl.index, sphl.hier_description.c_str());
-			}
-		}
-
-		// do a little visualization on the current enabled status
-		int size = (int)ssgUserData->ssphhLights.size();
-		std::string bits(ssgUserData->ssphhLights.size(), 'n');
-		for (int i = 0; i < size; i++)
-			if (ssgUserData->ssphhLights[i].enabled)
-				bits[i] = 'y';
-		ImGui::SameLine();
-		ImGui::Text("%d %s", size, bits.c_str());
-
-		ImGui::PopID();
-
-		ImGui::Separator();
-
-		ImGui::Checkbox("Enable shadow map VIZ", &Interface.ssphh.enableShadowColorMap);
-		ImGui::SameLine();
-		ImGui::Checkbox("Enable sRGB", &rendererContext.rendererConfigs["default"].enableSRGB);
-		ImGui::Text("REF:");
-		ImGui::SameLine();
-		ImGui::Checkbox("2D", &Interface.ssphh.enableREF);
-		ImGui::SameLine();
-		ImGui::Checkbox("Cube", &Interface.ssphh.enableREFCubeMap);
-		ImGui::SameLine();
-		ImGui::Checkbox("HQ", &Interface.ssphh.enableHQ);
-		ImGui::SameLine();
-		ImGui::Checkbox("HDR", &Interface.ssphh.enableHDR);
-		ImGui::SameLine();
-		ImGui::Checkbox("Ks", &Interface.ssphh.enableKs);
-		ImGui::SameLine();
-		ImGui::Checkbox("PPMs", &ssphh.savePPMs);
-		ImGui::SameLine();
-		ImGui::Checkbox("JSONs", &ssphh.saveJSONs);
-
-		ImGui::PushItemWidth(100);
-		ImGui::PushID(1);
-		ImGui::TextColored(Colors::Rose, "VIZ");
-		ImGui::SameLine();
-		ImGui::SliderInt("MaxRayDepth", &Interface.ssphh.VIZ_MaxRayDepth, 0, 25);
-		ImGui::SameLine();
-		ImGui::SliderInt("PassLimit", &Interface.ssphh.VIZ_PassLimit, 1, 100);
-		ImGui::SameLine();
-		ImGui::Checkbox("Regen", &Interface.ssphh.VIZ_IgnoreCache);
-		ImGui::PopID();
-		ImGui::PushID(2);
-		ImGui::TextColored(Colors::Cyan, "GEN");
-		ImGui::SameLine();
-		ImGui::SliderInt("MaxRayDepth", &Interface.ssphh.GEN_MaxRayDepth, 0, 25);
-		ImGui::SameLine();
-		ImGui::SliderInt("PassLimit", &Interface.ssphh.GEN_PassLimit, 1, 100);
-		ImGui::SameLine();
-		ImGui::Checkbox("Regen", &Interface.ssphh.GEN_IgnoreCache);
-		ImGui::PopID();
-		ImGui::PushID(3);
-		ImGui::TextColored(Colors::Yellow, "REF");
-		ImGui::SameLine();
-		ImGui::SliderInt("MaxRayDepth", &Interface.ssphh.REF_MaxRayDepth, 0, 25);
-		ImGui::SameLine();
-		ImGui::SliderInt("PassLimit", &Interface.ssphh.REF_PassLimit, 1, 100);
-		ImGui::SameLine();
-		ImGui::Checkbox("Regen", &Interface.ssphh.REF_IgnoreCache);
-		ImGui::PopID();
-		imgui2NSizeSlider("SPHL Size", &Interface.ssphh.LightProbeSizeChoice, &Interface.ssphh.LightProbeSize, 4, 10);
-		ImGui::SameLine();
-		imgui2NSizeSlider("Shadow Size", &Interface.ssphh.ShadowSizeChoice, &Interface.ssphh.ShadowSize, 4, 10);
-		ImGui::PopItemWidth();
-
-		ImGui::Separator();
-
-		ImGui::PushItemWidth(100);
-		ImGui::SliderInt("Max Hierarchies", &Interface.ssphh.HierarchiesMaxSphls, 0, MaxSphlLights);
-		ImGui::SameLine();
-		ImGui::SliderInt("Max Degrees", &Interface.ssphh.MaxDegrees, 0, MaxSphlDegree);
-		ImGui::Text("Accum");
-		ImGui::SameLine();
-		ImGui::Checkbox("Self ", &Interface.ssphh.HierarchiesIncludeSelf);
-		ImGui::SameLine();
-		ImGui::Checkbox("Neighbors", &Interface.ssphh.HierarchiesIncludeNeighbors);
-		ImGui::SameLine();
-		ImGui::SliderFloat("Mix", &Interface.ssphh.HierarchiesMix, 0.0, 1.0);
-		ImGui::Text("Show ");
-		ImGui::SameLine();
-		ImGui::Checkbox("SPHLs", &Interface.ssphh.enableShowSPHLs);
-		ImGui::SameLine();
-		ImGui::Checkbox("Basic", &Interface.ssphh.enableBasicShowSPHLs);
-		ImGui::SameLine();
-		ImGui::Checkbox("Hierarchies", &Interface.ssphh.enableShowHierarchies);
-		ImGui::SameLine();
-		if (ImGui::Button("GO!")) {
-			DirtySPHLs();
-			//ssg.MakeSphlsUnclean();
-		}
-		ImGui::PopItemWidth();
-
-		ImGui::Separator();
-
-		if (ImGui::Button("GEN Test Products")) {
-			imguiCoronaGenerateTestProducts();
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("DEL Test Products")) {
-			imguiCoronaDeleteTestProducts();
-		}
-		ImGui::SameLine();
-		ImGui::Checkbox("REGEN Test Products", &Interface.ssphh.genProductsIgnoreCache);
-
-		ImGui::Checkbox("PPMCOMP Diffs", &Interface.ssphh.ppmcompareGenPPMs);
-		ImGui::SameLine();
-		ImGui::Checkbox("PPMCOMP Regen", &Interface.ssphh.ppmcompareIgnoreCache);
-
-		ImGui::Separator();
-
-		// show sorted list of hierarchies
-		for (size_t i = 0; i < ssgUserData->ssphhLights.size(); i++) {
-			ImGui::Text("%s", ssgUserData->ssphhLights[i].hier_description.c_str());
-		}
 
 		ImGui::End();
 	}

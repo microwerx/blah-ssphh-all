@@ -70,7 +70,7 @@ namespace SSPHH
 		bool useEXR = true;
 		FilePathInfo fpi(job.GetOutputPath(useEXR));
 		if (fpi.DoesNotExist()) {
-			Hf::Log.errorfn(__FUNCTION__, "Could not find rendered light probe %s", job.GetOutputPath(useEXR).c_str());
+			HFLOGERROR("Could not find rendered light probe %s", job.GetOutputPath(useEXR).c_str());
 			return false;
 		}
 

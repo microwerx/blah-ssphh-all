@@ -19,7 +19,7 @@ namespace SSPHH
 	//			InitRenderConfigs();
 	//			LoadRenderConfigs();
 	//			stopwatch.Stop();
-	//			Hf::Log.info("%s(): reload took %4.2f milliseconds", __FUNCTION__, stopwatch.GetMillisecondsElapsed());
+	//			HFLOGINFO("reload took %4.2f milliseconds", stopwatch.GetMillisecondsElapsed());
 	//		}
 	//
 	//		if (key == '2')
@@ -27,7 +27,7 @@ namespace SSPHH
 	//			Hf::StopWatch stopwatch;
 	//			ssg.Load(sceneFilename);
 	//			stopwatch.Stop();
-	//			Hf::Log.info("%s(): SSG reload took %4.2f milliseconds", __FUNCTION__, stopwatch.GetMillisecondsElapsed());
+	//			HFLOGINFO("SSG reload took %4.2f milliseconds", stopwatch.GetMillisecondsElapsed());
 	//		}
 	//
 	//		if (tolower(key) == '3') {

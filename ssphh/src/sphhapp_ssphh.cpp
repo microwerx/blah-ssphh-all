@@ -100,7 +100,7 @@ namespace SSPHH
 		//rc.blendFuncDstFactor = GL_ONE;
 
 		//if (!rc.shaderProgram) {
-		//	//Hf::Log.info("%s(): sphl shader not found", __FUNCTION__);
+		//	//HFLOGINFO("sphl shader not found");
 		//	return;
 		//}
 

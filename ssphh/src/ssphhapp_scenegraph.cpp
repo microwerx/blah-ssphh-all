@@ -47,7 +47,7 @@ namespace SSPHH
 		}
 
 		ssg.Load(sceneFilename);
-		Interface.sceneName = ssg.name;
+		Interface.sceneName = ssg.name_str();
 	}
 
 	void SSPHH_Application::SSG_OptimizeClippingPlanes() {

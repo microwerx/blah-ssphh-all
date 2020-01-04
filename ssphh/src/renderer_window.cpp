@@ -117,7 +117,7 @@ void RendererWindow::OnRenderDearImGui() {
 	}
 
 	static int hflogCurrentItem{ 0 };
-	int hflogSize = Hf::Log.getHistoryItemsSize();
+	int hflogSize = HFLOG_HISTORYSIZE();
 	if (hflogSize) ImGui::ListBox("hflog", &hflogCurrentItem, Hf::Log.getHistoryItems(), hflogSize);
 
 	endWindow();
