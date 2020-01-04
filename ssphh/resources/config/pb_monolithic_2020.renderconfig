@@ -42,8 +42,8 @@ texture2D map "test_texture_2d.png"
 
 texture2D coronaGroundTruth
 texture2D sampler default2dSampler
-texture2D uniform MapCorona
-texture2D map test_texture_2d.png "corona_export/corona_ground_truth.exr"
+texture2D uniform MapBlendReference
+texture2D map "corona_output/corona_ground_truth.exr"
 
 #textureCube pbskyEXR
 #textureCube map "test_corona_skymap.exr"
@@ -136,6 +136,7 @@ fbo linear_fbo
 fbo dimensions @DEFAULTWIDTH @DEFAULTHEIGHT
 fbo attach GL_TEXTURE_2D GL_DEPTH_ATTACHMENT  GL_DEPTH_COMPONENT16  MapDepthBuffer
 fbo attach GL_TEXTURE_2D GL_COLOR_ATTACHMENT0 GL_RGBA16F            MapColorBuffer
+fbo autoresize
 
 # ==== Render Configurations ====
 
@@ -154,7 +155,7 @@ fbo attach GL_TEXTURE_2D GL_COLOR_ATTACHMENT0 GL_RGBA16F            MapColorBuff
 # this render config is for drawing the skybox
 renderconfig skybox_rc
 renderconfig program skybox_program
-# renderconfig writefbo linear_fbo
+renderconfig writefbo linear_fbo
 renderconfig textureCube enviroSkyCube MapEnviroCube
 # renderconfig clearcolor 1.0 0.0 1.0 1.0
 # renderconfig viewport 0 256 512 512
@@ -167,7 +168,7 @@ renderconfig draw skybox
 
 renderconfig pbr_rc
 renderconfig program pbr_program
-# renderconfig writefbo linear_fbo
+renderconfig writefbo linear_fbo
 # renderconfig readfbo sunShadow
 # renderconfig readfbo moonShadow
 renderconfig viewport 0 0 1024 1024
@@ -196,8 +197,8 @@ renderconfig postprocess_rc
 renderconfig program postprocess_program
 renderconfig readfbo linear_fbo
 renderconfig viewport 1920 1080
-renderconfig texture2D test2d            MapKd
-renderconfig texture2D coronaGroundTruth MapCorona
+renderconfig texture2D test2d            MapBlendImage
+renderconfig texture2D coronaGroundTruth MapBlendReference
 renderconfig draw post
 
 # ==== UniformLists ====
@@ -231,8 +232,8 @@ renderer renderconfig viz_rc
 # renderer sphl
 # renderer renderconfig sphl_rc
 
-# renderer postprocess
-# renderer renderconfig postprocess_rc
+renderer postprocess
+renderer renderconfig postprocess_rc
 
 # ==== Render Commands ====
 
