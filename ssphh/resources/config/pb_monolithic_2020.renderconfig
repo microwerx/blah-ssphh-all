@@ -182,6 +182,7 @@ renderconfig draw scene
 
 renderconfig viz_rc
 renderconfig program viz_program
+renderconfig writefbo linear_fbo
 renderconfig autoresize
 renderconfig perspective 120 1 100
 renderconfig depthtest GL_LEQUAL
