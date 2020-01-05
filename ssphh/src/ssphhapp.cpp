@@ -393,6 +393,7 @@ namespace SSPHH
 
 			std::string filename = GetPathTracerSphlRenderName(
 				Interface.sceneName,
+				"SSHH",
 				Interface.ssphh.enableKs,
 				Interface.ssphh.REF_MaxRayDepth,
 				Interface.ssphh.REF_PassLimit,
@@ -410,40 +411,46 @@ namespace SSPHH
 		}
 	}
 
-	std::string SSPHH_Application::GetPathTracerName(const std::string& sceneName, bool ks, int mrd, int pl) {
+	std::string SSPHH_Application::GetPathTracerName(const std::string& sceneName, std::string& mode, bool ks, int mrd, int pl) {
 		std::ostringstream ostr;
-		ostr << sceneName;
+		ostr << sceneName << "_" << mode;
 		ostr << "_" << std::setw(2) << std::setfill('0') << mrd;
 		ostr << "_" << std::setw(2) << std::setfill('0') << pl;
 		if (ks)
 			ostr << "_Ks";
+		else
+			ostr << "_No"
 		return ostr.str();
 	}
 
-	std::string SSPHH_Application::GetSphlRenderName(const std::string& sceneName, int md) {
+	std::string SSPHH_Application::GetSphlRenderName(const std::string& sceneName, std::string& mode, int md) {
 		std::ostringstream ostr;
-		ostr << sceneName;
+		ostr << sceneName << "_" << mode;
 		ostr << "_sphlrender_" << std::setw(2) << std::setfill('0') << md;
 		return ostr.str();
 	}
 
-	std::string SSPHH_Application::GetPathTracerSphlRenderName(const std::string& sceneName, bool ks, int mrd, int pl, int md) {
+	std::string SSPHH_Application::GetPathTracerSphlRenderName(const std::string& sceneName, std::string& mode, bool ks, int mrd, int pl, int md) {
 		std::ostringstream ostr;
-		ostr << sceneName;
+		ostr << sceneName << "_" << mode;
 		ostr << "_" << std::setw(2) << std::setfill('0') << mrd;
 		ostr << "_" << std::setw(2) << std::setfill('0') << pl;
 		if (ks)
 			ostr << "_Ks";
+		else
+			ostr << "_No";
 		ostr << "_sphlrender_";
 		ostr << std::setw(2) << std::setfill('0') << md;
 		return ostr.str();
 	}
 
-	std::string SSPHH_Application::GetStatsName(const std::string& sceneName, bool ks, int mrd, int pl, int md) {
+	std::string SSPHH_Application::GetStatsName(const std::string& sceneName, std::string& mode, bool ks, int mrd, int pl, int md) {
 		std::ostringstream ostr;
-		ostr << sceneName;
+		ostr << sceneName << "_" << mode;
 		if (ks)
 			ostr << "_Ks";
+		else
+			ostr << "_No";
 		ostr << "_" << std::setw(2) << std::setfill('0') << mrd;
 		ostr << "_" << std::setw(2) << std::setfill('0') << pl;
 		ostr << "_" << std::setw(2) << std::setfill('0') << md;

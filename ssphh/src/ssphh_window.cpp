@@ -28,7 +28,7 @@ void SsphhWindow::OnRenderDearImGui() {
 	ImGui::Text("Scene: %s", ssg->name());
 
 	if (ImGui::Button("Generate Corona REF")) {
-		app.imguiCoronaGenerateSCN();
+		app.Corona_GenerateSCN();
 	}
 	if (ImGui::Button("HOSEK-WILKIE")) {
 		app.Sky_RegenCoronaSky();
@@ -37,31 +37,31 @@ void SsphhWindow::OnRenderDearImGui() {
 	ImGui::Text("Create/use Corona Hosek-Wilkie sky.");
 
 	if (ImGui::Button("REFERENCE")) {
-		app.imguiCoronaGenerateREF();
+		app.Corona_GenerateREF();
 	}
 	ImGui::SameLine();
 	ImGui::Text("Create reference for comparison (%.3lf sec)", app.Interface.ssphh.lastREFTime);
 
 	if (ImGui::Button("DELETE CACHE")) {
-		app.imguiCoronaDeleteCache();
+		app.Corona_DeleteCache();
 	}
 	ImGui::SameLine();
 	ImGui::Text("Delete cached light solution");
 
 	if (ImGui::Button("HIERGEN INIT")) {
-		app.imguiCoronaGenerateSphlINIT();
+		app.Corona_GenerateSphlINIT();
 	}
 	ImGui::SameLine();
 	ImGui::Text("Reset Hierarchies (%.3lf sec)", app.Interface.ssphh.lastINITTime);
 
 	if (ImGui::Button("SPHLVIZ")) {
-		app.imguiCoronaGenerateSphlVIZ();
+		app.Corona_GenerateSphlVIZ();
 	}
 	ImGui::SameLine();
 	ImGui::Text("Generate visibility network (%.3lf sec)", app.Interface.ssphh.lastVIZTime);
 
 	if (ImGui::Button("SPHLGEN")) {
-		app.imguiCoronaGenerateSphlGEN();
+		app.Corona_GenerateSphlGEN();
 		app.DirtySPHLs();
 		//ssg.MakeSphlsUnclean();
 	}
@@ -69,7 +69,7 @@ void SsphhWindow::OnRenderDearImGui() {
 	ImGui::Text("Generate GI solution (%.3lf sec)", app.Interface.ssphh.lastGENTime);
 
 	if (ImGui::Button("HIERGEN")) {
-		app.imguiCoronaGenerateSphlHIER();
+		app.Corona_GenerateSphlHIER();
 		app.DirtySPHLs();
 		//ssg.MakeSphlsUnclean();
 	}
@@ -215,11 +215,11 @@ void SsphhWindow::OnRenderDearImGui() {
 	ImGui::Separator();
 
 	if (ImGui::Button("GEN Test Products")) {
-		app.imguiCoronaGenerateTestProducts();
+		app.Corona_GenerateTestProducts();
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("DEL Test Products")) {
-		app.imguiCoronaDeleteTestProducts();
+		app.CoronaEraseTestProducts();
 	}
 	ImGui::SameLine();
 	ImGui::Checkbox("REGEN Test Products", &app.Interface.ssphh.genProductsIgnoreCache);

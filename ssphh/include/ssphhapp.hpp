@@ -420,18 +420,17 @@ namespace SSPHH
 		void imguiShowScenegraphEditor();
 		void imguiShowSphlEditor();
 		void imguiShowMaterialEditor();
-		void imguiCoronaControls();
-		void imguiCoronaGenerateSCN();
-		void imguiCoronaGenerateSphlVIZ();
-		void imguiCoronaGenerateSphlINIT();
-		void imguiCoronaGenerateSphlHIER();
-		void imguiCoronaGenerateSphlGEN();
-		void imguiCoronaCheckCache();
-		void imguiCoronaGenerateREF();
-		void imguiCoronaDeleteCache();
-		void imguiCoronaGenerateTestProducts();
-		void imguiCoronaGenerateCompareProduct(bool ks, int mrd, int pl, int md);
-		void imguiCoronaDeleteTestProducts();
+		void Corona_GenerateSCN();
+		void Corona_GenerateREF();
+		void Corona_GenerateSphlVIZ();
+		void Corona_GenerateSphlINIT();
+		void Corona_GenerateSphlHIER();
+		void Corona_GenerateSphlGEN();
+		void Corona_CheckCache();
+		void Corona_DeleteCache();
+		void Corona_GenerateTestProducts();
+		void Corona_GenerateCompareProduct(bool ks, int mrd, int pl, int md);
+		void CoronaEraseTestProducts();
 
 		void imgui2NSizeSlider(const char* desc, int* choice, int* size, int minvalue, int maxvalue);
 
@@ -469,10 +468,10 @@ namespace SSPHH
 
 		void SaveScreenshot();
 
-		static std::string GetPathTracerName(const std::string& sceneName, bool ks, int mrd, int pl);
-		static std::string GetSphlRenderName(const std::string& sceneName, int md);
-		static std::string GetPathTracerSphlRenderName(const std::string& sceneName, bool ks, int mrd, int pl, int md);
-		static std::string GetStatsName(const std::string& sceneName, bool ks, int mrd, int pl, int md);
+		static std::string GetPathTracerName(const std::string& sceneName, const std::string& mode, bool ks, int mrd, int pl);
+		static std::string GetSphlRenderName(const std::string& sceneName, const std::string& mode, int md);
+		static std::string GetPathTracerSphlRenderName(const std::string& sceneName, const std::string& mode, bool ks, int mrd, int pl, int md);
+		static std::string GetStatsName(const std::string& sceneName, const std::string& mode, bool ks, int mrd, int pl, int md);
 
 		void DirtySPHLs();
 		void UpdateSPHLs();

@@ -215,6 +215,7 @@
     <ClCompile Include="src\ssphhapp_unicornfish.cpp" />
     <ClCompile Include="src\ssphhapp_update.cpp" />
     <ClCompile Include="src\ssphhapp_usercontrols.cpp" />
+    <ClCompile Include="src\ssphh_corona.cpp" />
     <ClCompile Include="src\ssphh_imgui_tests.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.hpp</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.hpp</PrecompiledHeaderFile>

@@ -262,20 +262,20 @@ namespace SSPHH
 			}
 
 			if (key == "i" || key == "I") {
-				imguiCoronaGenerateSphlINIT();
+				Corona_GenerateSphlINIT();
 				Sky_RegenCoronaSky();
 			}
 
 			if (key == "v" || key == "V") {
-				imguiCoronaGenerateSphlVIZ();
+				Corona_GenerateSphlVIZ();
 			}
 
 			if (key == "g" || key == "G") {
-				imguiCoronaGenerateSphlGEN();
+				Corona_GenerateSphlGEN();
 			}
 
 			if (key == "h" || key == "H") {
-				imguiCoronaGenerateSphlHIER();
+				Corona_GenerateSphlHIER();
 			}
 
 			if (key == "j")
@@ -297,7 +297,7 @@ namespace SSPHH
 				Interface.ssphh.MaxDegrees = Fluxions::clamp(Interface.ssphh.MaxDegrees + 1, 0, 9);
 
 			if (key == "," || key == ".")
-				imguiCoronaGenerateSphlHIER();
+				Corona_GenerateSphlHIER();
 
 			if (key == "-" || key == "_") {
 				// decrease 1 hour
