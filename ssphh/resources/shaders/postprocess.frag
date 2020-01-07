@@ -81,7 +81,6 @@ vec3 calcToneMap(vec3 color, float exposure, float gamma, float highlights, floa
 }
 
 vec3 compareReference() {
-	refColor = texture(MapBlendReference, vTexCoord.st).rgb;
 	colorDifference = relativeLuminance(refColor) - relativeLuminance(srcColor);
 	if (colorDifference < 0.0) return vec3(0.0, min(1.0, -colorDifference), 0.0);
 	return vec3(min(1.0, colorDifference), 0.0, 0.0);
@@ -108,11 +107,10 @@ void main() {
 	if (FadeImage > 0.0) color = mix(color, imgColor, FadeImage);
 	if (FadeSolid > 0.0) color = mix(color, FadeColor.rgb, FadeSolid);
 
-	color = calcToneMap(color, ToneMapExposure, ToneMapGamma, ToneMapFilmicHighlight, ToneMapFilmicShadows);
-	if (FadeReference > 0.0) {
-		refColor = calcToneMap(refColor, ReferenceOps.r, ReferenceOps.g, ReferenceOps.b, ReferenceOps.a);
-		color = mix(color, refColor, FadeReference);
-	}
+	srcColor = calcToneMap(color, ToneMapExposure, ToneMapGamma, ToneMapFilmicHighlight, ToneMapFilmicShadows);	
+	refColor = calcToneMap(refColor, ReferenceOps.r, ReferenceOps.g, ReferenceOps.b, ReferenceOps.a);		
+
+	color = mix(srcColor, refColor, FadeReference);
 
 	if (ImageDifference > 0.0) {
 		color = mix(color, compareReference(), ImageDifference);

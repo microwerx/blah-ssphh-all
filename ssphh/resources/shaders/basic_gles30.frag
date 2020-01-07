@@ -77,6 +77,29 @@ in vec3 vColor;
 
 out vec4 oColor;
 
+vec3 decodeSRGB(vec3 color) {
+	return pow(color, vec3(2.2));
+}
+
+vec3 ReadMapKd() {
+	return decodeSRGB(texture(MapKd, vTexCoord).rgb);
+}
+
+bool sameHemisphere(float NdotL, float NdotV) {
+	return (NdotL * NdotV) > 0.0;
+}
+
+// N, L, and V need to be normalized
+vec3 calcPBR(vec3 N, vec3 L, vec3 V) {
+	float NdotL = dot(N, L);
+	float NdotV = dot(N, V);
+	float lighting = 0.1;
+	// if (!sameHemisphere(NdotL, NdotV)) {
+	// 	return vec3(0.1);
+	// }
+	return vec3(0.1 + 0.9 * max(0.0, NdotL));
+}
+
 //////////////////////////////////////////////////////////////////////
 // MAIN FUNCTION /////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
@@ -90,15 +113,17 @@ void main() {
 
 	vec3 L = normalize(DirtoLights[0].dirTo.xyz);
 	vec3 N = normalize(vNormal);
-	float NdotL = 0.5 + 0.5 * dot(N, L);
+	vec3 V = normalize(vPosition - vCameraPosition);
+
+	vec3 lighting = calcPBR(N, L, V);
 
 	vec3 mtlkd = materials[MtlID].Kd.rgb;
 	float kdmix = materials[MtlID].Kd.a;
-	vec3 kd = mix(mtlkd, texture(MapKd, vTexCoord).rgb, kdmix);
+	vec3 kd = mix(mtlkd, ReadMapKd(), kdmix);
 	if (length(mtlkd) < 0.1)
 		color = 0.5 * vNormal + 0.5 + 0.5 * kd + pointLights[0].E0;
 	else {
 		color = vec3(float(MtlID) / 32.0, mtlkd.gb);
 	}
-	oColor = vec4(NdotL * kd, 1.0);
+	oColor = vec4(lighting * kd, 1.0);
 }

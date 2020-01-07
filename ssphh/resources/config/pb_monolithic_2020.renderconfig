@@ -44,6 +44,7 @@ texture2D coronaGroundTruth
 texture2D sampler default2dSampler
 texture2D uniform MapBlendReference
 texture2D map "corona_output/corona_ground_truth.exr"
+texture2D alwaysLoad
 
 #textureCube pbskyEXR
 #textureCube map "test_corona_skymap.exr"
@@ -201,6 +202,7 @@ renderconfig autoresize
 renderconfig texture2D test2d            MapBlendFadeImage
 renderconfig texture2D coronaGroundTruth MapBlendReference
 renderconfig draw post
+renderconfig srgb
 
 # ==== UniformLists ====
 
