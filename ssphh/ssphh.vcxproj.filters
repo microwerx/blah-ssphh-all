@@ -231,7 +231,10 @@
       <Filter>Source Files\tools</Filter>
     </ClCompile>
     <ClCompile Include="src\ssphh_corona.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\ssphh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ssphhapp_pathanim.cpp">
+      <Filter>Source Files\ssphh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

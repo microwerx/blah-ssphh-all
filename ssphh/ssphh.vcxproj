@@ -205,6 +205,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.hpp</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.hpp</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="src\ssphhapp_pathanim.cpp" />
     <ClCompile Include="src\ssphhapp_pbsky.cpp" />
     <ClCompile Include="src\ssphhapp_render.cpp" />
     <ClCompile Include="src\ssphhapp_renderconfigs.cpp" />

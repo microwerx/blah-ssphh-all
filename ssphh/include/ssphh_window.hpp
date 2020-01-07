@@ -12,9 +12,11 @@ public:
 	void OnUpdate(double timeStamp) override;
 	void OnRenderDearImGui() override;
 
-
 private:
 	Fluxions::SimpleSceneGraph* ssg{ nullptr };
+	float buttonWidth{ 0.0f };
+	float vgrWidth{ 0.0f };
+	void alignat(float& width, const char* referencestr = nullptr);
 };
 
 using SSPHHWindowPtr = std::shared_ptr<SsphhWindow>;

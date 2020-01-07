@@ -44,11 +44,12 @@ namespace SSPHH
 	}
 
 	void SSPHH_Application::Sky_RegenCoronaSky() {
-		Uf::CoronaJob job("ssphh_sky", Uf::CoronaJob::Type::Sky);
+		Uf::CoronaJob job(Interface.sceneName, "ssphh_sky", Uf::CoronaJob::Type::Sky);
 
-		if (Interface.ssphh.enableHQ)
+		job.usePreviousRun(pbskyReuseCorona);
+		if (coronaScene.currentConfig.enableHQ)
 			job.EnableHQ();
-		if (Interface.ssphh.enableHDR)
+		if (coronaScene.currentConfig.enableHDR)
 			job.EnableHDR();
 
 		job.Start(coronaScene, ssg);
@@ -71,6 +72,13 @@ namespace SSPHH
 				lightProbe.ReverseSRGB().ReverseToneMap(ssg.environment.toneMapExposure());
 			}
 			lightProbe.convertRectToCubeMap();
+
+			static const std::string pbskyTextureName{ "enviroSkyCube" };
+			if (rendererContext.textureCubes.count(pbskyTextureName)) {
+				auto& t2d = rendererContext.textureCubes[pbskyTextureName];
+				t2d.setTextureCube(lightProbe);
+			}
+
 			//FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, ssg.environment.pbskyColorMapId);
 			//for (int i = 0; i < 6; i++) {
 			//	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA32F, (GLsizei)lightProbe.width(), (GLsizei)lightProbe.height(), 0, GL_RGBA, GL_FLOAT, lightProbe.getImageData(i));
@@ -198,11 +206,11 @@ namespace SSPHH
 			//glUniform1i(uCubeTexture, ssg.environment.pbskyColorMapUnit);
 		}
 		if (uProjectionMatrix >= 0) {
-			Matrix4f projectionMatrix = ssg.camera.projectionMatrix;
+			Matrix4f projectionMatrix = ssg.camera.projectionMatrix();
 			glUniformMatrix4fv(uProjectionMatrix, 1, GL_FALSE, projectionMatrix.const_ptr());
 		}
 		if (uCameraMatrix >= 0) {
-			Matrix4f viewMatrix = Interface.inversePreCameraMatrix * ssg.camera.viewMatrix;
+			Matrix4f viewMatrix = Interface.inversePreCameraMatrix * ssg.camera.viewMatrix();
 			viewMatrix.m14 = viewMatrix.m24 = viewMatrix.m34 = viewMatrix.m41 = viewMatrix.m42 = viewMatrix.m43 = 0.0f;
 			glUniformMatrix4fv(uCameraMatrix, 1, GL_FALSE, viewMatrix.const_ptr());
 		}

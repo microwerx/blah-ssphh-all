@@ -25,7 +25,9 @@
 #ifndef STDAFX_H
 #define STDAFX_H
 
-#include <fluxions_stdcxx.hpp>
+#include <hatchetfish.hpp>
+#include <fluxions.hpp>
+#include <viperfish.hpp>
 #include <ssphhapp.hpp>
 
 #endif // STDAFX_H

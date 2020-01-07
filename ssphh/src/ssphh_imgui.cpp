@@ -279,7 +279,6 @@ namespace SSPHH
 
 		ImGui::Separator();
 
-		imguiCoronaControls();
 		ImGui::DragFloat("Exposure", &ssg.environment.toneMapExposure(), 0.1f, -12.0f, 12.0f, "%.1f");
 		ImGui::DragFloat("Gamma", &ssg.environment.toneMapGamma(), 0.1f, 1.0f, 6.0f, "%.1f");
 
@@ -623,7 +622,7 @@ namespace SSPHH
 
 				ImGui::TextColored(Colors::Red, "Camera: ");
 				ImGui::DragFloat("FOV: ", &Interface.ssg.cameraFOV);
-				Matrix4f m = ssg.camera.viewMatrix;
+				Matrix4f m = ssg.camera.viewMatrix();
 				ImGui::Text(
 					"viewMatrix: % 3.2f % 3.2f % 3.2f % 3.2f\n"
 					"            % 3.2f % 3.2f % 3.2f % 3.2f\n"
@@ -643,7 +642,8 @@ namespace SSPHH
 					m.m21, m.m22, m.m23, m.m24,
 					m.m31, m.m32, m.m33, m.m34,
 					m.m41, m.m42, m.m43, m.m44);
-				ImGui::Text("CAMERA POS: % 3.2f/% 3.2f/ % 3.2f", Interface.cameraPosition.x, Interface.cameraPosition.y, Interface.cameraPosition.z);
+				Vector3f O = ssg.camera.origin();
+				ImGui::Text("CAMERA POS: % 3.2f/% 3.2f/ % 3.2f", O.x, O.y, O.z);
 				if (ImGui::SmallButton("LoadIdentity()")) {
 					Interface.preCameraMatrix.LoadIdentity();
 				}
@@ -1418,6 +1418,7 @@ namespace SSPHH
 		Hf::Log.resetStat("frametime");
 	}
 
+
 	void SSPHH_Application::imguiShowUfWindow() {
 		if (!Interface.tools.showUnicornfishWindow)
 			return;
@@ -1498,12 +1499,4 @@ namespace SSPHH
 
 		ImGui::End();
 	}
-
-	void SSPHH_Application::imgui2NSizeSlider(const char* desc, int* choice, int* size, int minvalue, int maxvalue) {
-		ImGui::SliderInt(desc, choice, minvalue, maxvalue);
-		ImGui::SameLine();
-		ImGui::Text("= %d", 2 << *choice);
-		*size = 2 << *choice;
-	}
-
 }

@@ -123,7 +123,7 @@ namespace SSPHH
 		GLfloat xpos = 0.0f;
 		GLfloat ypos = screenHeight - maxLines * 15.0f;
 
-		Matrix4f cameraMatrix_ = Interface.preCameraMatrix * ssg.camera.viewMatrix;
+		Matrix4f cameraMatrix_ = Interface.preCameraMatrix * ssg.camera.viewMatrix_;
 
 		const char* renderModes[] = {
 			"FIXED FUNCTION",

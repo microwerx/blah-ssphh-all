@@ -27,37 +27,57 @@ void SsphhWindow::OnRenderDearImGui() {
 	
 	ImGui::Text("Scene: %s", ssg->name());
 
-	if (ImGui::Button("Generate Corona REF")) {
+	ImGui::Text("Options: ");
+	ImGui::SameLine();
+	ImGui::Checkbox("Clear Cache", &app.coronaScene.currentConfig.clearCache);
+	ImGui::SameLine();
+	ImGui::Checkbox("Use Previous", &app.coronaScene.currentConfig.usePreviousRun);
+	ImGui::SameLine();
+	ImGui::Checkbox("Enable Specular", &app.coronaScene.currentConfig.enableSpecular);
+
+	if (ImGui::Button("SCENE")) {
+		app.PathAnim_Stop();
 		app.Corona_GenerateSCN();
 	}
+	ImGuiAlignAt(buttonWidth, "ABCDEFGHIJKLMNOPQRS");
+	ImGui::Text(app.coronaScene.lastSCN.c_str());
+
 	if (ImGui::Button("HOSEK-WILKIE")) {
 		app.Sky_RegenCoronaSky();
 	}
-	ImGui::SameLine();
+	ImGuiAlignAt(buttonWidth);
 	ImGui::Text("Create/use Corona Hosek-Wilkie sky.");
 
 	if (ImGui::Button("REFERENCE")) {
+		app.PathAnim_Stop();
 		app.Corona_GenerateREF();
 	}
-	ImGui::SameLine();
+	ImGuiAlignAt(buttonWidth);
 	ImGui::Text("Create reference for comparison (%.3lf sec)", app.Interface.ssphh.lastREFTime);
 
-	if (ImGui::Button("DELETE CACHE")) {
-		app.Corona_DeleteCache();
+	if (ImGui::Button("SCREENSHOT")) {
+		app.PathAnim_Stop();
+		app.Interface.saveScreenshot = true;
 	}
-	ImGui::SameLine();
-	ImGui::Text("Delete cached light solution");
+	ImGuiAlignAt(buttonWidth);
+	ImGui::Text("Save screenshot comparison (%.3lf sec)", app.Interface.ssphh.lastAPPTime);
+
+	if (ImGui::Button("DELETE CACHE")) {
+		app.Corona_EraseCache();
+	}
+	ImGuiAlignAt(buttonWidth);
+	ImGui::Text("Delete cached light solution (%d files removed)", app.Interface.ssphh.cacheFilesRemoved);
 
 	if (ImGui::Button("HIERGEN INIT")) {
 		app.Corona_GenerateSphlINIT();
 	}
-	ImGui::SameLine();
+	ImGuiAlignAt(buttonWidth);
 	ImGui::Text("Reset Hierarchies (%.3lf sec)", app.Interface.ssphh.lastINITTime);
 
 	if (ImGui::Button("SPHLVIZ")) {
 		app.Corona_GenerateSphlVIZ();
 	}
-	ImGui::SameLine();
+	ImGuiAlignAt(buttonWidth);
 	ImGui::Text("Generate visibility network (%.3lf sec)", app.Interface.ssphh.lastVIZTime);
 
 	if (ImGui::Button("SPHLGEN")) {
@@ -65,7 +85,7 @@ void SsphhWindow::OnRenderDearImGui() {
 		app.DirtySPHLs();
 		//ssg.MakeSphlsUnclean();
 	}
-	ImGui::SameLine();
+	ImGuiAlignAt(buttonWidth);
 	ImGui::Text("Generate GI solution (%.3lf sec)", app.Interface.ssphh.lastGENTime);
 
 	if (ImGui::Button("HIERGEN")) {
@@ -73,13 +93,13 @@ void SsphhWindow::OnRenderDearImGui() {
 		app.DirtySPHLs();
 		//ssg.MakeSphlsUnclean();
 	}
-	ImGui::SameLine();
+	ImGuiAlignAt(buttonWidth);
 	ImGui::Text("Generate Hierarchies (%.3lf sec)", app.Interface.ssphh.lastHIERTime);
 
 	if (ImGui::Button("SAVEOBJ")) {
 		app.imguiSphlSaveToOBJ();
 	}
-	ImGui::SameLine();
+	ImGuiAlignAt(buttonWidth);
 	ImGui::Text("Save current SPHL(s) to OBJ/MTL");
 
 	ImGui::Separator();
@@ -137,16 +157,16 @@ void SsphhWindow::OnRenderDearImGui() {
 	ImGui::SameLine();
 	ImGui::Checkbox("Enable sRGB", &app.rendererContext.rendererConfigs["default"].enableSRGB);
 	ImGui::Text("REF:");
-	ImGui::SameLine();
+	ImGuiAlignAt(vgrWidth, "ABCD");
 	ImGui::Checkbox("2D", &app.Interface.ssphh.enableREF);
 	ImGui::SameLine();
 	ImGui::Checkbox("Cube", &app.Interface.ssphh.enableREFCubeMap);
 	ImGui::SameLine();
-	ImGui::Checkbox("HQ", &app.Interface.ssphh.enableHQ);
+	ImGui::Checkbox("HQ", &app.coronaScene.currentConfig.enableHQ);
 	ImGui::SameLine();
-	ImGui::Checkbox("HDR", &app.Interface.ssphh.enableHDR);
+	ImGui::Checkbox("HDR", &app.coronaScene.currentConfig.enableHDR);
 	ImGui::SameLine();
-	ImGui::Checkbox("Ks", &app.Interface.ssphh.enableKs);
+	ImGui::Checkbox("Ks", &app.coronaScene.currentConfig.enableSpecular);
 	ImGui::SameLine();
 	ImGui::Checkbox("PPMs", &app.ssphh.savePPMs);
 	ImGui::SameLine();
@@ -155,34 +175,34 @@ void SsphhWindow::OnRenderDearImGui() {
 	ImGui::PushItemWidth(100);
 	ImGui::PushID(1);
 	ImGui::TextColored(Colors::Rose, "VIZ");
+	ImGuiAlignAt(vgrWidth);
+	ImGui::SliderInt("MaxRayDepth", &app.coronaScene.VIZ.maxRayDepth, 0, 25);
 	ImGui::SameLine();
-	ImGui::SliderInt("MaxRayDepth", &app.Interface.ssphh.VIZ_MaxRayDepth, 0, 25);
+	ImGui::SliderInt("PassLimit", &app.coronaScene.VIZ.passLimit, 1, 100);
 	ImGui::SameLine();
-	ImGui::SliderInt("PassLimit", &app.Interface.ssphh.VIZ_PassLimit, 1, 100);
-	ImGui::SameLine();
-	ImGui::Checkbox("Regen", &app.Interface.ssphh.VIZ_IgnoreCache);
+	ImGui::Checkbox("Use Previous", &app.coronaScene.VIZ.usePreviousRun);
 	ImGui::PopID();
 	ImGui::PushID(2);
 	ImGui::TextColored(Colors::Cyan, "GEN");
+	ImGuiAlignAt(vgrWidth);
+	ImGui::SliderInt("MaxRayDepth", &app.coronaScene.GEN.maxRayDepth, 0, 25);
 	ImGui::SameLine();
-	ImGui::SliderInt("MaxRayDepth", &app.Interface.ssphh.GEN_MaxRayDepth, 0, 25);
+	ImGui::SliderInt("PassLimit", &app.coronaScene.GEN.passLimit, 1, 100);
 	ImGui::SameLine();
-	ImGui::SliderInt("PassLimit", &app.Interface.ssphh.GEN_PassLimit, 1, 100);
-	ImGui::SameLine();
-	ImGui::Checkbox("Regen", &app.Interface.ssphh.GEN_IgnoreCache);
+	ImGui::Checkbox("Use Previous", &app.coronaScene.GEN.usePreviousRun);
 	ImGui::PopID();
 	ImGui::PushID(3);
 	ImGui::TextColored(Colors::Yellow, "REF");
+	ImGuiAlignAt(vgrWidth);
+	ImGui::SliderInt("MaxRayDepth", &app.coronaScene.REF.maxRayDepth, 0, 25);
 	ImGui::SameLine();
-	ImGui::SliderInt("MaxRayDepth", &app.Interface.ssphh.REF_MaxRayDepth, 0, 25);
+	ImGui::SliderInt("PassLimit", &app.coronaScene.REF.passLimit, 1, 100);
 	ImGui::SameLine();
-	ImGui::SliderInt("PassLimit", &app.Interface.ssphh.REF_PassLimit, 1, 100);
-	ImGui::SameLine();
-	ImGui::Checkbox("Regen", &app.Interface.ssphh.REF_IgnoreCache);
+	ImGui::Checkbox("Use Previous", &app.coronaScene.REF.usePreviousRun);
 	ImGui::PopID();
-	app.imgui2NSizeSlider("SPHL Size", &app.Interface.ssphh.LightProbeSizeChoice, &app.Interface.ssphh.LightProbeSize, 4, 10);
+	ImGui2NSlider("SPHL Size", &app.Interface.ssphh.LightProbeSizeChoice, &app.Interface.ssphh.LightProbeSize, 4, 10);
 	ImGui::SameLine();
-	app.imgui2NSizeSlider("Shadow Size", &app.Interface.ssphh.ShadowSizeChoice, &app.Interface.ssphh.ShadowSize, 4, 10);
+	ImGui2NSlider("Shadow Size", &app.Interface.ssphh.ShadowSizeChoice, &app.Interface.ssphh.ShadowSize, 4, 10);
 	ImGui::PopItemWidth();
 
 	ImGui::Separator();
@@ -208,7 +228,6 @@ void SsphhWindow::OnRenderDearImGui() {
 	ImGui::SameLine();
 	if (ImGui::Button("GO!")) {
 		app.DirtySPHLs();
-		//ssg.MakeSphlsUnclean();
 	}
 	ImGui::PopItemWidth();
 
@@ -219,7 +238,7 @@ void SsphhWindow::OnRenderDearImGui() {
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("DEL Test Products")) {
-		app.CoronaEraseTestProducts();
+		app.Corona_EraseTestProducts();
 	}
 	ImGui::SameLine();
 	ImGui::Checkbox("REGEN Test Products", &app.Interface.ssphh.genProductsIgnoreCache);

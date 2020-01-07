@@ -4,8 +4,6 @@
 
 namespace SSPHH
 {
-	//using TestProduct = std::tuple<bool, int, int, int, std::string>;
-
 	struct CoronaTestProduct {
 		int enableSpecularReflection;
 		int maxRayDepth;
@@ -56,83 +54,95 @@ namespace SSPHH
 		}
 	};
 
+	std::string MakeSceneScnName(const std::string& product, int frame) {
+		std::ostringstream ostr;
+		ostr << Uf::CoronaJob::exportPathPrefix;
+		ostr << product;
+		ostr << "_" << std::setw(6) << std::setfill('0') << frame;
+		ostr << ".scn";
+		return ostr.str();
+	}
+
+	std::string MakeSceneScnNameSH(const std::string& product, int i) {
+		std::ostringstream ostr;
+		ostr << Uf::CoronaJob::exportPathPrefix << product << std::setw(2) << std::setfill('0') << i << ".scn";
+		return ostr.str();
+	}
+
 	void SSPHH_Application::Corona_GenerateSCN() {
 		// Algorithm
 		// generate export_corona_cubemap_sphl_XX.scn      (64x64) where XX is the index of the SPHL
 		// generate export_corona_ground_truth.png (1280x720)
 		// run corona to generate export_corona_cubemap.png      (64x64)
 		// run corona to generate export_corona_ground_truth.png (1280x720)
-		coronaScene.clearCache = true;
-		for (size_t i = 0; i < 16; i++) {
-			if (i >= sphls.size())
-				break;
+		ssg.requestedResolution.x = getWidth();
+		ssg.requestedResolution.y = getHeight();
 
-			std::ostringstream ostr;
-			ostr << Uf::CoronaJob::exportPathPrefix << "export_corona_cubemap_sphl_"
-				<< std::setw(2) << std::setfill('0') << (int)i << ".scn";
-			coronaScene.writeCubeMapSCN(ostr.str(), ssg, sphls[i].position.xyz());
+		for (int i = 0; i < MaxShLights; i++) {
+			if (i >= sphls.size()) break;
+			coronaScene.writeCubeMapSCN(MakeSceneScnNameSH("export_corona_cubemap_sphl_", i), ssg, sphls[i].position.xyz());
 		}
 
-		coronaScene.writeSCN(Uf::CoronaJob::exportPathPrefix +
-							 "export_corona_ground_truth.scn", ssg);
-		coronaScene.writeCubeMapSCN(Uf::CoronaJob::exportPathPrefix +
-									"export_corona_ground_truth_cube.scn", ssg);
+		int frame = int(cameraAnimationTime * 10000);
+		coronaScene.lastFrame = frame;
+		coronaScene.writeSCN(MakeSceneScnName("export_corona_ground_truth", frame), ssg);
+		coronaScene.writeCubeMapSCN(MakeSceneScnName("export_corona_ground_truth_cube", frame), ssg);
 	}
 
 	void SSPHH_Application::Corona_GenerateREF() {
 		Corona_CheckCache();
 		if (Interface.ssphh.enableREF) {
-			double time0 = HFLOG_SECS_ELAPSED();
-			std::string name = Fluxions::MakeREFName(
+			Hf::StopWatch stopwatch;
+			std::string REF_name = Fluxions::MakeREFName(
 				Interface.sceneName,
 				false,
-				Interface.ssphh.enableHDR,
-				Interface.ssphh.enableHQ,
-				Interface.ssphh.enableKs,
-				Interface.ssphh.REF_MaxRayDepth,
-				Interface.ssphh.REF_PassLimit);
-			Uf::CoronaJob job1(name, Uf::CoronaJob::Type::REF);
-			if (Interface.ssphh.enableHQ)
+				coronaScene.REF.enableHDR,
+				coronaScene.REF.enableHQ,
+				coronaScene.REF.enableSpecular,
+				coronaScene.REF.maxRayDepth,
+				coronaScene.REF.passLimit);
+			Uf::CoronaJob job1(Interface.sceneName, REF_name, Uf::CoronaJob::Type::REF);
+			if (coronaScene.currentConfig.enableHQ)
 				job1.EnableHQ();
-			if (Interface.ssphh.enableHDR)
+			if (coronaScene.currentConfig.enableHDR)
 				job1.EnableHDR();
-			job1.SetMaxRayDepth(Interface.ssphh.REF_MaxRayDepth);
-			job1.SetPassLimit(Interface.ssphh.REF_PassLimit);
-			job1.SetIgnoreCache(Interface.ssphh.REF_IgnoreCache);
+			job1.SetMaxRayDepth(coronaScene.REF.maxRayDepth);
+			job1.SetPassLimit(coronaScene.REF.passLimit);
+			job1.usePreviousRun(coronaScene.REF.usePreviousRun);
 			// send it out
 			if (!ssphhUf.IsStopped())
 				ssphhUf.ScatterJob(job1);
 			else
 				job1.Start(coronaScene, ssg);
-			Interface.ssphh.lastREFPath = job1.GetOutputPath();
-			Interface.ssphh.lastREFTime = HFLOG_SECS_ELAPSED() - time0;
+			Interface.ssphh.lastREFImagePath = job1.GetOutputPath();
+			Interface.ssphh.lastREFTime = stopwatch.Stop_s();
 		}
 
 		if (Interface.ssphh.enableREFCubeMap) {
-			double time0 = HFLOG_SECS_ELAPSED();
-			std::string name = Fluxions::MakeREFName(
+			Hf::StopWatch stopwatch;
+			std::string REF_name = Fluxions::MakeREFName(
 				Interface.sceneName,
 				true,
-				Interface.ssphh.enableHDR,
-				Interface.ssphh.enableHQ,
-				Interface.ssphh.enableKs,
-				Interface.ssphh.REF_MaxRayDepth,
-				Interface.ssphh.REF_PassLimit);
-			Uf::CoronaJob job2(name, Uf::CoronaJob::Type::REF_CubeMap);
-			if (Interface.ssphh.enableHQ)
+				coronaScene.currentConfig.enableHDR,
+				coronaScene.currentConfig.enableHQ,
+				coronaScene.currentConfig.enableSpecular,
+				coronaScene.REF.maxRayDepth,
+				coronaScene.REF.passLimit);
+			Uf::CoronaJob job2(Interface.sceneName, REF_name, Uf::CoronaJob::Type::REF_CubeMap);
+			if (coronaScene.currentConfig.enableHQ)
 				job2.EnableHQ();
-			if (Interface.ssphh.enableHDR)
+			if (coronaScene.currentConfig.enableHDR)
 				job2.EnableHDR();
-			job2.SetMaxRayDepth(Interface.ssphh.REF_MaxRayDepth);
-			job2.SetPassLimit(Interface.ssphh.REF_PassLimit);
-			job2.SetIgnoreCache(Interface.ssphh.REF_IgnoreCache);
+			job2.SetMaxRayDepth(coronaScene.REF.maxRayDepth);
+			job2.SetPassLimit(coronaScene.REF.passLimit);
+			job2.usePreviousRun(coronaScene.REF.usePreviousRun);
 			// send it out
 			if (!ssphhUf.IsStopped())
 				ssphhUf.ScatterJob(job2);
 			else
 				job2.Start(coronaScene, ssg);
-			Interface.ssphh.lastREFCubeMapPath = job2.GetOutputPath();
-			Interface.ssphh.lastREFCubeMapTime = HFLOG_SECS_ELAPSED() - time0;
+			Interface.ssphh.lastREFCubeMapImagePath = job2.GetOutputPath();
+			Interface.ssphh.lastREFCubeMapTime = stopwatch.Stop_s();
 		}
 	}
 
@@ -143,7 +153,7 @@ namespace SSPHH
 		// for every pair of lights i, j where i != j,
 		//     generate a SCN that represents the
 
-		double viz_t0 = HFLOG_SECS_ELAPSED();
+		Hf::StopWatch stopwatch;
 
 		int count = 0;
 		int numLights = (int)ssgUserData->ssphhLights.size();
@@ -161,26 +171,26 @@ namespace SSPHH
 				if (recvLight == sendLight)
 					continue;
 
-				int mrd = Interface.ssphh.VIZ_MaxRayDepth;
-				int pl = Interface.ssphh.VIZ_PassLimit;
+				int mrd = coronaScene.VIZ.maxRayDepth;
+				int pl = coronaScene.VIZ.passLimit;
 				std::string viz_name;
 				viz_name = Fluxions::MakeVIZName(Interface.sceneName,
 												 recvLight,
 												 sendLight,
 												 false,
 												 false,
-												 Interface.ssphh.enableKs,
+												 coronaScene.currentConfig.enableSpecular,
 												 mrd,
 												 pl);
 
-				Uf::CoronaJob job(viz_name, Uf::CoronaJob::Type::VIZ, sendLight, recvLight);
-				if (Interface.ssphh.enableHDR)
+				Uf::CoronaJob job(Interface.sceneName, viz_name, Uf::CoronaJob::Type::VIZ, sendLight, recvLight);
+				if (coronaScene.currentConfig.enableHDR)
 					job.EnableHDR();
-				if (Interface.ssphh.enableHQ)
+				if (coronaScene.currentConfig.enableHQ)
 					job.EnableHQ();
 				job.SetMaxRayDepth(mrd);
 				job.SetPassLimit(mrd);
-				job.SetIgnoreCache(Interface.ssphh.VIZ_IgnoreCache);
+				job.usePreviousRun(coronaScene.VIZ.usePreviousRun);
 				job.SetImageDimensions(Interface.ssphh.LightProbeSize, Interface.ssphh.LightProbeSize);
 
 				if (!ssphhUf.IsStopped()) {
@@ -198,21 +208,21 @@ namespace SSPHH
 		if (count)
 			ssphh.VIZ();
 
-		Interface.ssphh.lastVIZTime = HFLOG_SECS_ELAPSED() - viz_t0;
+		Interface.ssphh.lastVIZTime = stopwatch.Stop_s();
 	}
 
 	void SSPHH_Application::Corona_GenerateSphlINIT() {
-		double timeElapsed = HFLOG_SECS_ELAPSED();
+		Hf::StopWatch stopwatch;
 		ssphh.INIT(ssg);
-		Interface.ssphh.lastINITTime = HFLOG_SECS_ELAPSED() - timeElapsed;
+		Interface.ssphh.lastINITTime = stopwatch.Stop_s();
 		DirtySPHLs();
 	}
 
 	void SSPHH_Application::Corona_GenerateSphlHIER() {
-		double timeElapsed = HFLOG_SECS_ELAPSED();
+		Hf::StopWatch stopwatch;
 		ssphh.VIZmix = Interface.ssphh.HierarchiesMix;
 		ssphh.HIER(Interface.ssphh.HierarchiesIncludeSelf, Interface.ssphh.HierarchiesIncludeNeighbors, Interface.ssphh.MaxDegrees);
-		Interface.ssphh.lastHIERTime = HFLOG_SECS_ELAPSED() - timeElapsed;
+		Interface.ssphh.lastHIERTime = stopwatch.Stop_s();
 		DirtySPHLs();
 	}
 
@@ -227,7 +237,7 @@ namespace SSPHH
 
 		int count = 0;
 		int numLights = (int)ssgUserData->ssphhLights.size();
-		double gen_t0 = HFLOG_SECS_ELAPSED();
+		Hf::StopWatch stopwatch;
 		Interface.ssphh.gen_times.resize(numLights, 0.0);
 		for (int sendLight = 0; sendLight < numLights; sendLight++) {
 			if (rendererContext.rendererConfigs["default"].shaderDebugSphl >= 0 &&
@@ -237,25 +247,26 @@ namespace SSPHH
 			sphl.vizgenLightProbes.resize(numLights);
 
 			//sphl.index = sendLight;
-			int mrd = Interface.ssphh.GEN_MaxRayDepth;
-			int pl = Interface.ssphh.GEN_PassLimit;
-			Uf::CoronaJob job(Fluxions::MakeGENName(
-				Interface.sceneName,
-				sendLight,
-				false,
-				false,
-				Interface.ssphh.enableKs,
-				mrd,
-				pl),
-				Uf::CoronaJob::Type::GEN, sendLight);
-			if (Interface.ssphh.enableHDR)
+			int mrd = coronaScene.GEN.maxRayDepth;
+			int pl = coronaScene.GEN.passLimit;
+			Uf::CoronaJob job(Interface.sceneName,
+							  Fluxions::MakeGENName(
+								  Interface.sceneName,
+								  sendLight,
+								  false,
+								  false,
+								  coronaScene.currentConfig.enableSpecular,
+								  mrd,
+								  pl),
+							  Uf::CoronaJob::Type::GEN, sendLight);
+			if (coronaScene.currentConfig.enableHDR)
 				job.EnableHDR();
-			if (Interface.ssphh.enableHQ)
+			if (coronaScene.currentConfig.enableHQ)
 				job.EnableHQ();
 			job.SetMaxRayDepth(mrd);
 			job.SetPassLimit(pl);
 			job.SetImageDimensions(Interface.ssphh.LightProbeSize, Interface.ssphh.LightProbeSize);
-			job.SetIgnoreCache(Interface.ssphh.GEN_IgnoreCache);
+			job.usePreviousRun(coronaScene.GEN.usePreviousRun);
 
 			if (!ssphhUf.IsStopped()) {
 				// send it out
@@ -273,17 +284,18 @@ namespace SSPHH
 			DirtySPHLs();
 		}
 
-		Interface.ssphh.lastGENTime = HFLOG_SECS_ELAPSED() - gen_t0;
+		Interface.ssphh.lastGENTime = stopwatch.Stop_s();
 	}
 
 	void SSPHH_Application::Corona_CheckCache() {
-		if (coronaScene.enableKs != Interface.ssphh.enableKs) {
-			coronaScene.enableKs = Interface.ssphh.enableKs;
-			coronaScene.clearCache = true;
-		}
+		//if (coronaScene.currentConfig.enableSpecular != coronaScene.currentConfig.enableSpecular) {
+		//	coronaScene.currentConfig.enableSpecular = coronaScene.currentConfig.enableSpecular;
+		//	coronaScene.currentConfig.clearCache = true;
+		//}
 	}
 
-	void SSPHH_Application::Corona_DeleteCache() {
+	void SSPHH_Application::Corona_EraseCache() {
+		int filesRemoved = 0;
 		std::vector<std::string> ext_to_delete{
 			".scn",
 			".exr",
@@ -324,7 +336,9 @@ namespace SSPHH
 
 			for (auto& ext : ext_to_delete) {
 				std::string target = base_filename + ext;
-				std::filesystem::remove(target);
+				if (std::filesystem::remove(target)) {
+					filesRemoved++;
+				}
 			}
 
 			// we count one more for the sun-to-sphl files
@@ -333,15 +347,27 @@ namespace SSPHH
 
 				for (auto& ext : ext_to_delete) {
 					std::string target = viz_base_filename + ext;
-					std::filesystem::remove(target);
+					if (std::filesystem::remove(target)) {
+						filesRemoved++;
+					}
 				}
 			}
 		}
 
 		const std::string& gt = Fluxions::MakeREFName(Interface.sceneName, false);
 		const std::string& gt_cm = Fluxions::MakeREFName(Interface.sceneName, true);
-		const std::string& gt_mrdpl = Fluxions::MakeREFName(Interface.sceneName, false, Interface.ssphh.enableHDR, false, Interface.ssphh.REF_MaxRayDepth, Interface.ssphh.REF_PassLimit);
-		const std::string& gt_cm_mrdpl = Fluxions::MakeREFName(Interface.sceneName, true, Interface.ssphh.enableHDR, false, Interface.ssphh.REF_MaxRayDepth, Interface.ssphh.REF_PassLimit);
+		const std::string& gt_mrdpl = Fluxions::MakeREFName(Interface.sceneName,
+															false,
+															coronaScene.currentConfig.enableHDR,
+															false,
+															coronaScene.REF.maxRayDepth,
+															coronaScene.REF.passLimit);
+		const std::string& gt_cm_mrdpl = Fluxions::MakeREFName(Interface.sceneName,
+															   true,
+															   coronaScene.currentConfig.enableHDR,
+															   false,
+															   coronaScene.REF.maxRayDepth,
+															   coronaScene.REF.passLimit);
 
 		std::vector<std::string> product_ext_to_delete{
 			".scn",
@@ -374,9 +400,13 @@ namespace SSPHH
 		for (auto& product : products) {
 			for (auto& product_ext : product_ext_to_delete) {
 				std::string target = product + product_ext;
-				std::filesystem::remove(target);
+				if (std::filesystem::remove(target)) {
+					filesRemoved++;
+				}
 			}
 		}
+
+		Interface.ssphh.cacheFilesRemoved = filesRemoved;
 	}
 
 	void SSPHH_Application::Corona_GenerateTestProducts() {
@@ -395,33 +425,33 @@ namespace SSPHH
 		std::vector<int> specular = { 1 };
 		std::map<std::string, CoronaTestProduct> coronaTestProductTimes;
 
-		auto gmrd = Interface.ssphh.GEN_MaxRayDepth;
-		auto vmrd = Interface.ssphh.VIZ_MaxRayDepth;
-		auto rmrd = Interface.ssphh.REF_MaxRayDepth;
-		auto gpl = Interface.ssphh.GEN_PassLimit;
-		auto vpl = Interface.ssphh.VIZ_PassLimit;
-		auto rpl = Interface.ssphh.REF_PassLimit;
-		auto gic = Interface.ssphh.GEN_IgnoreCache;
-		auto vic = Interface.ssphh.VIZ_IgnoreCache;
-		auto ric = Interface.ssphh.REF_IgnoreCache;
+		auto gmrd = coronaScene.GEN.maxRayDepth;
+		auto vmrd = coronaScene.VIZ.maxRayDepth;
+		auto rmrd = coronaScene.REF.maxRayDepth;
+		auto gpl = coronaScene.GEN.passLimit;
+		auto vpl = coronaScene.VIZ.passLimit;
+		auto rpl = coronaScene.REF.passLimit;
+		auto gic = coronaScene.GEN.clearCache;
+		auto vic = coronaScene.VIZ.clearCache;
+		auto ric = coronaScene.REF.clearCache;
 		auto lastDegrees = Interface.ssphh.MaxDegrees;
 
 		int totalProducts = (int)(specular.size() * maxRayDepths.size() * passes.size() * degrees.size());
 		int count = 0;
 
 		// Render Ground Truth First
-		coronaScene.clearCache = true;
-		coronaScene.enableKs = true;
+		coronaScene.currentConfig.clearCache = true;
+		coronaScene.currentConfig.enableSpecular = true;
 		coronaScene.writeSCN(ssg.name_str(), ssg);
 		for (auto& mrd : maxRayDepths) {
 			for (auto& pl : passes) {
-				Interface.ssphh.REF_MaxRayDepth = mrd;
-				Interface.ssphh.REF_PassLimit = pl;
-				Interface.ssphh.REF_IgnoreCache = Interface.ssphh.genProductsIgnoreCache;
+				coronaScene.REF.maxRayDepth = mrd;
+				coronaScene.REF.passLimit = pl;
+				coronaScene.REF.clearCache = Interface.ssphh.genProductsIgnoreCache;
 				Interface.ssphh.LightProbeSize = 32;
 				Interface.ssphh.enableShowSPHLs = false;
 				Interface.ssphh.enableShowHierarchies = false;
-				Interface.ssphh.enableKs = true;
+				coronaScene.currentConfig.enableSpecular = true;
 
 				std::string ptname = GetPathTracerName(Interface.sceneName, "CRNA", true, mrd, pl);
 				HFLOGINFO("Starting %s", ptname.c_str());
@@ -434,24 +464,24 @@ namespace SSPHH
 		}
 
 		for (auto& ks : specular) {
-			coronaScene.clearCache = true;
-			coronaScene.enableKs = ks != 0;
+			coronaScene.currentConfig.clearCache = true;
+			coronaScene.currentConfig.enableSpecular = ks != 0;
 			coronaScene.writeSCN(ssg.name_str(), ssg);
 			for (auto& mrd : maxRayDepths) {
 				for (auto& pl : passes) {
-					Interface.ssphh.GEN_MaxRayDepth = mrd;
-					Interface.ssphh.GEN_PassLimit = pl;
-					Interface.ssphh.GEN_IgnoreCache = Interface.ssphh.genProductsIgnoreCache;
-					Interface.ssphh.VIZ_MaxRayDepth = mrd;
-					Interface.ssphh.VIZ_PassLimit = pl;
-					Interface.ssphh.VIZ_IgnoreCache = Interface.ssphh.genProductsIgnoreCache;
-					Interface.ssphh.REF_MaxRayDepth = mrd;
-					Interface.ssphh.REF_PassLimit = pl;
-					Interface.ssphh.REF_IgnoreCache = Interface.ssphh.genProductsIgnoreCache;
+					coronaScene.GEN.maxRayDepth = mrd;
+					coronaScene.GEN.passLimit = pl;
+					coronaScene.GEN.clearCache = Interface.ssphh.genProductsIgnoreCache;
+					coronaScene.VIZ.maxRayDepth = mrd;
+					coronaScene.VIZ.passLimit = pl;
+					coronaScene.VIZ.clearCache = Interface.ssphh.genProductsIgnoreCache;
+					coronaScene.REF.maxRayDepth = mrd;
+					coronaScene.REF.passLimit = pl;
+					coronaScene.REF.clearCache = Interface.ssphh.genProductsIgnoreCache;
 					Interface.ssphh.LightProbeSize = 32;
 					Interface.ssphh.enableShowSPHLs = false;
 					Interface.ssphh.enableShowHierarchies = false;
-					Interface.ssphh.enableKs = ks;
+					coronaScene.currentConfig.enableSpecular = ks;
 
 					std::string ptname = GetPathTracerName(Interface.sceneName, "CRNA", ks, mrd, pl);
 					std::string INITname = GetPathTracerName(Interface.sceneName, "INIT", ks, mrd, pl);
@@ -513,7 +543,7 @@ namespace SSPHH
 		}
 
 		std::ofstream fout(Interface.sceneName + "_stats.csv",
-						   Interface.ssphh.genProductsIgnoreCache ? std::ios::out : std::ios::app);
+			(Interface.ssphh.genProductsIgnoreCache ? std::ios::out : std::ios::app));
 		std::string dtg = HFLOG_DTG();
 		fout << dtg << "\n" << "name,dtg,ks,mrd,pl,md,time,ptE,sphlE,d1E,d2E" << "\n";
 		for (auto& [name, t] : coronaTestProductTimes) {
@@ -526,15 +556,15 @@ namespace SSPHH
 		}
 		fout.close();
 
-		Interface.ssphh.GEN_MaxRayDepth = gmrd;
-		Interface.ssphh.VIZ_MaxRayDepth = vmrd;
-		Interface.ssphh.REF_MaxRayDepth = rmrd;
-		Interface.ssphh.GEN_PassLimit = gpl;
-		Interface.ssphh.VIZ_PassLimit = vpl;
-		Interface.ssphh.REF_PassLimit = rpl;
-		Interface.ssphh.GEN_IgnoreCache = gic;
-		Interface.ssphh.VIZ_IgnoreCache = vic;
-		Interface.ssphh.REF_IgnoreCache = ric;
+		coronaScene.GEN.maxRayDepth = gmrd;
+		coronaScene.VIZ.maxRayDepth = vmrd;
+		coronaScene.REF.maxRayDepth = rmrd;
+		coronaScene.GEN.passLimit = gpl;
+		coronaScene.VIZ.passLimit = vpl;
+		coronaScene.REF.passLimit = rpl;
+		coronaScene.GEN.clearCache = gic;
+		coronaScene.VIZ.clearCache = vic;
+		coronaScene.REF.clearCache = ric;
 		Interface.ssphh.MaxDegrees = lastDegrees;
 	}
 
@@ -545,8 +575,10 @@ namespace SSPHH
 
 		Image3f image1;
 		Image3f image2;
-		image1.loadPPM(Interface.ssphh.lastREFPath);
-		image2.loadPPM(Interface.ssphh.lastSphlRenderPath);
+		HFLOGDEBUG("NEED TO REDO THIS CODE!!!");
+		return;
+		//image1.loadPPM(Interface.ssphh.lastREFImagePath);
+		//image2.loadPPM(Interface.ssphh.lastSphlRenderImagePath);
 
 		PPMCompare ppmcompare;
 
@@ -564,6 +596,6 @@ namespace SSPHH
 		Interface.ssphh.ppmcompareIgnoreCache = false;
 	}
 
-	void SSPHH_Application::CoronaEraseTestProducts() {}
+	void SSPHH_Application::Corona_EraseTestProducts() {}
 
 } // namespace SSPHH

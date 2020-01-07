@@ -57,14 +57,14 @@ namespace SSPHH
 
 namespace SSPHH
 {
-	class SSPHH_Application : public Widget
-	{
+	class SSPHH_Application : public Widget {
 	public:
 		// PHYSICALLY BASED SKY METHODS/MEMBERS /////////////////////////////
 
 		// Physically Based Code
 		//Color4f groundRadiance;
 		//Color4f sunDiskRadiance;
+		bool pbskyReuseCorona{ false };
 		double pbskyAge = 0.0;
 		double pbskyMaxAge = 5.0;
 		//double pbskyLatitude = 38.9;
@@ -83,7 +83,7 @@ namespace SSPHH
 		void Sky_LoadCoronaSky(bool loadEXR, const std::string& path);
 		void Sky_InitViewController();
 		void Sky_Render();
-		
+
 		///////////////////////////////////////////////////////////////
 
 	public:
@@ -123,8 +123,7 @@ namespace SSPHH
 
 		// GRAPHICAL USER INTERFACE METHODS
 
-		struct InterfaceInfo
-		{
+		struct InterfaceInfo {
 			Matrix4f projectionMatrix;
 			Matrix4f preCameraMatrix;
 			Matrix4f inversePreCameraMatrix;
@@ -179,8 +178,7 @@ namespace SSPHH
 			bool showDeferredHUD = false;
 			bool showImGui = false;
 
-			struct TOOLSINFO
-			{
+			struct TOOLSINFO {
 				bool showMaterialEditor = false;
 				bool showSphlEditor = false;
 				bool showScenegraphEditor = false;
@@ -201,8 +199,7 @@ namespace SSPHH
 				bool showGLInfo = false;
 			} tools;
 
-			struct SSGINFO
-			{
+			struct SSGINFO {
 				bool showEnvironment = false;
 				bool showEnvironmentDetails = false;
 				bool showGeometry = false;
@@ -224,10 +221,8 @@ namespace SSPHH
 				bool createScene = false;
 			} ssg;
 
-			struct MATERIALSINFO
-			{
-				struct MtlValuePtrs
-				{
+			struct MATERIALSINFO {
+				struct MtlValuePtrs {
 					float* PBm = nullptr;
 					float* PBk = nullptr;
 					float* PBior = nullptr;
@@ -252,24 +247,17 @@ namespace SSPHH
 				//vector<pair<bool, vector<int, bool>>> mtlsCollapsed;
 			} mtls;
 
-			struct SSPHHWINDOW
-			{
+			struct SSPHHWINDOW {
 				bool enabled = false;
 				static const int MaxSPHLs = 16;
 
-				enum class SSPHH_Status
-				{
+				enum class SSPHH_Status {
 					SendUfMessage = 0,
 					RecvUfMessage = 1,
 					UploadToGpu = 2,
 					Finished
 				};
 
-				bool enableHQ = false;
-				bool enableHDR = false;
-				bool enableKs = true;
-				bool enableREF = true;
-				bool enableREFCubeMap = false;
 				int numSphls = 0;
 				std::map<int, SSPHH_Status> ssphhStatus;
 				bool enableShadowColorMap = false;
@@ -284,28 +272,27 @@ namespace SSPHH
 				int HierarchiesMaxSphls = MaxSphlLights;
 				bool HierarchiesGeneratePPMs = false;
 				int MaxDegrees = MaxSphlDegree;
-				int REF_MaxRayDepth = 5;
-				int REF_PassLimit = 1;
-				int VIZ_MaxRayDepth = 3;
-				int VIZ_PassLimit = 1;
-				int GEN_MaxRayDepth = 3;
-				int GEN_PassLimit = 1;
+
 				int LightProbeSizeChoice = 4;
 				int LightProbeSize = 2 << 4;
 				int ShadowSizeChoice = 6;
 				int ShadowSize = 2 << 6;
-				bool GEN_IgnoreCache = false;
-				bool VIZ_IgnoreCache = false;
-				bool REF_IgnoreCache = false;
 				bool genProductsIgnoreCache = false;
 				bool ppmcompareIgnoreCache = false;
 				bool ppmcompareGenPPMs = false;
 				std::string gi_status;
 
-				std::string lastREFPath;
-				std::string lastREFCubeMapPath;
-				std::string lastSphlRenderPath;
+				bool enableREF = true;
+				bool enableREFCubeMap = false;
 
+				std::string lastAPPImagePath;			// The previous screenshot
+				std::string lastREFImagePath;			// The previous ground truth
+				std::string lastREFCubeMapImagePath;	// The previous ground truth cube
+				std::string lastGENRenderImagePath;		// The previous gen light probe
+				std::string lastVIZRenderImagePath;		// The previous viz light probe
+
+				int cacheFilesRemoved{ 0 };
+				double lastAPPTime = 0.0;
 				double lastREFTime = 0.0;
 				double lastREFCubeMapTime = 0.0;
 				double lastINITTime = 0.0;
@@ -318,8 +305,7 @@ namespace SSPHH
 				double lastDiff2TotalEnergy = 0.0;
 			} ssphh;
 
-			struct UNICORNFISHWINDOW
-			{
+			struct UNICORNFISHWINDOW {
 				// Uf read from variables / UI write to variables
 				std::vector<std::string> send_queue;
 				std::vector<const char*> send_queue_items;
@@ -347,15 +333,13 @@ namespace SSPHH
 				bool windowInit = false;
 			} uf;
 
-			struct RENDERCONFIGWINDOW
-			{
+			struct RENDERCONFIGWINDOW {
 				int sunShadowMapSizeChoice = 10;
 				int sunShadowMapSize = 2 << 10;
 				float sunShadowMapZoom = 1.0;
 			} renderconfig;
 
-			struct TESTSWINDOW
-			{
+			struct TESTSWINDOW {
 				bool bTestSPHLs = false;
 				bool bShowSPHLResults = false;
 				int saveSphlJSON = 0;
@@ -385,8 +369,7 @@ namespace SSPHH
 		float imguiWinX = 64.0f;
 		float imguiWinW = 384.0f;
 
-		struct HUDInfo
-		{
+		struct HUDInfo {
 			double pbskyTime = 0.0;
 			double gbufferPassTime = 0.0;
 			double deferredPassTime = 0.0;
@@ -427,12 +410,10 @@ namespace SSPHH
 		void Corona_GenerateSphlHIER();
 		void Corona_GenerateSphlGEN();
 		void Corona_CheckCache();
-		void Corona_DeleteCache();
+		void Corona_EraseCache();
 		void Corona_GenerateTestProducts();
 		void Corona_GenerateCompareProduct(bool ks, int mrd, int pl, int md);
-		void CoronaEraseTestProducts();
-
-		void imgui2NSizeSlider(const char* desc, int* choice, int* size, int minvalue, int maxvalue);
+		void Corona_EraseTestProducts();
 
 		void imguiShowUfWindow();
 		void imguiShowSSPHHWindow();
@@ -465,7 +446,8 @@ namespace SSPHH
 		void RenderDeferredHUD();
 
 		// TASKS
-
+		int frameNumber() const { return int(cameraAnimationTime * 10000); }
+		std::string frameName() const;
 		void SaveScreenshot();
 
 		static std::string GetPathTracerName(const std::string& sceneName, const std::string& mode, bool ks, int mrd, int pl);
@@ -544,6 +526,7 @@ namespace SSPHH
 		SimpleGeometryMesh ssphh_hierarchy_mesh;
 		FxModel geosphere;
 		// Sphl sphl;
+		static constexpr int MaxShLights = 16;
 		std::map<size_t, Sphl> sphls;
 		bool coefs_init = false;
 		// End SPHL code
@@ -577,7 +560,15 @@ namespace SSPHH
 		const std::string& GetSceneName() const { return Interface.sceneName; }
 
 		CameraAnimation cameraAnimation;
+		float cameraAnimationSpeed{ 1.0f };
+		float cameraAnimationTime{ 0.0f };
+		int cameraAnimationKeyframe{ 0 };
 		void PathAnim_LoadCameraPath(const std::string& path);
+		void PathAnim_SaveCameraPath(const std::string& path);
+		void PathAnim_Play();
+		void PathAnim_Stop();
+		void PathAnim_Toggle();
+		void PathAnim_Update();
 
 		InterfaceInfo Interface;
 		int counter = 0;

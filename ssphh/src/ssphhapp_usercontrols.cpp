@@ -257,7 +257,11 @@ namespace SSPHH
 				Sun_UseCurrentTime();
 			}
 
-			if (key == " " || key == "o" || key == "O") {
+			if (key == " ") {
+				PathAnim_Toggle();
+			}
+			
+			if (key == "o" || key == "O") {
 				Interface.enableOrbit = !Interface.enableOrbit;
 			}
 

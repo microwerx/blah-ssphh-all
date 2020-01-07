@@ -338,7 +338,7 @@ namespace SSPHH
 	void SSPHH_Application::RenderTest2SphereCubeMap() {
 		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
 
-		//Matrix4f cameraMatrix_ = Interface.inversePreCameraMatrix * ssg.camera.viewMatrix;
+		//Matrix4f cameraMatrix_ = Interface.inversePreCameraMatrix * ssg.camera.viewMatrix_;
 		//Vector3f cameraPosition(cameraMatrix_.m14, cameraMatrix_.m24, cameraMatrix_.m34);
 		//int s = 128;
 		//RendererConfig* cubeRC = rendererContext.renderers["gles30CubeMap"].getRenderConfig();
@@ -385,33 +385,56 @@ namespace SSPHH
 		//}
 	}
 
+	std::string SSPHH_Application::frameName() const {
+		std::ostringstream ostr;
+		ostr << "SSHH_" << std::setw(6) << std::setfill('0') << frameNumber();
+		return ostr.str();
+	}
 
 	void SSPHH_Application::SaveScreenshot() {
 		if (Interface.saveScreenshot) {
+			Hf::StopWatch stopwatch;
 			Interface.saveScreenshot = false;
-			Image3ub image(getWidthi(), getHeighti());
+			Image3f exrimage(getWidthi(), getHeighti());
+			Image3ub pngimage(getWidthi(), getHeighti());
 
 			std::string filename = GetPathTracerSphlRenderName(
 				Interface.sceneName,
-				"SSHH",
-				Interface.ssphh.enableKs,
-				Interface.ssphh.REF_MaxRayDepth,
-				Interface.ssphh.REF_PassLimit,
+				frameName(),
+				coronaScene.currentConfig.enableSpecular,
+				coronaScene.REF.maxRayDepth,
+				coronaScene.REF.passLimit,
 				Interface.ssphh.MaxDegrees);
-			filename += ".ppm";
-			Interface.ssphh.lastSphlRenderPath = filename;
-			Hf::StopWatch stopwatch;
+			std::string exrfilename = filename + ".exr";
+			std::string pngfilename = filename + ".png";
+			Interface.ssphh.lastAPPImagePath = exrfilename;
+
+			Hf::StopWatch readPixelsClock;
 			glFinish();
-			glReadPixels(0, 0, getWidthi(), getHeighti(), GL_RGB, GL_UNSIGNED_BYTE, (void*)image.getPixels(0)->const_ptr());
-			HFLOGINFO("glReadPixels took %3.2f milliseconds", stopwatch.GetMillisecondsElapsed());
-			stopwatch.Start();
-			image.savePPMi(filename, 1.0f, 0, 255, 0, true);
-			stopwatch.Stop();
-			HFLOGINFO("savePPMi took %3.2f milliseconds", stopwatch.GetMillisecondsElapsed());
+			glReadPixels(0, 0, getWidthi(), getHeighti(), GL_RGB, GL_FLOAT, (void*)exrimage.getPixels(0)->ptr());
+			glReadPixels(0, 0, getWidthi(), getHeighti(), GL_RGB, GL_UNSIGNED_BYTE, (void*)pngimage.getPixels(0)->ptr());
+			HFLOGINFO("glReadPixels took %3.2f milliseconds", readPixelsClock.Stop_ms());
+
+			Hf::StopWatch writePNGClock;
+			pngimage.flipY();
+			SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormatFrom((void*)pngimage.getPixels(0)->ptr(),
+																	  pngimage.width(), pngimage.height(), 8,
+																	  pngimage.pitch(),
+																	  SDL_PIXELFORMAT_RGB24);
+			IMG_SavePNG(surface, pngfilename.c_str());
+			SDL_FreeSurface(surface);
+			HFLOGINFO("savePPM took %3.2f milliseconds", writePNGClock.Stop_ms());
+
+			Hf::StopWatch writeEXRClock;
+			exrimage.flipY();
+			exrimage.saveEXR(exrfilename);
+			HFLOGINFO("saveEXR took %3.2f milliseconds", writeEXRClock.Stop_ms());
+
+			Interface.ssphh.lastAPPTime = stopwatch.Stop_s();
 		}
 	}
 
-	std::string SSPHH_Application::GetPathTracerName(const std::string& sceneName, std::string& mode, bool ks, int mrd, int pl) {
+	std::string SSPHH_Application::GetPathTracerName(const std::string& sceneName, const std::string& mode, bool ks, int mrd, int pl) {
 		std::ostringstream ostr;
 		ostr << sceneName << "_" << mode;
 		ostr << "_" << std::setw(2) << std::setfill('0') << mrd;
@@ -419,18 +442,18 @@ namespace SSPHH
 		if (ks)
 			ostr << "_Ks";
 		else
-			ostr << "_No"
+			ostr << "_No";
 		return ostr.str();
 	}
 
-	std::string SSPHH_Application::GetSphlRenderName(const std::string& sceneName, std::string& mode, int md) {
+	std::string SSPHH_Application::GetSphlRenderName(const std::string& sceneName, const std::string& mode, int md) {
 		std::ostringstream ostr;
 		ostr << sceneName << "_" << mode;
 		ostr << "_sphlrender_" << std::setw(2) << std::setfill('0') << md;
 		return ostr.str();
 	}
 
-	std::string SSPHH_Application::GetPathTracerSphlRenderName(const std::string& sceneName, std::string& mode, bool ks, int mrd, int pl, int md) {
+	std::string SSPHH_Application::GetPathTracerSphlRenderName(const std::string& sceneName, const std::string& mode, bool ks, int mrd, int pl, int md) {
 		std::ostringstream ostr;
 		ostr << sceneName << "_" << mode;
 		ostr << "_" << std::setw(2) << std::setfill('0') << mrd;
@@ -444,7 +467,7 @@ namespace SSPHH
 		return ostr.str();
 	}
 
-	std::string SSPHH_Application::GetStatsName(const std::string& sceneName, std::string& mode, bool ks, int mrd, int pl, int md) {
+	std::string SSPHH_Application::GetStatsName(const std::string& sceneName, const std::string& mode, bool ks, int mrd, int pl, int md) {
 		std::ostringstream ostr;
 		ostr << sceneName << "_" << mode;
 		if (ks)

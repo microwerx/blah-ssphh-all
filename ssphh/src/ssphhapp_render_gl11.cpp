@@ -23,7 +23,7 @@ namespace SSPHH
 		perspective.PerspectiveY(ssg.camera.fov, aspect, 0.01f, 200.0f);
 		glMultMatrixf(perspective.const_ptr());
 		glMultMatrixf((Interface.preCameraMatrix).AsInverse().const_ptr());
-		//glMultMatrixf((ssg.camera.viewMatrix).const_ptr());
+		//glMultMatrixf((ssg.camera.viewMatrix_).const_ptr());
 
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
@@ -47,7 +47,7 @@ namespace SSPHH
 
 		// Camera
 		glPushMatrix();
-		glMultMatrixf(ssg.camera.viewMatrix.AsInverse().const_ptr());
+		glMultMatrixf(ssg.camera.viewMatrix_.AsInverse().const_ptr());
 		glPushMatrix();
 		glTranslatef(0.0f, 0.0f, -1.0f);
 		FxDrawGL1WireCone(2 * sin(ssg.camera.fov * FX_DEGREES_TO_RADIANS * 0.5), 1.0, 32, 2);
@@ -57,7 +57,7 @@ namespace SSPHH
 		FxDrawGL1WireCube(1.0);
 		glPopMatrix();
 		FxDrawGL1SixAxis(1.0);
-		FxDrawGL1WireFrustumf(ssg.camera.projectionMatrix.const_ptr());
+		FxDrawGL1WireFrustumf(ssg.camera.projectionMatrix_.const_ptr());
 		glPopMatrix();
 
 		// Scene center

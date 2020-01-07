@@ -66,8 +66,16 @@ void RendererConfigWindow::OnRenderDearImGui() {
 		endWindow(); return;
 	}
 
+	// OPTIONS
+
+	ImGui::Separator();
+	ImGui::Checkbox("SRGB", &rc->enableSRGB);
+	ImGui::Checkbox("Maps", &rc->useMaps);
+	ImGui::Checkbox("Mats", &rc->useMaterials);
+
 	// FBO information ///////////////////////////////////////////////////
 
+	ImGui::Separator();
 	ImGui::TextColored(Colors::White, "RC '%s' [%s]", rc->name(), rc->parent()->name());
 	if (ImGui::TreeNode("writefbos")) {
 		for (const auto& [k, v] : rc->writeFBOs) {

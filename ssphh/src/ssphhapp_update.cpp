@@ -1,8 +1,4 @@
 #include <ssphhapp.hpp>
-#include <hatchetfish_stopwatch.hpp>
-#include <viperfish_animpath_window.hpp>
-
-extern Vf::AnimPathWindowPtr animpath_window_ptr;
 
 namespace SSPHH
 {
@@ -31,81 +27,7 @@ namespace SSPHH
 			Interface.recomputeSky = false;
 		}
 
-		if (Interface.enableAnimation && animpath_window_ptr) {
-			if (animpath_window_ptr->createNewPath) {
-				animpath_window_ptr->createNewPath = false;
-				cameraAnimation.create();
-				return;
-			}
-
-			if (animpath_window_ptr->clear_animation) {
-				cameraAnimation.clear();
-				return;
-			}
-
-			if (animpath_window_ptr->save_animation) {
-				animpath_window_ptr->save_animation = false;
-				std::ofstream fout("animation.txt");
-				cameraAnimation.write(fout);
-				return;
-			}
-
-			if (animpath_window_ptr->load_animation) {
-				animpath_window_ptr->load_animation = false;
-				PathAnim_LoadCameraPath("animation.txt");
-				return;
-			}
-
-			cameraAnimation.set_alpha(animpath_window_ptr->alpha);
-
-			animpath_window_ptr->max_keys = cameraAnimation.size();
-			if (animpath_window_ptr->set_key) {
-				int i = animpath_window_ptr->key;
-				cameraAnimation.keyframes[i].setPosition(animpath_window_ptr->p1);
-				cameraAnimation.keyframes[i].setQuaternion(animpath_window_ptr->q1);
-			}
-			else {
-				int i = animpath_window_ptr->key;
-				animpath_window_ptr->p1 = cameraAnimation.keyframes[i].p();
-				animpath_window_ptr->q1 = cameraAnimation.keyframes[i].q();
-			}
-
-			//{
-			//	int i = animpath_window_ptr->key;
-			//	animpath_window_ptr->kq0 = cameraAnimation[i - 1].q();
-			//	animpath_window_ptr->kq1 = cameraAnimation[i].q();
-			//	animpath_window_ptr->kq2 = cameraAnimation[i + 1].q();
-			//	animpath_window_ptr->kq3 = cameraAnimation[i + 2].q();
-			//	animpath_window_ptr->ka = squad_a(animpath_window_ptr->kq0,
-			//								  animpath_window_ptr->kq1,
-			//								  animpath_window_ptr->kq2);
-			//	animpath_window_ptr->kb = squad_b(animpath_window_ptr->kq1,
-			//								  animpath_window_ptr->kq2,
-			//								  animpath_window_ptr->kq3);
-			//}
-
-			cameraAnimation.calcgraph(animpath_window_ptr);
-
-			animpath_window_ptr->t += animpath_window_ptr->speed * (float)GetFrameTime();
-			if (animpath_window_ptr->t > cameraAnimation.size()) {
-				animpath_window_ptr->t -= int(animpath_window_ptr->t);
-			}
-			float t = animpath_window_ptr->t;
-
-			Vector3f p = animpath_window_ptr->blerp ?
-				cameraAnimation.plerp(t) :
-				cameraAnimation.pcatmullrom(t);
-			Quaternionf q = animpath_window_ptr->bsquad ?
-				cameraAnimation.qsquad(t) :
-				cameraAnimation.qslerp(t);
-
-			animpath_window_ptr->q2 = q;
-			animpath_window_ptr->p2 = p;
-			Matrix4f m;
-			m.Translate(p.x, p.y, p.z);
-			m.MultMatrix((animpath_window_ptr->q * q).toMatrix4());
-			ssg.camera.viewMatrix = m.AsInverse();
-		}
+		PathAnim_Update();
 
 		if (Interface.enableOrbit) {
 			rotX += (float)deltaTime;
@@ -161,7 +83,7 @@ namespace SSPHH
 
 		if (Interface.saveCoronaCubeMapSCN) {
 			Interface.saveCoronaCubeMapSCN = false;
-			Vector3f cameraPosition = ssg.camera.viewMatrix.col4().xyz();
+			Vector3f cameraPosition = ssg.camera.origin();
 			coronaScene.writeCubeMapSCN("output_cubemap.scn", ssg, cameraPosition);
 		}
 
@@ -304,7 +226,7 @@ namespace SSPHH
 		Interface.postCameraMatrix.Translate(0.0f, 0.0f, Interface.cameraOrbit.z);
 		Interface.inversePostCameraMatrix = Interface.postCameraMatrix.AsInverse();
 
-		Interface.finalCameraMatrix = Interface.preCameraMatrix * ssg.camera.viewMatrix * Interface.postCameraMatrix;
+		Interface.finalCameraMatrix = Interface.preCameraMatrix * ssg.camera.viewMatrix() * Interface.postCameraMatrix;
 		Interface.inverseFinalCameraMatrix = Interface.finalCameraMatrix.AsInverse();
 		Interface.cameraPosition = Interface.finalCameraMatrix.col4();
 
@@ -327,20 +249,6 @@ namespace SSPHH
 		if (Interface.increaseLatitude || Interface.decreaseLatitude || Interface.increaseLongitude || Interface.decreaseLongitude) {
 			ssg.environment.pbsky.SetLocation(pbskyLatitude, pbskyLongitude);
 			Sun_AdvanceClock(0.0, true);
-		}
-	}
-
-	void SSPHH_Application::PathAnim_LoadCameraPath(const std::string& path) {
-		cameraAnimation.clear();
-		std::ifstream fin(path);
-		while (fin) {
-			std::string line;
-			std::getline(fin, line);
-			std::istringstream istr(line);
-			std::string token;
-			istr >> token;
-			if (token.empty()) continue;
-			cameraAnimation.read(token, istr);
 		}
 	}
 }

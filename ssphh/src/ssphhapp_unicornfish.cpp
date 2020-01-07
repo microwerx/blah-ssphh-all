@@ -100,7 +100,7 @@ namespace SSPHH
 		}
 		else if (job.IsGEN()) {
 			sphl.readPtrcLightProbe(job.GetOutputPath(useEXR));
-			sphl.savePtrcLightProbe(job.GetName() + "_sph.ppm");
+			sphl.savePtrcLightProbe(job.GetName() + "_" + std::to_string(sendLight) + "_sph.exr");
 
 			//if (ssgUserData->ssphh.saveJSONs)
 			//	sphl.SaveJsonSph(job.GetName() + "_sph.json");
