@@ -16,7 +16,7 @@ void PbskyViewController::show() {
 	if (!visible) return;
 	if (firstshow) init();
 
-	ImGui::SetNextWindowContentWidth(w);
+	ImGui::SetNextWindowContentSize({w, -1});
 	ImGui::Begin("PBSKY");
 	if (ImGui::Button("Hide")) {
 		visible = false;

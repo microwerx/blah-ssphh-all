@@ -203,7 +203,7 @@ namespace SSPHH
 		///////////////////////////////////////////////////////////
 
 		//ImGui::SetNextWindowSize(ImVec2(320, 200));
-		ImGui::SetNextWindowContentWidth(imguiWinW);
+		ImGui::SetNextWindowContentSize({imguiWinW, -1});
 		ImGui::SetNextWindowPos(ImVec2(imguiWinX, 64));
 		ImGui::Begin("Tool Window");
 		ImGui::PushID("ToolWindow");
@@ -547,7 +547,7 @@ namespace SSPHH
 
 		if (Interface.tools.showScenegraphEditor) {
 			imguiWinX += imguiWinW + 64.0f;
-			ImGui::SetNextWindowContentWidth(imguiWinW * 2);
+			ImGui::SetNextWindowContentSize({imguiWinW * 2, -1});
 			ImGui::SetNextWindowPos(ImVec2(imguiWinX, 64));
 			imguiWinX += imguiWinW;
 			ImGui::Begin("Scenegraph");
@@ -888,7 +888,7 @@ namespace SSPHH
 				ImGui::SetNextWindowSize(ImVec2(w, h));
 				ImGui::SetNextWindowPos(ImVec2(getWidth() - w, getHeight() - h));
 			}
-			ImGui::SetNextWindowContentWidth(w);
+			ImGui::SetNextWindowContentSize({w, -1});
 			ImGui::Begin("SSPL Editor");
 			ImGui::Text("%d SSPLs", (int)ssgUserData->ssphhLights.size());
 			if (ImGui::Button("Add SSPL")) {
@@ -1424,7 +1424,7 @@ namespace SSPHH
 			return;
 		if (!Interface.uf.windowInit) {
 			Interface.uf.windowInit = true;
-			ImGui::SetNextWindowContentWidth(512.0f);
+			ImGui::SetNextWindowContentSize({512.0f, -1});
 			ImGui::SetNextWindowPos(ImVec2(imguiWinX + imguiWinW + 32, 64));
 		}
 		ImGui::Begin("Unicornfish");
@@ -1494,7 +1494,7 @@ namespace SSPHH
 			ImGui::SetNextWindowSize(ImVec2(w, h));
 			init = true;
 		}
-		ImGui::SetNextWindowContentWidth(640.0f);
+		ImGui::SetNextWindowContentSize({640.0f, -1});
 		ImGui::Begin("SSPHH");
 
 		ImGui::End();

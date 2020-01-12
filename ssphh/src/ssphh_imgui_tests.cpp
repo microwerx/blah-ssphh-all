@@ -9,7 +9,7 @@ namespace SSPHH
 			return;
 
 		imguiWinX += imguiWinW + 64.0f;
-		ImGui::SetNextWindowContentWidth(imguiWinW);
+		ImGui::SetNextWindowContentSize({imguiWinW, -1});
 		ImGui::SetNextWindowPos(ImVec2(imguiWinX, 64));
 
 		ImGui::Begin("TestWindow");

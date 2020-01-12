@@ -98,7 +98,6 @@ namespace SSPHH
 			return;
 
 		size_t count = cmdargs.size();
-		int i = 1;
 		for (size_t j = 1; j < count; j++) {
 			bool nextArgExists = j < count - 1;
 			if ((cmdargs[j] == "-scene") && nextArgExists) {

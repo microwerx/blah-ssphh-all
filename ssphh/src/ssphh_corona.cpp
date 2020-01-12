@@ -20,6 +20,7 @@ namespace SSPHH
 
 		static std::ostream& writeHeader(std::ostream& os) {
 			os << "name,dtg,specular,mrd,pl,md,time,ptE,sphlE,d1E,d2E" << "\n";
+			return os;
 		}
 
 		std::ostream& writeln(std::ostream& os) const {
