@@ -360,6 +360,7 @@ GPATH
 *.gch
 *.a
 *.o
+ssphh/build/ssphh
 
 CoronaStandalone_log.txt
 imgui.ini
