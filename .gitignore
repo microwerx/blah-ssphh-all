@@ -354,6 +354,13 @@ MigrationBackup/
 
 # microwerx added gitignore
 desktop.ini
+GTAGS
+GRTAGS
+GPATH
+*.gch
+*.a
+*.o
+
 CoronaStandalone_log.txt
 imgui.ini
 ssphh/corona_export/
