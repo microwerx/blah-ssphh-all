@@ -9,18 +9,21 @@
 # global
 
 SOLUTIONDIR=../../
-PROJECTDIR=ssphh/
-DEP_INCDIR = $(SOLUTIONDIR)fluxions/dep/include
-DEP_SRCDIR = $(SOLUTIONDIR)fluxions/dep/src
-SRCDIR = $(SOLUTIONDIR)$(PROJECTDIR)src
-INCDIR = $(SOLUTIONDIR)$(PROJECTDIR)include
-OBJDIR = $(SOLUTIONDIR)$(PROJECTDIR)build
-FLUXIONS = $(SOLUTIONDIR)fluxions/build/libfluxions.a
-FLUXIONS_INCDIR = $(SOLUTIONDIR)fluxions/include
-FLUXIONS_LIBDIR = $(SOLUTIONDIR)fluxions/build
-FLUXIONS_SRCDIR = $(SOLUTIONDIR)fluxions/src
+PROJECTDIR=
+DEP_INCDIR =../../imgui
+DEP_SRCDIR =../../imgui/
+SRCDIR = $(PROJECTDIR)src
+INCDIR = $(PROJECTDIR)include
+OBJDIR = $(PROJECTDIR)build
+
+FLUXIONS_DIR = $(SOLUTIONDIR)fluxions/
+FLUXIONS_INCDIR = $(FLUXIONS_DIR)include
+FLUXIONS_LIBDIR = $(FLUXIONS_DIR)build
+FLUXIONS_SRCDIR = $(FLUXIONS_DIR)src
 FLUXIONS_HEADERS = $(wildcard $(FLUXIONS_INCDIR)/*.hpp) $(wildcard $(FLUXIONS_INCDIR)/*.h)
 FLUXIONS_SOURCES = $(wildcard $(FLUXIONS_SRCDIR)/*.cpp) $(wildcard $(FLUXIONS_SRCDIR)/*.c)
+FLUXIONS_LIB = $(FLUXIONS_DIR)build/libfluxions.a
+
 DEPCXXSOURCES = $(wildcard $(DEP_SRCDIR)/*.cpp)
 DEPCSOURCES = $(wildcard $(DEP_SRCDIR)/*.c)
 CXXSOURCES = $(wildcard $(SRCDIR)/*.cpp)
@@ -35,13 +38,13 @@ DEPOBJECTS = $(patsubst $(DEP_SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(DEPCXXSOURCES)) $(pa
 OBJECTS = $(SRCOBJECTS) $(DEPOBJECTS)
 TARGET = build/ssphh
 GCH = $(SRCDIR)/pch.h.gch
-GCH_SRC = $(SRCDIR)/pch.h
+GCH_SRC = $(SRCDIR)/pch.hpp
 
 CC = gcc
-CCFLAGS = -Wall -I$(INCDIR) -I$(DEP_INCDIR) `python3-config --includes`
+CCFLAGS = -Wall -I$(INCDIR) `python3-config --includes`
 CXX = g++
-CXXFLAGS = -std=c++14 -g -Wall -I$(INCDIR) -I$(DEP_INCDIR) -I$(FLUXIONS_INCDIR) `python3-config --includes`
-LDFLAGS = -L../../fluxions/build -lfluxions -lglut -lGLEW -lGL -lcurl -lczmq -lzmq -lSDL2_image -lSDL2 -lIlmImf -lHalf -lImath -lpthread -lstdc++
+CXXFLAGS = -std=c++17 -g -Wall -I$(INCDIR) -I$(DEP_INCDIR) -I$(FLUXIONS_INCDIR) `python3-config --includes`
+LDFLAGS = -L$(FLUXIONS_LIBDIR) -lfluxions -lglfw -lGLEW -lGL -lcurl -lczmq -lzmq -lSDL2_image -lSDL2 -lIlmImf -lHalf -lImath -lpthread -lstdc++
 
 .PHONY: all clean precompiled
 
@@ -57,14 +60,14 @@ cobjects: $(DEPCOBJECTS)
 	echo
 	echo $(DEPOBJECTS)
 
-$(TARGET): $(OBJECTS) ../fluxions/build/libfluxions.a
+$(TARGET): $(OBJECTS) $(FLUXIONS_LIB)
 	$(CXX) -o $@ $(OBJECTS) $(LDFLAGS)
 
 $(GCH): $(GCH_SRC) $(HEADERS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(FLUXIONS): $(FLUXIONS_HEADERS) $(FLUXIONS_SOURCES)
-	$(MAKE) -C $(SOLUTIONDIR)fluxions/
+	$(MAKE) -C $(FLUXIONS_DIR)
 
 # $(OBJDIR)/%.o: $(CXXSOURCES)/%.cpp $(GCH)
 # 	$(CXX) $(CXXFLAGS) -c $< -o $@
