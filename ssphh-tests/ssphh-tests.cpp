@@ -87,8 +87,7 @@ void printQuaternions(ostream& fout,
 	}
 }
 
-class CameraAnimation
-{
+class CameraAnimation {
 public:
 	static constexpr unsigned w = 4;
 	static constexpr unsigned h = 4;
@@ -315,7 +314,7 @@ void TestQuaternions() {
 	cout << "y,p,r        " << y << ", " << p << ", " << r << endl;
 }
 
-int main() {
+int main(int argc, char** argv) {
 	TestQuaternions();
 	return 0;
 
