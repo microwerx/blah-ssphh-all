@@ -380,3 +380,7 @@ ssphh/output/
 !ssphh/resources/renderconfigs/**
 !ssphh/resources/models/*
 ssphh-tests/*.pfm
+
+# CMake
+build/**/
+!build/.keep
