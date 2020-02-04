@@ -69,7 +69,7 @@ namespace SSPHH {
 	}
 
 	SSPHH_Application::~SSPHH_Application() {
-		deletenull(&ssgUserData);
+		if (ssgUserData) deletenull(&ssgUserData);
 	}
 
 	void SSPHH_Application::ParseCommandArguments(const std::vector<std::string>& cmdargs) {
@@ -216,7 +216,7 @@ namespace SSPHH {
 		// Initialize Simple Scene Graph
 		FxSetErrorMessage(__FILE__, __LINE__, "initializing scene graph");
 
-		deletenull(&ssgUserData);
+		if (ssgUserData) deletenull(&ssgUserData);
 		ssgUserData = new SSG_SSPHHRendererPlugin(&ssg);
 		SSG_LoadScene();
 		cameraAnimation.create();
@@ -247,7 +247,7 @@ namespace SSPHH {
 		// r.Kill();
 		// r.Init();
 
-		deletenull(&ssgUserData);
+		if (ssgUserData) deletenull(&ssgUserData);
 		rendererContext.kill();
 		ssg.reset();
 		////renderer.reset();

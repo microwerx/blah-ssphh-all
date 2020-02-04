@@ -17,7 +17,7 @@ namespace SSPHH
 	void SSPHH_Application::Sun_AdvanceClock(double numSeconds, bool recomputeSky) {
 		pbsky_timeOffsetInSeconds += numSeconds;
 		ssg.environment.pbsky.SetTime(pbsky_localtime, (float)pbsky_timeOffsetInSeconds);
-		Interface.recomputeSky = true;
+		Interface.recomputeSky = recomputeSky;
 	}
 
 	void SSPHH_Application::Sun_ResetClock() {

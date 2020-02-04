@@ -66,7 +66,7 @@ namespace SSPHH
 			//	}
 		}
 
-		GLuint defaultCubeSamplerId = rendererContext.samplers["defaultCube"].getId();
+		//GLuint defaultCubeSamplerId = rendererContext.samplers["defaultCube"].getId();
 		//ssg.environment.pbskyColorMapSamplerId = defaultCubeSamplerId;
 		//ssg.environment.enviroColorMapSamplerId = defaultCubeSamplerId;
 		//ssg.environment.sunColorMapSamplerId = defaultCubeSamplerId;

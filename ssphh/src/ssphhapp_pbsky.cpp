@@ -83,7 +83,7 @@ namespace SSPHH
 			//for (int i = 0; i < 6; i++) {
 			//	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA32F, (GLsizei)lightProbe.width(), (GLsizei)lightProbe.height(), 0, GL_RGBA, GL_FLOAT, lightProbe.getImageData(i));
 			//}
-			//glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+			//FxGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 			//FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 		}
 		else {
@@ -146,7 +146,7 @@ namespace SSPHH
 
 		static GLuint abo = 0;
 		static GLuint eabo = 0;
-		GLuint vbo = 0;
+		//GLuint vbo = 0; // possibly unused?
 		GLint vloc = -1;
 		GLint tloc = -1;
 		GLuint program = 0;
@@ -186,12 +186,8 @@ namespace SSPHH
 		tloc = glGetAttribLocation(program, "aTexCoord");
 
 		if (abo == 0) {
-			glGenBuffers(1, &abo);
-			glGenBuffers(1, &eabo);
-			glBindBuffer(GL_ARRAY_BUFFER, abo);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(buffer), buffer, GL_STATIC_DRAW);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eabo);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+			FxCreateBuffer(GL_ARRAY_BUFFER, &abo, sizeof(buffer), buffer, GL_STATIC_DRAW);
+			FxCreateBuffer(GL_ELEMENT_ARRAY_BUFFER, &eabo, sizeof(indices), indices, GL_STATIC_DRAW);
 		}
 
 		glUseProgram(program);

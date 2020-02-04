@@ -6,7 +6,6 @@ namespace SSPHH
 	void SSPHH_Application::RenderGLES30Shadows() {
 		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
 
-		return;
 		//RendererConfig& cubeShadow = rendererContext.rendererConfigs["cubeShadow"];
 		//RendererConfig& rectShadow = rendererContext.rendererConfigs["rectShadow"];
 

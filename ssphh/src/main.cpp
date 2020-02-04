@@ -21,7 +21,7 @@
 //#pragma comment(lib, "libczmq.lib")
 //#pragma comment(lib, "libcurl.lib")
 //#endif
-
+#ifdef NEED_LIBARIES
 #ifdef _DEBUG
 #pragma comment(lib, "libzmq-mt-gd-4_3_3.lib")
 #pragma comment(lib, "glew32d.lib")
@@ -59,6 +59,8 @@
 #pragma comment(lib, "SDL2_mixer.lib")
 #endif
 #endif // _DEBUG
+#endif
+
 #endif // _WIN32
 
 #include <DragDrop.hpp>
