@@ -1,21 +1,3 @@
-// SSPHH/Fluxions/Unicornfish/Viperfish/Hatchetfish/Sunfish/Damselfish/GLUT Extensions
-// Copyright (C) 2017 Jonathan Metzgar
-// All rights reserved.
-//
-// This program is free software : you can redistribute it and/or modify
-// it under the terms of the GNU Affero General Public License as
-// published by the Free Software Foundation, either version 3 of the
-// License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
-// GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with this program.If not, see <https://www.gnu.org/licenses/>.
-//
-// For any other type of licensing, please contact me at jmetzgar@outlook.com
 #ifndef SSPHH_CORONA_HPP
 #define SSPHH_CORONA_HPP
 
@@ -24,12 +6,10 @@
 #include <fluxions_gte_matrix_math.hpp>
 #include <fluxions_stdcxx.hpp>
 
-namespace SSPHH
-{
+namespace SSPHH {
 	using namespace Fluxions;
 
-	struct IntensityStat
-	{
+	struct IntensityStat {
 		Fluxions::Image3f image;
 
 		double sumI = 0.0;
@@ -54,7 +34,7 @@ namespace SSPHH
 
 		int count = 0;
 
-		IntensityStat &operator+=(const Color3f &color);
+		IntensityStat& operator+=(const Color3f& color);
 		void Finalize();
 
 		//inline Color3f min(const Color3f& v1, const Color3f& v2)
@@ -68,14 +48,12 @@ namespace SSPHH
 		//}
 	};
 
-	class PPMCompare
-	{
+	class PPMCompare {
 	public:
 		PPMCompare();
 		~PPMCompare();
 
-		enum class ColorSpaceType
-		{
+		enum class ColorSpaceType {
 			XYZ,
 			SRGB,
 			P3
@@ -83,8 +61,8 @@ namespace SSPHH
 
 		void Init(bool hasSpecular, int maxRayDepth, int passCount, int maxDegree);
 		void SetConversion(ColorSpaceType im1type, ColorSpaceType im2type);
-		void Compare(Image3f &image1, Image3f &image2);
-		void SaveResults(const std::string &statsName, const std::string &pathtracerName, bool genDiffs = false, bool ignoreCache = false);
+		void Compare(Image3f& image1, Image3f& image2);
+		void SaveResults(const std::string& statsName, const std::string& pathtracerName, bool genDiffs = false, bool ignoreCache = false);
 
 		// main product variables
 		IntensityStat image1stat;
@@ -119,14 +97,12 @@ namespace SSPHH
 		int blockSize = 32;
 		ColorSpaceType imageColorSpaces[2] = { ColorSpaceType::SRGB, ColorSpaceType::SRGB };
 
-		inline float reverseGamma(float value)
-		{
+		inline float reverseGamma(float value) {
 			const float a = 0.055f;
 			return value <= 0.04045f ? (value / 12.92f) : (powf((value + a) / (1.0f + a), 2.4f));
 		}
 
-		inline float compandGamma(float value)
-		{
+		inline float compandGamma(float value) {
 			const float a = 0.055f;
 			if (value <= 0.0031308f)
 				return 12.92f * value;
@@ -135,8 +111,7 @@ namespace SSPHH
 			return 0.0f;
 		}
 
-		inline Color3f SRGBtoXYZ(const Color3f &color)
-		{
+		inline Color3f SRGBtoXYZ(const Color3f& color) {
 			Color3f out;
 			Vector3f srgb(reverseGamma(color.r), reverseGamma(color.g), reverseGamma(color.b));
 			Matrix3f conversionMatrix(
@@ -148,8 +123,7 @@ namespace SSPHH
 			return out;
 		}
 
-		inline Color3f XYZtoSRGB(const Color3f &color)
-		{
+		inline Color3f XYZtoSRGB(const Color3f& color) {
 			// Step 1: matrix multiplication
 			Matrix3f conversionMatrix(
 				3.2406f, -1.5372f, -0.4986f,
@@ -161,8 +135,7 @@ namespace SSPHH
 			return srgb;
 		}
 
-		inline Color3f XYZtoSRGB255(const Color3f &color)
-		{
+		inline Color3f XYZtoSRGB255(const Color3f& color) {
 			// Step 1: matrix multiplication
 			Matrix3f conversionMatrix(
 				3.2406f, -1.5372f, -0.4986f,

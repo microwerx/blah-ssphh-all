@@ -1,21 +1,3 @@
-// SSPHH/Fluxions/Unicornfish/Viperfish/Hatchetfish/Sunfish/Damselfish/GLUT Extensions
-// Copyright (C) 2017 Jonathan Metzgar
-// All rights reserved.
-//
-// This program is free software : you can redistribute it and/or modify
-// it under the terms of the GNU Affero General Public License as
-// published by the Free Software Foundation, either version 3 of the
-// License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
-// GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with this program.If not, see <https://www.gnu.org/licenses/>.
-//
-// For any other type of licensing, please contact me at jmetzgar@outlook.com
 #ifndef SSPHH_UNICORNFISH_HPP
 #define SSPHH_UNICORNFISH_HPP
 
@@ -27,8 +9,7 @@
 #include <unicornfish_corona_job.hpp>
 #include <unicornfish_corona_scene_file.hpp>
 
-enum class UfType
-{
+enum class UfType {
 	None,
 	Broker,
 	ClientGLES20,
@@ -108,11 +89,9 @@ enum class UfType
 
 // SUF = SSPHH Unicornfish
 
-class Unicornfish
-{
+class Unicornfish {
 public:
-	enum class NodeType
-	{
+	enum class NodeType {
 		Client,
 		Worker,
 		Broker
@@ -145,25 +124,25 @@ public:
 
 	bool IsStopped() const { return stopped; }
 
-	void StartClient(const std::string &endpoint);
-	void StartWorker(const std::string &endpoint, const std::string &service);
+	void StartClient(const std::string& endpoint);
+	void StartWorker(const std::string& endpoint, const std::string& service);
 	void StartBroker();
 	void StartStandalone(bool client = true, bool broker = true, bool worker = true);
 	void Join();
 	void Stop() { stopped = true; }
 
-	void SetUIMessage(Unicornfish::NodeType type, const std::string &message);
-	const std::string &GetUIMessage(Unicornfish::NodeType type);
+	void SetUIMessage(Unicornfish::NodeType type, const std::string& message);
+	const std::string& GetUIMessage(Unicornfish::NodeType type);
 
-	void ScatterJob(Uf::CoronaJob &job);
+	void ScatterJob(Uf::CoronaJob& job);
 	// Move the queue of scattered jobs out. Uf::CoronaJob::IsFinished() returns false
-	int PushScatteredJobs(std::map<std::string, Uf::CoronaJob> &jobs);
+	int PushScatteredJobs(std::map<std::string, Uf::CoronaJob>& jobs);
 	// Move the queue of gathered jobs back. Uf::CoronaJob::IsFinished() returns true
-	void PullFinishedJobs(std::map<std::string, Uf::CoronaJob> &jobs);
+	void PullFinishedJobs(std::map<std::string, Uf::CoronaJob>& jobs);
 	int GetNumScatteredJobs() const;
 	int GetNumFinishedJobs() const;
 
-	void GetFinishedJobs(std::map<std::string, Uf::CoronaJob> &finished_jobs);
+	void GetFinishedJobs(std::map<std::string, Uf::CoronaJob>& finished_jobs);
 
 private:
 	std::mutex uf_mutex;
@@ -185,12 +164,11 @@ private:
 	std::string client_message;
 };
 
-namespace Uf
-{
-	void DoClient(const char *endpoint, Unicornfish *context);
-	void DoBroker(const char *endpoint, Unicornfish *context);
-	void DoWorker(const char *endpoint, const char *service, Unicornfish *context);
-	void DoOldWorker(const char *endpoint, const char *service, Unicornfish * context);
+namespace Uf {
+	void DoClient(const char* endpoint, Unicornfish* context);
+	void DoBroker(const char* endpoint, Unicornfish* context);
+	void DoWorker(const char* endpoint, const char* service, Unicornfish* context);
+	void DoOldWorker(const char* endpoint, const char* service, Unicornfish* context);
 }
 
 extern Unicornfish ssphhUf;

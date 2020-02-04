@@ -2,7 +2,7 @@
 #define HELP_WINDOW_HPP
 
 #include <viperfish_window.hpp>
-#include <fluxions_simple_scene_graph.hpp>
+#include <fluxions_ssg_scene_graph.hpp>
 
 class HelpWindow : public Vf::Window {
 public:

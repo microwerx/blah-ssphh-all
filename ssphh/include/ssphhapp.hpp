@@ -1,21 +1,3 @@
-// SSPHH/Fluxions/Unicornfish/Viperfish/Hatchetfish/Sunfish/Damselfish/GLUT Extensions
-// Copyright (C) 2017 Jonathan Metzgar
-// All rights reserved.
-//
-// This program is free software : you can redistribute it and/or modify
-// it under the terms of the GNU Affero General Public License as
-// published by the Free Software Foundation, either version 3 of the
-// License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
-// GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with this program.If not, see <https://www.gnu.org/licenses/>.
-//
-// For any other type of licensing, please contact me at jmetzgar@outlook.com
 #ifndef SSPHH_HPP
 #define SSPHH_HPP
 
@@ -28,15 +10,14 @@
 #include <ssphh_ppmcompare.hpp>
 #include <ssphh_unicornfish.hpp>
 #include <fluxions_ssg_ssphh_renderer_plugin.hpp>
-#include <fluxions_simple_ssphh.hpp>
+#include <fluxions_ssg_ssphh.hpp>
 #include <PbskyViewController.hpp>
 #include <camera_animation.hpp>
 
 using namespace Vf;
 using namespace Fluxions;
 
-namespace SSPHH
-{
+namespace SSPHH {
 	extern const char* default_renderconfig_path;
 	extern const char* default_scene_graph_path;
 	extern const std::string default_coronaskyboxcubemap_path;
@@ -55,8 +36,7 @@ namespace SSPHH
 //extern RendererWindowPtr renderer_window_ptr;
 //extern RendererConfigWindowPtr renderer_config_window_ptr;
 
-namespace SSPHH
-{
+namespace SSPHH {
 	class SSPHH_Application : public Widget {
 	public:
 		// PHYSICALLY BASED SKY METHODS/MEMBERS /////////////////////////////

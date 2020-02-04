@@ -1,21 +1,3 @@
-// SSPHH/Fluxions/Unicornfish/Viperfish/Hatchetfish/Sunfish/Damselfish/GLUT Extensions
-// Copyright (C) 2017 Jonathan Metzgar
-// All rights reserved.
-//
-// This program is free software : you can redistribute it and/or modify
-// it under the terms of the GNU Affero General Public License as
-// published by the Free Software Foundation, either version 3 of the
-// License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
-// GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with this program.If not, see <https://www.gnu.org/licenses/>.
-//
-// For any other type of licensing, please contact me at jmetzgar@outlook.com
 #include <iostream>
 #include <string>
 #include <damselfish_json.hpp>
@@ -24,11 +6,9 @@
 #include <fluxions_gte.hpp>
 
 
-template <typename T = int> class Outer
-{
+template <typename T = int> class Outer {
 public:
-	struct Inner
-	{
+	struct Inner {
 		float t = 0.0f;
 	};
 
@@ -36,8 +16,7 @@ public:
 };
 
 
-void test_nested_template_structs()
-{
+void test_nested_template_structs() {
 	//Outer<float> o;
 	//Outer::Inner i;
 	//i.t = 1.0;
@@ -45,8 +24,7 @@ void test_nested_template_structs()
 }
 
 
-void test_json()
-{
+void test_json() {
 	std::string test_json = "{\"projects\":[{\"id\":\"1\", \"name\" : \"Outside scene\", \"description\" : \"A scene with a floor, teapot, bunny, and dragon.\"}, { \"id\":\"2\",\"name\" : \"test1\",\"description\" : \"this is a description for test1\" }, { \"id\":\"3\",\"name\" : \"test2\",\"description\" : \"this is a description for test2\" }, { \"id\":\"4\",\"name\" : \"a project\",\"description\" : \"a description about a project\" }, { \"id\":\"32\",\"name\" : \"test\",\"description\" : \"test description\" }, { \"id\":\"114\",\"name\" : \"test8141\",\"description\" : \"this is a description for test1\" }, { \"id\":\"119\",\"name\" : \"project 1\",\"description\" : \"project 1 description\" }, { \"id\":\"120\",\"name\" : \"project 2\",\"description\" : \"project 2 description\" }, { \"id\":\"121\",\"name\" : \"project 3\",\"description\" : \"project 3 description\" }, { \"id\":\"122\",\"name\" : \"project 4\",\"description\" : \"project 4 description\" }, { \"id\":\"123\",\"name\" : \"project 5\",\"description\" : \"project 5 description\" }]}";
 
 	Df::JSONPtr json = Df::JSON::New();
@@ -76,8 +54,7 @@ void test_json()
 }
 
 
-int test_curl()
-{
+int test_curl() {
 	using namespace Uf;
 	Curl curl;
 	double t0 = HFLOG_SECS_ELAPSED();
@@ -137,8 +114,7 @@ int test_curl()
 //}
 
 
-void test_spherical_coordinate_conversions()
-{
+void test_spherical_coordinate_conversions() {
 	using namespace Fluxions;
 
 	Vector3f v1;
@@ -168,8 +144,7 @@ void test_spherical_coordinate_conversions()
 }
 
 
-void do_tests()
-{
+void do_tests() {
 	//test_spherical_coordinate_conversions();
 	//exit(0);
 	//test_linear_algebra();

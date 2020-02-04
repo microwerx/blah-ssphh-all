@@ -1,9 +1,9 @@
 #include "pch.hpp"
+#include <filesystem>
 #include <ssphhapp.hpp>
 #include <fluxions_ssphh_utilities.hpp>
 
-namespace SSPHH
-{
+namespace SSPHH {
 	struct CoronaTestProduct {
 		int enableSpecularReflection;
 		int maxRayDepth;

@@ -1,31 +1,10 @@
-// SSPHH/Fluxions/Unicornfish/Viperfish/Hatchetfish/Sunfish/Damselfish/GLUT Extensions
-// Copyright (C) 2017 Jonathan Metzgar
-// All rights reserved.
-//
-// This program is free software : you can redistribute it and/or modify
-// it under the terms of the GNU Affero General Public License as
-// published by the Free Software Foundation, either version 3 of the
-// License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
-// GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with this program.If not, see <https://www.gnu.org/licenses/>.
-//
-// For any other type of licensing, please contact me at jmetzgar@outlook.com
 #include "pch.hpp"
 #include <ssphhapp.hpp>
 #include <ssphh_unicornfish.hpp>
 #include <SphlJob.hpp>
 
-namespace Uf
-{
-
-	void DoClient(const char * endpoint, Unicornfish * uf)
-	{
+namespace Uf {
+	void DoClient(const char* endpoint, Unicornfish* uf) {
 		if (!uf)
 			return;
 		if (!ssphh_widget_ptr)
@@ -47,10 +26,10 @@ namespace Uf
 
 			// Send out scattered jobs
 			if (numScatteredJobs > 0) {
-				for (auto & job : scatteredJobs) {
+				for (auto& job : scatteredJobs) {
 					int64_t dt = cur_time - sent_times[job.first];
 					if (!job.second.IsJobWorking() && dt >= 25000) {
-						Uf::CoronaJob &coronaJob = job.second;
+						Uf::CoronaJob& coronaJob = job.second;
 						SphlJob sphlJob;
 						sphlJob.numChannels = 4;
 						sphlJob.resizeCoefs(5);
@@ -104,7 +83,7 @@ namespace Uf
 			}
 
 			numWorkingJobs = 0;
-			for (auto & sj : scatteredJobs) {
+			for (auto& sj : scatteredJobs) {
 				if (sj.second.IsJobFinished())
 					numGatheredJobs++;
 				if (sj.second.IsJobWorking())

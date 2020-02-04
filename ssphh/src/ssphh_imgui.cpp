@@ -1,22 +1,3 @@
-// SSPHH/Fluxions/Unicornfish/Viperfish/Hatchetfish/Sunfish/Damselfish/GLUT Extensions
-// Copyright (C) 2017 Jonathan Metzgar
-// All rights reserved.
-//
-// This program is free software : you can redistribute it and/or modify
-// it under the terms of the GNU Affero General Public License as
-// published by the Free Software Foundation, either version 3 of the
-// License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
-// GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with this program.If not, see <https://www.gnu.org/licenses/>.
-//
-// For any other type of licensing, please contact me at jmetzgar@outlook.com
-
 #include "pch.hpp"
 #include <viperfish_dear_imgui.hpp>
 #include <ssphhapp.hpp>
@@ -85,8 +66,7 @@ static const std::string DebugShaderChoices[21] = {
 	ImGui::NewLine();     \
 	ImGui::Separator();
 
-namespace SSPHH
-{
+namespace SSPHH {
 	void SSPHH_Application::InitImGui() {
 		//ImGuiIO& io = ImGui::GetIO();
 		//io.Fonts->AddFontDefault();
@@ -203,7 +183,7 @@ namespace SSPHH
 		///////////////////////////////////////////////////////////
 
 		//ImGui::SetNextWindowSize(ImVec2(320, 200));
-		ImGui::SetNextWindowContentSize({imguiWinW, -1});
+		ImGui::SetNextWindowContentSize({ imguiWinW, -1 });
 		ImGui::SetNextWindowPos(ImVec2(imguiWinX, 64));
 		ImGui::Begin("Tool Window");
 		ImGui::PushID("ToolWindow");
@@ -547,7 +527,7 @@ namespace SSPHH
 
 		if (Interface.tools.showScenegraphEditor) {
 			imguiWinX += imguiWinW + 64.0f;
-			ImGui::SetNextWindowContentSize({imguiWinW * 2, -1});
+			ImGui::SetNextWindowContentSize({ imguiWinW * 2, -1 });
 			ImGui::SetNextWindowPos(ImVec2(imguiWinX, 64));
 			imguiWinX += imguiWinW;
 			ImGui::Begin("Scenegraph");
@@ -888,7 +868,7 @@ namespace SSPHH
 				ImGui::SetNextWindowSize(ImVec2(w, h));
 				ImGui::SetNextWindowPos(ImVec2(getWidth() - w, getHeight() - h));
 			}
-			ImGui::SetNextWindowContentSize({w, -1});
+			ImGui::SetNextWindowContentSize({ w, -1 });
 			ImGui::Begin("SSPL Editor");
 			ImGui::Text("%d SSPLs", (int)ssgUserData->ssphhLights.size());
 			if (ImGui::Button("Add SSPL")) {
@@ -1149,7 +1129,7 @@ namespace SSPHH
 					}
 
 					ImGui::TreePop();
-				}
+					}
 				else {
 					ImGui::SameLine();
 					ImGui::Checkbox("", &sspl.enabled);
@@ -1200,13 +1180,13 @@ namespace SSPHH
 				}
 				ImGui::PopID();
 				i++;
-			}
+				}
 			if (whichToDelete >= 0) {
 				ssgUserData->ssphhLights.erase(ssgUserData->ssphhLights.begin() + whichToDelete);
 			}
 			ImGui::End();
+			}
 		}
-	}
 
 	void SSPHH_Application::imguiShowMaterialEditor() {
 		///////////////////////////////////////////////////////////
@@ -1424,7 +1404,7 @@ namespace SSPHH
 			return;
 		if (!Interface.uf.windowInit) {
 			Interface.uf.windowInit = true;
-			ImGui::SetNextWindowContentSize({512.0f, -1});
+			ImGui::SetNextWindowContentSize({ 512.0f, -1 });
 			ImGui::SetNextWindowPos(ImVec2(imguiWinX + imguiWinW + 32, 64));
 		}
 		ImGui::Begin("Unicornfish");
@@ -1494,9 +1474,9 @@ namespace SSPHH
 			ImGui::SetNextWindowSize(ImVec2(w, h));
 			init = true;
 		}
-		ImGui::SetNextWindowContentSize({640.0f, -1});
+		ImGui::SetNextWindowContentSize({ 640.0f, -1 });
 		ImGui::Begin("SSPHH");
 
 		ImGui::End();
 	}
-}
+	}
