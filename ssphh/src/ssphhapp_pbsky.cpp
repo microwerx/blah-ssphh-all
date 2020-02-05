@@ -61,13 +61,13 @@ namespace SSPHH
 
 	void SSPHH_Application::Sky_LoadCoronaSky(bool loadEXR, const std::string& path) {
 		FilePathInfo fpi(path);
-		if (fpi.Exists()) {
+		if (fpi.exists()) {
 			Image4f lightProbe;
 			if (loadEXR) {
-				lightProbe.loadEXR(fpi.path);
+				lightProbe.loadEXR(fpi.shortestPath());
 			}
 			else {
-				lightProbe.loadPPM(fpi.path);
+				lightProbe.loadPPM(fpi.shortestPath());
 				//lightProbe.scaleColors(1.0f / (2.5f * powf(2.0f, ssg.environment.toneMapExposure)));
 				lightProbe.ReverseSRGB().ReverseToneMap(ssg.environment.toneMapExposure());
 			}
@@ -87,7 +87,7 @@ namespace SSPHH
 			//FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 		}
 		else {
-			HFLOGERROR("Could not generate %s", fpi.path.c_str());
+			HFLOGERROR("Could not generate %s", fpi.shortestPathC());
 		}
 	}
 

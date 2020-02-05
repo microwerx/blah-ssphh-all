@@ -152,7 +152,10 @@ namespace SSPHH
 		double mdx = mousemvmt ? mouse.dragStates[0].currentDelta.x : 0.0;
 		double mdy = mousemvmt ? mouse.dragStates[0].currentDelta.y : 0.0;
 
-		Vector2f dimensions = Vector2f((float)rendererContext.getDeferredRect().w, (float)rendererContext.getDeferredRect().h);
+		Vector2f dimensions{
+			(float)rendererContext.getDeferredRect().w,
+			(float)rendererContext.getDeferredRect().h
+		};
 		double rectLength = dimensions.length();
 		double scale = -180.0 / rectLength;
 		mdx *= scale;

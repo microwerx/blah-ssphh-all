@@ -742,7 +742,7 @@ namespace SSPHH {
 					ImGui::Checkbox(label.str().c_str(), &Interface.ssg.geometryCollapsed[i].second);
 					if (Interface.ssg.geometryCollapsed[i].second) {
 						ImGui::Text("name:     %s", group.name());
-						ImGui::Text("filename: %s", group.fpi.fname.c_str());
+						ImGui::Text("filename: %s", group.fpi.stem().c_str());
 						//ImGui::Text("mtllib:   %s", group.mtllibName.c_str());
 						BoundingBoxf& bbox = group.bbox;
 						Vector3f meshSceneMin = bbox.minBounds;

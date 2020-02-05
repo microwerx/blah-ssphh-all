@@ -18,15 +18,12 @@ namespace SSPHH
 	{
 		int &test = Interface.tests.saveSphlOBJ;
 		FilePathInfo fpi("output");
-		if (fpi.DoesNotExist()) {
-#ifdef _WIN32
-			_mkdir("output");
-#else
-			mkdir("output", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-#endif
-		}
-		fpi.Set("output");
-		if (!fpi.IsDirectory()) {
+		if (fpi.notFound()) {
+			std::error_code ec;
+			std::filesystem::create_directory("output", std::filesystem::current_path(), ec);
+			fpi.reset("output");
+		}		
+		if (!fpi.isDirectory()) {
 			HFLOGERROR("Path 'output' is not a directory");
 			return;
 		}

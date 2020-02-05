@@ -82,7 +82,7 @@ namespace SSPHH {
 			if ((cmdargs[j] == "-scene") && nextArgExists) {
 				// next argument is the path
 				FilePathInfo fpi(cmdargs[j + 1]);
-				if (fpi.Exists()) {
+				if (fpi.exists()) {
 					sceneFilename = cmdargs[j + 1];
 					HFLOGINFO("loading scene file %s", sceneFilename.c_str());
 				}

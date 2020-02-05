@@ -264,7 +264,7 @@ namespace SSPHH {
 			png.replace(png.end() - 3, png.end(), "png");
 
 			FilePathInfo fpi(png);
-			if (fpi.Exists() && !ignoreCache)
+			if (fpi.exists() && !ignoreCache)
 				continue;
 
 			std::string cmdline = std::string("magick ") + f.second + " " + png;

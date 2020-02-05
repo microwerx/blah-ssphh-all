@@ -69,7 +69,7 @@ namespace SSPHH
 	bool SSPHH_Application::GI_ProcessJob(Uf::CoronaJob& job) {
 		bool useEXR = true;
 		FilePathInfo fpi(job.GetOutputPath(useEXR));
-		if (fpi.DoesNotExist()) {
+		if (fpi.notFound()) {
 			HFLOGERROR("Could not find rendered light probe %s", job.GetOutputPath(useEXR).c_str());
 			return false;
 		}
@@ -88,10 +88,10 @@ namespace SSPHH
 		Sph4f sph;
 		if (job.IsVIZ()) {
 			if (useEXR) {
-				sphl.vizgenLightProbes[recvLight].loadEXR(fpi.path);
+				sphl.vizgenLightProbes[recvLight].loadEXR(fpi.shortestPath());
 			}
 			else {
-				sphl.vizgenLightProbes[recvLight].loadPPM(fpi.path);
+				sphl.vizgenLightProbes[recvLight].loadPPM(fpi.shortestPath());
 			}
 			sphl.vizgenLightProbes[recvLight].convertRectToCubeMap();
 			sphl.lightProbeToSph(sphl.vizgenLightProbes[recvLight], sph.msph);
@@ -108,10 +108,10 @@ namespace SSPHH
 				sphl.saveJsonSph(job.GetName() + "_sph.json");
 
 			if (useEXR) {
-				sphl.vizgenLightProbes[sendLight].loadEXR(fpi.path);
+				sphl.vizgenLightProbes[sendLight].loadEXR(fpi.shortestPath());
 			}
 			else {
-				sphl.vizgenLightProbes[sendLight].loadPPM(fpi.path);
+				sphl.vizgenLightProbes[sendLight].loadPPM(fpi.shortestPath());
 
 			}
 			sphl.vizgenLightProbes[sendLight].convertRectToCubeMap();
