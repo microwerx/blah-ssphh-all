@@ -1,0 +1,48 @@
+
+# pbsky <double turbidity> <double latitude> <double longitude> <int samples> <Color3f ground albedo>
+# pbsky 4.0 29.57 38.9 -104.8 1 0.471 0.373 0.251
+pbsky 4.0 64.835 -147.653 1 0.471 0.373 0.251
+
+camera perspective_otrf 0.0 1.0 5.0 0.0 1.0 0.0 0.0 1.0 0.0 45.0
+
+# enviro color 0.0 0.0 0.2
+
+sun dirTo 0 1 .1 color 1 1 1 sizeMult 200.0 
+
+# pointLight [name] [E0] [falloffRadius] [position]
+# pointLight PointLight0 1.0 100.0 0.0 2.0 0.0
+
+
+mtllib test_gallery2_scene.mtl
+transform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+geometryGroup test_gallery2_scene.obj
+
+
+# Test objects
+mtllib test_scene.mtl
+
+transform 1.0 0.0 0.0 0.0    0.0 1.0 0.0 1.0    0.0 0.0 1.0 0.0
+geometryGroup teapot.obj
+
+transform 2.0 0.0 0.0 4.0 0.0 2.0 0.0 2.0 0.0 0.0 2.0 0.0
+geometryGroup bunny.obj
+
+transform 2.0 0.0 0.0 -4.0 0.0 2.0 0.0 2.0 0.0 0.0 2.0 0.0
+geometryGroup dragon2.obj
+
+
+# TREX!
+#mtllib trex.mtl
+#transform 0.28 0.00 0.28 0.20 0.00 0.40 0.00 0.00 -0.28 0.00 0.28 0.00 0.00 0.00 0.00 1.00
+#geometryGroup trex.obj
+
+
+
+conffile default.conf
+
+
+sphl SPHL00 1.0 100.0 -2.5 2.0 -2.5
+sphl SPHL01 1.0 100.0  2.5 2.0 -2.5
+sphl SPHL02 1.0 100.0  0.0 0.5  1.0
+sphl SPHL03 1.0 100.0  0.0 0.5 -2.5
+sphl SPHL04 1.0 100.0  0.0 2.0  2.0

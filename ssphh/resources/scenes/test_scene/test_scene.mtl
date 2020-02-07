@@ -1,0 +1,14 @@
+
+
+newmtl "whiteDiffuseMtl"
+
+Kd 1.0 1.0 1.0
+
+newmtl "whiteRefractMtl"
+
+Kd 1.0 0.6 0.8
+
+newmtl "whiteLight"
+
+Ke 1.0 1.0 1.0
+

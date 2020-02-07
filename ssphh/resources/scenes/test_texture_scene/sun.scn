@@ -1,0 +1,21 @@
+
+
+
+enviro texmap ":sky 0.1 1.7" 
+
+sun dirTo 1 1 1 color 1 1 1 sizeMult 1.0 
+
+camera perspective_otrf 0.0 0.0 0.0  1.0  0.0  0.0  0.0 1.0 0.0 90.0
+#camera perspective_otrf 0.0 0.0 0.0 -1.0  0.0  0.0  0.0 1.0 0.0 90.0
+#camera perspective_otrf 0.0 0.0 0.0  0.0 -1.0  0.0  1.0 0.0 0.0 90.0
+#camera perspective_otrf 0.0 0.0 0.0  0.0  1.0  0.0 -1.0 0.0 0.0 90.0
+#camera perspective_otrf 0.0 0.0 0.0  0.0  0.0  1.0  0.0 1.0 0.0 90.0
+#camera perspective_otrf 0.0 0.0 0.0  0.0  0.0 -1.0  0.0 1.0 0.0 90.0
+
+conffile sun.conf
+
+
+mtllib sun.mtl
+
+transform 15.0 0.0 0.0 0.0 0.0 15.0 0.0 0.0 0.0 0.0 15.0 100.0
+sphere sky

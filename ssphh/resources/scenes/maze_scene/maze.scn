@@ -1,0 +1,6 @@
+
+
+# 
+camera perspective_otrf 0.0 3.0 0.0 0.0 0.0 0.0 0.0 1.0 0.0 45.0
+
+geometryGroup maze.obj

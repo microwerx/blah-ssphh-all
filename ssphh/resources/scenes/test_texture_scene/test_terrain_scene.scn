@@ -1,0 +1,58 @@
+
+# pbsky <double turbidity> <double latitude> <double longitude> <int samples> <Color3f ground albedo>
+# pbsky 4.0 38.9 -104.8 1 0.471 0.373 0.251
+pbsky 4.0 64.835 -147.653 1 0.471 0.373 0.251
+
+camera "mainCamera" perspective_otrf 45.0 0.0 3.0 20.0 0.0 0.0 0.0 0.0 1.0 0.0
+
+# enviro color 0.0 0.0 0.2
+
+sun dirTo 0 1 .1 color 1 1 1 sizeMult 200.0 
+
+# dirtoLight "name" E0 dirTo
+dirtoLight sun 1.0 1.0 1.0 1.0
+
+mtllib test_scene.mtl
+
+transform 0.15 0.0 0.0 0.0 0.0 0.15 0.0 5.0 0.0 0.0 0.15 5.0
+sphere whiteLight
+
+transform 1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0 0.0
+geometryGroup teapot.obj
+
+transform 2.0 0.0 0.0 4.0 0.0 2.0 0.0 0.0 0.0 0.0 2.0 0.0
+geometryGroup bunny.obj
+
+transform 2.0 0.0 0.0 -4.0 0.0 2.0 0.0 0.0 0.0 0.0 2.0 0.0
+geometryGroup dragon2.obj
+
+transform 1.0 0.0 0.0 -4.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0 4.0
+
+#sphere whiteDiffuseMtl
+
+mtllib sponza.obj.mtl
+
+transform 0.0 0.0 2.0 0.0 0.0 2.0 0.0 -2.0 2.0 0.0 0.0 0.0
+#geometryGroup sponza.obj
+
+# Floor
+
+transform 1.0 0.0 0.0 0.0 0.0 1.0 0.0 -2.0 0.0 0.0 1.0 0.0
+geometryGroup sand_terrain.obj
+
+conffile default.conf
+
+# SSPHH Testing Lights
+
+sphl SPHL00 1.0 100.0 -4.0 2.0 -4.0
+sphl SPHL01 1.0 100.0  4.0 2.0 -4.0
+sphl SPHL02 1.0 100.0  4.0 2.0  4.0
+sphl SPHL03 1.0 100.0 -4.0 2.0  4.0
+
+# These are the new versions with initial conditions for degree 1
+# Format anisoLight "name" x y z falloffRadius E0_r E0_g E0_b
+
+anisoLight SHL00 -4.0 2.0 -4.0 100.0 1 1 1
+anisoLight SHL01  4.0 2.0 -4.0 100.0 1 1 1
+anisoLight SHL02  4.0 2.0  4.0 100.0 1 1 1
+anisoLight SHL03 -4.0 2.0  4.0 100.0 1 1 1

@@ -1,0 +1,19 @@
+
+
+camera perspective_otrf 0.0 3.0 20.0 0.0 0.0 0.0 0.0 1.0 0.0 45.0
+
+#enviro color 0.0 0.0 0.2
+
+mtllib test_scene.mtl
+
+transform 0.15 0.0 0.0 0.0 0.0 0.15 0.0 5.0 0.0 0.0 0.15 0.0
+sphere whiteLight
+
+transform 1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0 0.0
+geometryGroup teapot.obj
+#sphere whiteDiffuseMtl
+
+transform 0.0 0.0 2.0 0.0 0.0 2.0 0.0 -2.0 2.0 0.0 0.0 0.0
+geometryGroup white_sponza.obj
+
+conffile test_scene.conf

@@ -1,0 +1,33 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 09.11.2017 09:11:25
+
+newmtl MitsubaInside
+	Ns 32
+	d 1
+	Tr 0
+	Tf 1 1 1
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+#UCCS Gold 207/184/124 #cfb87c    (0.8118 0.7216 0.4863) OR (0.9122 0.8659 0.7262)
+	Kd 0.01 0.01 0.01
+	Ks 0.3500 0.3500 0.3500
+#PBGGXgamma 0.1
+#PBKsm      0.200
+#PBKdm     -0.200
+#PBior      1.5
+#PBk        0.0
+
+newmtl MitsubaOutside
+	Ns 32
+	d 1
+	Tr 0
+	Tf 1 1 1
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.8118 0.7216 0.4863
+	Ks 0.8118 0.7216 0.4863
+#PBGGXgamma 0.1
+#PBKsm      0.200
+#PBKdm     -0.200
+#PBior      1.5
+#PBk        0.0

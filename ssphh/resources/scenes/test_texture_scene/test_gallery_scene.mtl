@@ -1,0 +1,146 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 20.11.2017 22:27:50
+
+newmtl Room_Dutch_White_Matte
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.9412 0.9373 0.7333
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+#PBGGXgamma 0.1
+#PBKsm      0.200
+#PBKdm     -0.200
+#PBior      1.5
+#PBk        0.0
+
+newmtl Left_Box
+	Ns 25.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 1.0000 0.0000 1.0000
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+#PBGGXgamma 0.1
+#PBKsm      0.200
+#PBKdm     -0.200
+#PBior      1.5
+#PBk        0.0
+
+newmtl Right_Box
+	Ns 25.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.0000 1.0000 1.0000
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+#PBGGXgamma 0.1
+#PBKsm      0.200
+#PBKdm     -0.200
+#PBior      1.5
+#PBk        0.0
+
+newmtl Boat
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka boat.png
+	map_Kd boat.png
+#PBGGXgamma 0.1
+#PBKsm      0.200
+#PBKdm     -0.200
+#PBior      1.5
+#PBk        0.0
+
+
+newmtl Sail
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka sails.png
+	map_Kd sails.png
+#PBGGXgamma 0.1
+#PBKsm     -1.000
+#PBKdm     -1.000
+#PBior      1.5
+#PBk        0.0
+
+
+newmtl Gallery_Floor
+	Ns 90.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 1.0000 1.0000 1.0000
+	Ks 0.1800 0.1800 0.1800
+	Ke 0.0000 0.0000 0.0000
+	map_Ka board_cherry.png
+	map_Kd board_cherry.png
+#PBGGXgamma 0.1
+#PBKsm      0.200
+#PBKdm     -0.200
+#PBior      1.5
+#PBk        0.0
+
+
+newmtl Gallery_Ceiling
+	Ns 25.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 1.0000 1.0000 1.0000
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+#PBGGXgamma 0.1
+#PBKsm      0.200
+#PBKdm     -0.200
+#PBior      1.5
+#PBk        0.0
+
+
+newmtl OutsideFloor
+	Ns 32
+	d 1
+	Tr 0
+	Tf 1 1 1
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 1.0000 1.0000 1.0000
+	Ks 0.3500 0.3500 0.3500
+#PBGGXgamma 0.1
+#PBKsm      0.200
+#PBKdm     -0.200
+#PBior      1.5
+#PBk        0.0
