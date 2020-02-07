@@ -368,12 +368,13 @@ ssphh/corona_export/
 ssphh/corona_output/
 ssphh/corona_conf/
 *.ppm
+*.cache
 
 # Ignore the resources folder
 ssphh/models
-ssphh/resources/scenes
-ssphh/resources/models
-ssphh/resources/fonts
+!ssphh/resources/scenes
+!ssphh/resources/models
+!ssphh/resources/fonts
 ssphh/resources/corona_exports
 ssphh/output/
 !ssphh/resources/shaders/**
