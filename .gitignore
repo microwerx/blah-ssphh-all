@@ -369,6 +369,8 @@ ssphh/corona_output/
 ssphh/corona_conf/
 *.ppm
 *.cache
+dock-medium.otf
+dock-medium.ttf
 
 # Ignore the resources folder
 ssphh/models
