@@ -46,6 +46,10 @@ namespace SSPHH
 			return;
 		}
 
+		ssg.addPath("resources/models/");
+		ssg.addPath("resources/textures/");
+		ssg.addPath("resources/scenes/");
+		ssg.addPath("resources/scenes/test_texture_scene/");
 		ssg.Load(sceneFilename);
 		Interface.sceneName = ssg.name_str();
 	}

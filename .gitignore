@@ -365,23 +365,27 @@ ssphh/build/ssphh
 CoronaStandalone_log.txt
 imgui.ini
 ssphh/corona_export/
-ssphh/corona_output/
-ssphh/corona_conf/
+ssphh/corona_output/*GEN*
+ssphh/corona_output/*VIZ*
+ssphh/corona_output/*REF*
 *.ppm
 *.cache
 dock-medium.*
 
 # Ignore the resources folder
-ssphh/models
-!ssphh/resources/scenes
-!ssphh/resources/models
-!ssphh/resources/fonts
+!ssphh/resources/**/*.obj
+# ssphh/models
 ssphh/resources/corona_exports
-ssphh/output/
-!ssphh/resources/shaders/**
-!ssphh/resources/renderconfigs/**
-!ssphh/resources/models/*
-ssphh-tests/*.pfm
+# !ssphh/resources/scenes/**/*.obj
+# !ssphh/resources/models
+# !ssphh/resources/models/*.obj
+# !ssphh/resources/fonts
+# ssphh/output/
+# !ssphh/resources/shaders/**
+# !ssphh/resources/renderconfigs/**
+# !ssphh/resources/models/*
+# ssphh-tests/*.pfm
+# ssphh/**/*.cache
 
 # CMake
 build/**/

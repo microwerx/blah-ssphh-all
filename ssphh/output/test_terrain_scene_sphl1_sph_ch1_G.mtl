@@ -1,0 +1,7 @@
+
+newmtl test_terrain_scene_sphl1_sph_ch1_G
+
+    Kd 0 1 0
+    Ks 0.1 0.1 0.1
+    Ns 1.0
+    Tr 1.0    d 0.0
