@@ -193,7 +193,7 @@ namespace SSPHH
 		}
 
 		if (keymod == keyboard.AltKeyBit) {
-			if (key == "F6") { PathAnim_LoadCameraPath("animation.txt"); }
+			if (key == "F6") { PathAnim_LoadCameraPath(""); }
 		}
 
 		if (keymod == 0) {

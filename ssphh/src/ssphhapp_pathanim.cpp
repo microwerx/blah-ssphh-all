@@ -6,11 +6,15 @@ extern Vf::AnimPathWindowPtr animpath_window_ptr;
 
 namespace SSPHH
 {
-	const std::string default_animation_path{ "animation.txt" };
+	const std::string default_animation_path{ "resources/anim/animation.txt" };
 
 	void SSPHH_Application::PathAnim_LoadCameraPath(const std::string& path) {
 		cameraAnimation.clear();
-		std::ifstream fin(path);
+		std::ifstream fin;
+		if (path.empty())
+			fin.open(default_animation_path);
+		else
+			fin.open(path);
 		while (fin) {
 			std::string line;
 			std::getline(fin, line);
@@ -105,7 +109,7 @@ namespace SSPHH
 			t = 0.0f;
 			break;
 		case Vf::PathAnimActions::LoadAnimation:
-			PathAnim_LoadCameraPath("animation.txt");
+			PathAnim_LoadCameraPath(default_animation_path);
 			t = 0.0f;
 			break;
 		case Vf::PathAnimActions::SaveAnimation:

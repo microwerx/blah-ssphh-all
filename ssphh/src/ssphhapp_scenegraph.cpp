@@ -51,6 +51,14 @@ namespace SSPHH
 		ssg.addPath("resources/scenes/");
 		ssg.addPath("resources/scenes/test_texture_scene/");
 		ssg.Load(sceneFilename);
+
+		if (!ssg.dirToLights.count("Sun")) {
+			ssg.dirToLights.create("Sun");
+		}
+		if (!ssg.dirToLights.count("Moon")) {
+			ssg.dirToLights.create("Moon");
+		}
+
 		Interface.sceneName = ssg.name_str();
 	}
 
