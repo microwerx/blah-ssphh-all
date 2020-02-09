@@ -31,14 +31,14 @@ namespace SSPHH
 	void SSPHH_Application::Sky_SaveHosekWilkieTextures() {
 		HFLOGINFO("Saving pbsky ppm texture maps");
 		Hf::StopWatch stopwatch;
-		ssg.environment.pbsky.generatedCylMap.savePPM(default_pbsky_cylmap_ppm);
-		ssg.environment.pbsky.generatedCubeMap.savePPM(default_pbsky_cubemap1_ppm, 0);
-		ssg.environment.pbsky.generatedCubeMap.savePPM(default_pbsky_cubemap2_ppm, 1);
-		ssg.environment.pbsky.generatedCubeMap.savePPM(default_pbsky_cubemap3_ppm, 2);
-		ssg.environment.pbsky.generatedCubeMap.savePPM(default_pbsky_cubemap4_ppm, 3);
-		ssg.environment.pbsky.generatedCubeMap.savePPM(default_pbsky_cubemap5_ppm, 4);
-		ssg.environment.pbsky.generatedCubeMap.savePPM(default_pbsky_cubemap6_ppm, 5);
-		ssg.environment.pbsky.generatedCubeMap.saveCubePPM(default_pbsky_cubemap_ppm);
+		ssg.environment.pbsky.generatedSunCylMap.savePPM(default_pbsky_cylmap_ppm);
+		ssg.environment.pbsky.generatedSunCubeMap.savePPM(default_pbsky_cubemap1_ppm, 0);
+		ssg.environment.pbsky.generatedSunCubeMap.savePPM(default_pbsky_cubemap2_ppm, 1);
+		ssg.environment.pbsky.generatedSunCubeMap.savePPM(default_pbsky_cubemap3_ppm, 2);
+		ssg.environment.pbsky.generatedSunCubeMap.savePPM(default_pbsky_cubemap4_ppm, 3);
+		ssg.environment.pbsky.generatedSunCubeMap.savePPM(default_pbsky_cubemap5_ppm, 4);
+		ssg.environment.pbsky.generatedSunCubeMap.savePPM(default_pbsky_cubemap6_ppm, 5);
+		ssg.environment.pbsky.generatedSunCubeMap.saveCubePPM(default_pbsky_cubemap_ppm);
 		stopwatch.Stop();
 		HFLOGINFO("Saving pbsky ppm texture maps took %4.2f seconds", stopwatch.GetSecondsElapsed());
 	}

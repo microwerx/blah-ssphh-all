@@ -22,7 +22,7 @@ namespace SSPHH
 
 	void SSPHH_Application::Sun_ResetClock() {
 		ssg.environment.pbsky.SetCivilDateTime(ssg.environment.pbsky_dtg);
-		ssg.environment.pbsky.computeSunFromLocale();
+		ssg.environment.pbsky.computeAstroFromLocale();
 		pbsky_localtime = ssg.environment.pbsky.GetTime();
 		pbsky_timeOffsetInSeconds = 0.0;
 		Interface.recomputeSky = true;
@@ -35,7 +35,7 @@ namespace SSPHH
 		pbsky_timeOffsetInSeconds = 0.0;
 
 		ssg.environment.pbsky.SetTime(time(NULL), 0.0);
-		ssg.environment.pbsky.computeSunFromLocale();
+		ssg.environment.pbsky.computeAstroFromLocale();
 		Interface.recomputeSky = true;
 		Sky_RegenHosekWilkieTextures();
 	}

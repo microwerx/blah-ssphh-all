@@ -709,7 +709,7 @@ namespace SSPHH {
 				turbidity = Fluxions::clamp<double>(turbidity, 1.0, 10.0);
 				ssg.environment.pbsky.SetTurbidity((float)turbidity);
 				if (turbidity != lastTurbidity) {
-					ssg.environment.pbsky.computeSunFromLocale();
+					ssg.environment.pbsky.computeAstroFromLocale();
 					ssg.environment.ComputePBSky();
 				}
 

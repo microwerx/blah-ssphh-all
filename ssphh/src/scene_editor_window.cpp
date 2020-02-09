@@ -1,4 +1,4 @@
-#include "pch.hpp"
+﻿#include "pch.hpp"
 #include <ssphhapp.hpp>
 #include <scene_editor_window.hpp>
 
@@ -69,7 +69,7 @@ void SceneEditorWindow::OnRenderDearImGui() {
 		ImGui::TreePop();
 	}
 
-	if (moon && ImGui::TreeNode("Moon")){
+	if (moon && ImGui::TreeNode("Moon")) {
 		ImGui::TextColored(Colors::Azure, "Moon");
 		ImGui::ColorEdit3("moonE0", moon->E0.ptr());
 		ImGui::DragFloat3("moonDirTo", moon->dirTo.ptr(), 0.01f, -1.0f, 1.0f);
@@ -77,6 +77,26 @@ void SceneEditorWindow::OnRenderDearImGui() {
 		if (ImGui::Button("real")) {
 			moon->dirTo = ssg->environment.curMoonDirTo;
 		}
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("AstroCalc")) {
+		auto cdt = ssg->environment.pbsky.GetCivilDateTime();
+		Color3f modis = ssg->environment.pbsky.computeModisAlbedo(false);
+		auto sunRADec = ssg->environment.pbsky.getSunRADec();
+		auto moonRADec = ssg->environment.pbsky.getMoonRADec();
+		float lat = ssg->environment.pbsky.GetLatitude();
+		float lon = ssg->environment.pbsky.GetLongitude();
+		const char* NS = lat < 0 ? "S" : "N";
+		const char* EW = lat < 0 ? "W" : "E";
+		ImGui::LabelText("lat/lon", "%2.2f%s %3.2f%s", std::abs(lat), NS, std::abs(lon), EW);
+		if (ImGui::SmallButton("MODIS")) {
+			ssg->environment.pbsky.computeModisAlbedo(true);
+		}
+		ImGui::SameLine(); ImGui::ColorEdit3("MODIS", modis.ptr());
+		// TODO: print \u0251 for alpha, \u03B4 for delta
+		ImGui::LabelText("Moon RA", "a: % 03.4f, d: % 03.4f", sunRADec.alpha, sunRADec.delta);
+		ImGui::LabelText("Moon Dec", "a: % 03.4f, d: % 03.4f", moonRADec.alpha, moonRADec.delta);
 		ImGui::TreePop();
 	}
 

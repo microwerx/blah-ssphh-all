@@ -158,7 +158,7 @@ renderconfig skybox_rc
 renderconfig program skybox_program
 renderconfig writefbo linear_fbo
 renderconfig textureCube enviroSkyCube MapEnviroCube
-# renderconfig clearcolor 1.0 0.0 1.0 1.0
+renderconfig clearcolor 1.0 0.0 1.0 1.0
 # renderconfig viewport 0 256 512 512
 renderconfig perspective 120 1 100
 renderconfig autoresize
