@@ -283,13 +283,47 @@
     <ClCompile Include="src\unicornfish_window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="resources\shaders\basic_gles30.frag" />
+    <None Include="resources\shaders\basic_gles30.vert" />
+    <None Include="resources\shaders\cube_shadow_gl330.frag" />
+    <None Include="resources\shaders\cube_shadow_gl330.vert" />
+    <None Include="resources\shaders\default_fast_fs.glsl" />
+    <None Include="resources\shaders\default_fast_vs.glsl" />
+    <None Include="resources\shaders\default_slow.frag" />
+    <None Include="resources\shaders\default_slow.vert" />
+    <None Include="resources\shaders\default_slow_es20.frag" />
+    <None Include="resources\shaders\default_slow_es20.vert" />
     <None Include="resources\shaders\default_slow_es30.frag" />
     <None Include="resources\shaders\default_slow_es30.vert" />
+    <None Include="resources\shaders\default_z_fs.glsl" />
+    <None Include="resources\shaders\default_z_vs.glsl" />
+    <None Include="resources\shaders\deferred_fbo_gles30.frag" />
+    <None Include="resources\shaders\deferred_fbo_gles30.vert" />
+    <None Include="resources\shaders\gles30.frag" />
+    <None Include="resources\shaders\gles30.vert" />
+    <None Include="resources\shaders\glslang.conf" />
+    <None Include="resources\shaders\glut_unwrapped_cubemap.frag" />
+    <None Include="resources\shaders\glut_unwrapped_cubemap.vert" />
+    <None Include="resources\shaders\postprocess.frag" />
+    <None Include="resources\shaders\postprocess.vert" />
+    <None Include="resources\shaders\simple_colored_vertex.vert" />
+    <None Include="resources\shaders\skybox.frag" />
+    <None Include="resources\shaders\skybox.vert" />
+    <None Include="resources\shaders\sphl.frag" />
+    <None Include="resources\shaders\sphl.vert" />
+    <None Include="resources\shaders\sphl300.frag" />
+    <None Include="resources\shaders\sphl300.vert" />
+    <None Include="resources\shaders\sphl_cubemap.frag" />
+    <None Include="resources\shaders\sphl_cubemap.vert" />
+    <None Include="resources\shaders\sphl_gles30.frag" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="ssphh-icon.ico">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="resources\shaders\LICENSE.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

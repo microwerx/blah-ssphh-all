@@ -11,10 +11,10 @@ public:
 
 	void OnUpdate(double timeStamp) override;
 	void OnRenderDearImGui() override;
-
-
 private:
 	Fluxions::SimpleSceneGraph* ssg{ nullptr };
+	Fluxions::BaseDirToLight* moon{ nullptr };
+	Fluxions::BaseDirToLight* sun{ nullptr };
 };
 
 using SceneEditorWindowPtr = std::shared_ptr<SceneEditorWindow>;

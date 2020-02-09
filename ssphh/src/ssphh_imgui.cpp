@@ -709,7 +709,7 @@ namespace SSPHH {
 				turbidity = Fluxions::clamp<double>(turbidity, 1.0, 10.0);
 				ssg.environment.pbsky.SetTurbidity((float)turbidity);
 				if (turbidity != lastTurbidity) {
-					ssg.environment.pbsky.ComputeSunFromLocale();
+					ssg.environment.pbsky.computeSunFromLocale();
 					ssg.environment.ComputePBSky();
 				}
 
@@ -767,8 +767,8 @@ namespace SSPHH {
 				for (auto& [k, spl] : ssg.pointLights) {
 					std::ostringstream ostr;
 					ImGui::Text("Name(%d): %s", i, spl.name());
-					ImGui::DragFloat("E0", &spl.E0, 0.1f, 0.0f, 5.0f);
-					ImGui::DragFloat("Falloff Radius", &spl.falloffRadius, 1.0f, 0.0f, 1000.0f);
+					ImGui::ColorEdit4("E0", spl.E0.ptr());
+					ImGui::DragFloat("Falloff Radius", &spl.position.w, 1.0f, 0.0f, 1000.0f);
 					ImGui::DragFloat3("Position", spl.position.ptr(), 0.1f, -10.0f, 10.0f);
 					i++;
 				}

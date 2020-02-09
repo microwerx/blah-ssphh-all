@@ -22,7 +22,7 @@ namespace SSPHH
 
 	void SSPHH_Application::Sun_ResetClock() {
 		ssg.environment.pbsky.SetCivilDateTime(ssg.environment.pbsky_dtg);
-		ssg.environment.pbsky.ComputeSunFromLocale();
+		ssg.environment.pbsky.computeSunFromLocale();
 		pbsky_localtime = ssg.environment.pbsky.GetTime();
 		pbsky_timeOffsetInSeconds = 0.0;
 		Interface.recomputeSky = true;
@@ -35,9 +35,16 @@ namespace SSPHH
 		pbsky_timeOffsetInSeconds = 0.0;
 
 		ssg.environment.pbsky.SetTime(time(NULL), 0.0);
-		ssg.environment.pbsky.ComputeSunFromLocale();
+		ssg.environment.pbsky.computeSunFromLocale();
 		Interface.recomputeSky = true;
 		Sky_RegenHosekWilkieTextures();
+	}
+
+	void SSPHH_Application::Sun_SetLights() {
+		if (!sun) sun = ssg.dirToLights.getPtr("sun");
+		if (sun) sun->dirTo = ssg.environment.curSunDirTo;
+		if (!moon) moon = ssg.dirToLights.getPtr("moon");
+		if (moon) moon->dirTo = ssg.environment.curMoonDirTo;
 	}
 
 	void SSPHH_Application::SSG_LoadScene() {
@@ -52,11 +59,11 @@ namespace SSPHH
 		ssg.addPath("resources/scenes/test_texture_scene/");
 		ssg.Load(sceneFilename);
 
-		if (!ssg.dirToLights.count("Sun")) {
-			ssg.dirToLights.create("Sun");
+		if (!ssg.dirToLights.count("sun")) {
+			ssg.dirToLights.create("sun");
 		}
-		if (!ssg.dirToLights.count("Moon")) {
-			ssg.dirToLights.create("Moon");
+		if (!ssg.dirToLights.count("moon")) {
+			ssg.dirToLights.create("moon");
 		}
 
 		Interface.sceneName = ssg.name_str();

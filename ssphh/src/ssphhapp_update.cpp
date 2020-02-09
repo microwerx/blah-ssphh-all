@@ -21,11 +21,13 @@ namespace SSPHH
 		//	pbskyAge = 0.0;
 		//}
 
+		ssg.environment.Update(ssg.getBoundingBox());
 		if (Interface.recomputeSky) {
-			ssg.environment.Update(ssg.getBoundingBox());
 			ssg.environment.ComputePBSky();
 			Interface.recomputeSky = false;
 		}
+
+		Sun_SetLights();
 
 		PathAnim_Update();
 

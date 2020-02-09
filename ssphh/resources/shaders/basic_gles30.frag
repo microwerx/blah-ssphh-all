@@ -115,7 +115,12 @@ void main() {
 	vec3 N = normalize(vNormal);
 	vec3 V = normalize(vPosition - vCameraPosition);
 
-	vec3 lighting = calcPBR(N, L, V);
+	vec3 E0 = DirtoLights[0].E0.rgb;
+	vec3 lighting = E0 * max(0.0, L.y) * calcPBR(N, L, V);
+
+	L = normalize(DirtoLights[1].dirTo.xyz);
+	E0 = DirtoLights[1].E0.rgb;
+	lighting += E0 * max(0.0, L.y) * calcPBR(N, L, V);
 
 	vec3 mtlkd = materials[MtlID].Kd.rgb;
 	float kdmix = materials[MtlID].Kd.a;

@@ -81,9 +81,21 @@ namespace SSPHH
 	void SSPHH_Application::RenderGLES30_VIZ() {
 		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
 
+		static double viz_lag{ 0 };
+		static constexpr double MS_PER_VIZ_UPDATE = 1.0 / 30.0;
+		viz_lag += GetFrameTime();
+		bool updateViz{ false };
+		while (viz_lag >= MS_PER_VIZ_UPDATE) {
+			viz_lag -= MS_PER_VIZ_UPDATE;
+			updateViz = true;
+		}
+
 		const std::string renderername{ "viz" };
 		if (rendererContext.renderers.count(renderername)) {
 			const std::string& renderconfigname = rendererContext.renderers[renderername].renderconfigname;
+			if (updateViz) {
+				rendererContext.renderers[renderername].update(RendererGLES30::UPDATE_VIZ);
+			}
 			Fluxions::RenderImage(rendererContext, ssg, renderername, renderconfigname);
 		}
 

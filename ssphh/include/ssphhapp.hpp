@@ -54,6 +54,8 @@ namespace SSPHH {
 		bool isSkyComputed;
 		time_t pbsky_localtime;
 		double pbsky_timeOffsetInSeconds = 0.0;
+		BaseDirToLight* sun{ nullptr };
+		BaseDirToLight* moon{ nullptr };
 		//void pbskyComputeCubemap();
 		//RendererTextureObject PBSkyCubeMap;
 		SimpleRenderer_GLushort Skybox;
@@ -583,6 +585,7 @@ namespace SSPHH {
 		void Sun_AdvanceClock(double numSeconds, bool recomputeSky = false);
 		void Sun_ResetClock();
 		void Sun_UseCurrentTime();
+		void Sun_SetLights();
 		void InitRenderConfigs();
 		void LoadRenderConfigs();
 
