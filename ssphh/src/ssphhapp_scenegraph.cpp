@@ -43,8 +43,14 @@ namespace SSPHH
 	void SSPHH_Application::Sun_SetLights() {
 		if (!sun) sun = ssg.dirToLights.getPtr("sun");
 		if (sun) sun->dirTo = ssg.environment.curSunDirTo;
-		if (!moon) moon = ssg.dirToLights.getPtr("moon");
-		if (moon) moon->dirTo = ssg.environment.curMoonDirTo;
+		if (!moon) {
+			moon = ssg.dirToLights.getPtr("moon");
+			moonGG = ssg.geometryGroups.getPtr("moon");
+		}
+		if (moon) {
+			moon->dirTo = ssg.environment.curMoonDirTo;
+			moonGG->transform = Matrix4f::MakeTranslation(moon->dirTo.xyz() * 95.0f);
+		}
 	}
 
 	void SSPHH_Application::SSG_LoadScene() {
@@ -59,12 +65,14 @@ namespace SSPHH
 		ssg.addPath("resources/scenes/test_texture_scene/");
 		ssg.Load(sceneFilename);
 
-		if (!ssg.dirToLights.count("sun")) {
-			ssg.dirToLights.create("sun");
-		}
-		if (!ssg.dirToLights.count("moon")) {
-			ssg.dirToLights.create("moon");
-		}
+		// Configure astronomical models/textures/lights
+		ssg.environment.hasMoon = true;
+		ssg.environment.hasSun = true;
+		ssg.addDirToLight("sun");
+		ssg.addDirToLight("moon");
+		ssg.currentTransform.LoadIdentity();
+		ssg.currentTransform.Translate(0.0f, 2.0f, 0.0f);
+		ssg.addGeometryGroup("moon", "resources/models/moon.obj");
 
 		Interface.sceneName = ssg.name_str();
 	}

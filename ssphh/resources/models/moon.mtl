@@ -12,6 +12,5 @@ newmtl Moon
 	Kd 0.5882 0.5882 0.5882
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka moon_4k.png
-	map_Kd moon_4k.png
-	map_bump moon_4k_normal.png
+	map_Kd moon-4k-diffuse.png
+	map_bump moon-4k-normal.jpg

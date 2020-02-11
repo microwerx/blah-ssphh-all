@@ -56,6 +56,7 @@ namespace SSPHH {
 		double pbsky_timeOffsetInSeconds = 0.0;
 		BaseDirToLight* sun{ nullptr };
 		BaseDirToLight* moon{ nullptr };
+		SimpleGeometryGroup* moonGG{ nullptr };
 		//void pbskyComputeCubemap();
 		//RendererTextureObject PBSkyCubeMap;
 		SimpleRenderer_GLushort Skybox;
