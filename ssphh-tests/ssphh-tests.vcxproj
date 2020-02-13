@@ -158,6 +158,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ssphh-tests.cpp" />
+    <ClCompile Include="test-resample.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="test-resample.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

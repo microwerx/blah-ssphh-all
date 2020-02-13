@@ -69,7 +69,7 @@ texture2D alwaysLoad
 textureCube enviroSkyCube
 # textureCube map test_corona_cube.exr
 # textureCube map galileo_cross.exr
-textureCube map mwpan2_RGB_3600.pfm
+textureCube map mwpan2_cubemap.exr
 textureCube uniform MapEnviroCube
 textureCube sampler defaultCubeSampler
 textureCube alwaysLoad

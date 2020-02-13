@@ -10,6 +10,7 @@
 #include <iomanip>
 #include <fluxions_gte.hpp>
 #include <fluxions_gte_catmull_rom.hpp>
+#include "test-resample.hpp"
 
 using namespace std;
 
@@ -315,7 +316,7 @@ void TestQuaternions() {
 }
 
 int main(int argc, char** argv) {
-	TestQuaternions();
+	TestResample();
 	return 0;
 
 	auto float_category = std::iterator_traits<float*>::iterator_category();
