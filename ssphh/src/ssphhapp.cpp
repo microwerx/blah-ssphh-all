@@ -227,6 +227,8 @@ namespace SSPHH {
 		InitRenderConfigs();
 		LoadRenderConfigs();
 
+		auroraViz.OnInit();
+
 		FxSetDefaultErrorMessage();
 
 		// Initialize Physically Based Sky

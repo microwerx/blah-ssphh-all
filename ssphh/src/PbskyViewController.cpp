@@ -1,3 +1,4 @@
+#include "pch.hpp"
 #include <PbskyViewController.hpp>
 #include <ssphhapp.hpp>
 

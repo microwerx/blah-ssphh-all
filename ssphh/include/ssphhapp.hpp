@@ -13,6 +13,7 @@
 #include <fluxions_ssg_ssphh.hpp>
 #include <PbskyViewController.hpp>
 #include <camera_animation.hpp>
+#include <AuroraVisualization.hpp>
 
 using namespace Vf;
 using namespace Fluxions;
@@ -66,6 +67,8 @@ namespace SSPHH {
 		void Sky_LoadCoronaSky(bool loadEXR, const std::string& path);
 		void Sky_InitViewController();
 		void Sky_Render();
+
+		AuroraViz auroraViz;
 
 		///////////////////////////////////////////////////////////////
 

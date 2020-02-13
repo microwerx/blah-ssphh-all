@@ -30,15 +30,15 @@ transform 1.0 0.0 0.0 -4.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0 4.0
 
 #sphere whiteDiffuseMtl
 
-mtllib sponza.obj.mtl
 
 transform 0.0 0.0 2.0 0.0 0.0 2.0 0.0 -2.0 2.0 0.0 0.0 0.0
+#mtllib sponza.obj.mtl
 #geometryGroup sponza.obj
 
 # Floor
 
 transform 1.0 0.0 0.0 0.0 0.0 1.0 0.0 -2.0 0.0 0.0 1.0 0.0
-geometryGroup sand_terrain.obj
+#geometryGroup sand_terrain.obj
 
 conffile default.conf
 

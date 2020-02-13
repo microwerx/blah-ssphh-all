@@ -1,3 +1,4 @@
+#include "pch.hpp"
 #include <camera_animation.hpp>
 
 void CameraAnimation::calcgraph(Vf::AnimPathWindowPtr& mw) {

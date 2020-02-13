@@ -1,8 +1,8 @@
+#include "pch.hpp"
 #include <fluxions_renderer_utilities.hpp>
 #include <ssphhapp.hpp>
 
-namespace SSPHH
-{
+namespace SSPHH {
 	void SSPHH_Application::SetupRenderGLES30() {
 		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
 		SSG_OptimizeClippingPlanes();
@@ -38,7 +38,7 @@ namespace SSPHH
 		if (Interface.drawSkyBox) {
 			RenderGLES30_SkyBox();
 		}
-		
+
 		if (Interface.drawPBR) {
 			RenderGLES30_SceneGraph();
 		}
@@ -46,10 +46,12 @@ namespace SSPHH
 		if (Interface.drawVIZ) {
 			RenderGLES30_VIZ();
 		}
-		
+
 		if (Interface.drawPOST) {
 			RenderGLES30_PostProcess();
 		}
+
+		auroraViz.RenderFrame(GetElapsedTime());
 
 		FxSetDefaultErrorMessage();
 	}
@@ -73,6 +75,9 @@ namespace SSPHH
 		if (rendererContext.renderers.count(renderername)) {
 			const std::string& renderconfigname = rendererContext.renderers[renderername].renderconfigname;
 			Fluxions::RenderImage(rendererContext, ssg, renderername, renderconfigname);
+			
+			//auto renderer = rendererContext.renderers[renderername];
+			//auroraViz.RenderFrame(renderer, (int)GetElapsedTime());
 		}
 
 		while (glGetError() != GL_NO_ERROR) HFLOGWARN("OpenGL Error");

@@ -1,3 +1,4 @@
+#include "pch.hpp"
 #include <ssphhapp.hpp>
 
 namespace SSPHH
@@ -13,6 +14,8 @@ namespace SSPHH
 		if (Interface.enableSunCycle) {
 			// one day in five minutes
 			Sun_AdvanceClock(deltaTime * 288.0);
+
+			auroraViz.OnUpdate(deltaTime);
 		}
 
 		//pbskyAge += deltaTime;

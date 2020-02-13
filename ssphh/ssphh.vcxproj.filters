@@ -105,6 +105,9 @@
     <ClInclude Include="include\tool_window.hpp">
       <Filter>Header Files\tools</Filter>
     </ClInclude>
+    <ClInclude Include="include\Header.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -234,6 +237,9 @@
       <Filter>Source Files\ssphh</Filter>
     </ClCompile>
     <ClCompile Include="src\ssphhapp_pathanim.cpp">
+      <Filter>Source Files\ssphh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AuroraVisualization.cpp">
       <Filter>Source Files\ssphh</Filter>
     </ClCompile>
   </ItemGroup>
