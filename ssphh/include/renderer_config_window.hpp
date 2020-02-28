@@ -1,9 +1,8 @@
 #ifndef SSPHHAPP_RENDERCONFIGS_HPP
 #define SSPHHAPP_RENDERCONFIGS_HPP
 
+#include <fluxions_renderer_config.hpp>
 #include <viperfish_window.hpp>
-
-class Fluxions::RendererContext;
 
 class RendererConfigWindow : public Vf::Window {
 public:
