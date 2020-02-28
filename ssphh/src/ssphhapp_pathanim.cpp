@@ -115,6 +115,8 @@ namespace SSPHH
 		case Vf::PathAnimActions::SaveAnimation:
 			PathAnim_SaveCameraPath(default_animation_path);
 			break;
+		default:
+			break;
 		}
 		if (animpath_window_ptr->action >= Vf::PathAnimActions::FragileOperation) {
 			animpath_window_ptr->action = Vf::PathAnimActions::None;

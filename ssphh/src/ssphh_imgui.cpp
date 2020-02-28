@@ -946,7 +946,7 @@ namespace SSPHH {
 						sspl.randomizePosition = true;
 					}
 
-					ImGui::Text("Name %s", sspl.name(), 32);
+					ImGui::Text("Name %s %d", sspl.name(), 32);
 					ImGui::Separator();
 					ImGui::Text("Shadow build time: %.1fms", sspl.depthSphlMap.buildTime);
 

@@ -113,7 +113,7 @@ void RendererConfigWindow::OnRenderDearImGui() {
 		ImGui::TextColored(Colors::Red, "RC '%s' program is not linked!", rc->name());
 	}
 	if (rc->rc_program_ptr->getInfoLog().size()) {
-		ImGui::TextColored(Colors::Yellow, rc->rc_program_ptr->getInfoLog().c_str());
+		ImGui::TextColored(Colors::Yellow, "%s", rc->rc_program_ptr->getInfoLog().c_str());
 	}
 	if (ImGui::TreeNode("Attached Shaders")) {
 		for (const auto& v : rc->rc_program_ptr->attachedShaders) {
@@ -123,7 +123,7 @@ void RendererConfigWindow::OnRenderDearImGui() {
 						v->name(),
 						v->status());
 			if (v->infoLog.size()) {
-				ImGui::TextColored(Colors::Yellow, v->infoLog.c_str());
+				ImGui::TextColored(Colors::Yellow, "%s", v->infoLog.c_str());
 			}
 		}
 		ImGui::TreePop();

@@ -44,9 +44,9 @@ void HelpWindow::OnRenderDearImGui() {
 
 	for (auto& [heading, key, desc] : lines) {
 		ImGui::PushStyleColor(ImGuiCol_Text, colors[heading]);
-		ImGui::Text(key.c_str());
+		ImGui::Text("%s", key.c_str());
 		ImGui::SameLine(gap);
-		ImGui::TextWrapped(desc.c_str());
+		ImGui::TextWrapped("%s", desc.c_str());
 		ImGui::PopStyleColor();
 	}
 

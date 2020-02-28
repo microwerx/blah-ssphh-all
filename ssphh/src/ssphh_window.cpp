@@ -40,7 +40,7 @@ void SsphhWindow::OnRenderDearImGui() {
 		app.Corona_GenerateSCN();
 	}
 	ImGuiAlignAt(buttonWidth, "ABCDEFGHIJKLMNOPQRS");
-	ImGui::Text(app.coronaScene.lastSCN.c_str());
+	ImGui::Text("%s", app.coronaScene.lastSCN.c_str());
 
 	if (ImGui::Button("HOSEK-WILKIE")) {
 		app.Sky_RegenCoronaSky();
