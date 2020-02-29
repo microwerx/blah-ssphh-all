@@ -67,11 +67,6 @@
 #include <GLFW_template.hpp>
 #include <GLUT_template.hpp>
 
-#ifndef FLUXIONS_NO_SDL
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#endif
-
 #include <fluxions.hpp>
 #include <viperfish.hpp>
 #include <viperfish_root_window.hpp>

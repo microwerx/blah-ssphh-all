@@ -13,7 +13,7 @@ public:
 	void OnRenderDearImGui() override;
 
 private:
-	Fluxions::RendererContext* context{ nullptr };
+	Fluxions::RendererContextPtr rendererContext;
 	float lastShadersLoadTime{ 0.0f };
 	float lastTextureLoadTime{ 0.0f };
 	float lastConfigsLoadTime{ 0.0f };

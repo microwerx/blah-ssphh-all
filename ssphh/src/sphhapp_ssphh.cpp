@@ -1,8 +1,7 @@
 #include "pch.hpp"
 #include <ssphhapp.hpp>
 
-namespace SSPHH
-{
+namespace SSPHH {
 	void SSPHH_Application::DirtySPHLs() {
 		int i = 0;
 		for (auto& sphl : ssgUserData->ssphhLights) {
@@ -14,10 +13,10 @@ namespace SSPHH
 	void SSPHH_Application::UpdateSPHLs() {
 		if (!coefs_init) {
 			geosphere.load("resources/models/icos4.txt");
-			//sphl.randomize();
-			//sphl.createMesh(geosphere);
-			//sphl.createLightProbe();
-			rendererContext.renderers["sph_renderer"].setSceneGraph(&ssg);
+			// sphl.randomize();
+			// sphl.createMesh(geosphere);
+			// sphl.createLightProbe();
+			rendererContext->renderers["sph_renderer"]->setSceneGraph(ssg);
 			coefs_init = true;
 		}
 
@@ -34,8 +33,8 @@ namespace SSPHH
 		int i = 0;
 		for (auto& sphl : ssgUserData->ssphhLights) {
 			if (sphl.randomize) {
-				//sphls[i].randomize();
-				//for (int lm = 0; lm < sphl.GetMaxCoefficients(); lm++)
+				// sphls[i].randomize();
+				// for (int lm = 0; lm < sphl.GetMaxCoefficients(); lm++)
 				//{
 				//	sphl.msph[0][lm] = sphls[i].v_coefs[Sphl::RedComponent][lm];
 				//	sphl.msph[1][lm] = sphls[i].v_coefs[Sphl::GreenComponent][lm];
@@ -55,7 +54,7 @@ namespace SSPHH
 				// Copy coefficients from the scene graph SPHL list
 				sphls[i].copyCoefficients(sphl, Interface.ssphh.MaxDegrees, Interface.ssphh.enableBasicShowSPHLs);
 				sphls[i].createMesh(geosphere);
-				//sphls[i].createLightProbe();
+				// sphls[i].createLightProbe();
 				sphl.dirty = false;
 				sphl.depthSphlMap.dirty = true;
 			}
@@ -76,45 +75,43 @@ namespace SSPHH
 
 			if (Interface.ssphh.enableShadowColorMap) {
 				sphls[i].lightProbeTexIds[0] = sphl.colorSphlMap.getTexture();
-			}
-			else {
+			} else {
 				sphls[i].lightProbeTexIds[0] = sphl.hierLightProbeTexture.getTexture();
 			}
 			sphls[i].lightProbeTexIds[1] = sphl.ptrcLightProbeTexture.getTexture();
 			sphls[i].lightProbeTexIds[2] = sphl.msphLightProbeTexture.getTexture();
 			i++;
 		}
-
 	}
 
 	void SSPHH_Application::RenderGLES30SPHLs() {
 		if (!Interface.ssphh.enableShowSPHLs)
 			return;
 		////RendererContext gl;
-		//RendererConfig& rc = rendererContext.rendererConfigs["default"];
+		// RendererConfig& rc = rendererContext.rendererConfigs["default"];
 		//// FIXME: Are we using rendererContext?
-		//rc.rc_program_ptr->reset();// = rendererContext.FindProgram("sphl", "sphl");
-		//rc.clearDepthBuffer = false;
-		//rc.clearColorBuffer = false;
-		//rc.enableBlend = false;
-		//rc.blendFuncSrcFactor = GL_SRC_ALPHA;
-		//rc.blendFuncDstFactor = GL_ONE;
+		// rc.rc_program_ptr->reset();// = rendererContext.FindProgram("sphl", "sphl");
+		// rc.clearDepthBuffer = false;
+		// rc.clearColorBuffer = false;
+		// rc.enableBlend = false;
+		// rc.blendFuncSrcFactor = GL_SRC_ALPHA;
+		// rc.blendFuncDstFactor = GL_ONE;
 
-		//if (!rc.shaderProgram) {
+		// if (!rc.shaderProgram) {
 		//	//HFLOGINFO("sphl shader not found");
 		//	return;
 		//}
 
-		//GLint vloc = rc.shaderProgram->getAttribLocation("aPosition");
-		//GLint tloc = rc.shaderProgram->getAttribLocation("aTexCoord");
+		// GLint vloc = rc.shaderProgram->getAttribLocation("aPosition");
+		// GLint tloc = rc.shaderProgram->getAttribLocation("aTexCoord");
 
 		//// BEGIN RENDER SPH
-		//RendererGLES30&sph_renderer = rendererContext.renderers["sph_renderer"];
-		//sph_renderer.setRenderConfig(&rc);
+		// RendererGLES30&sph_renderer = rendererContext.renderers["sph_renderer"];
+		// sph_renderer.setRenderConfig(&rc);
 		////auto program1 = rc.shaderProgram = rendererContext.FindProgram("sphl", "sphl");
 		////auto program2 = rc.shaderProgram = rendererContext.FindProgram("glut", "cubemap");
-		//sph_renderer.saveGLState();
-		//if (sph_renderer.applyRenderConfig()) {
+		// sph_renderer.saveGLState();
+		// if (sph_renderer.applyRenderConfig()) {
 		//	glActiveTexture(GL_TEXTURE0);
 		//	for (auto& it : sphls) {
 		//		auto& sphl = it.second;
@@ -126,8 +123,8 @@ namespace SSPHH
 
 		//		rc.shaderProgram->applyUniform("SPHL_LightProbeMode", (RendererUniform)0);
 		//		rc.shaderProgram->applyUniform("SPHL_NumDegrees", (RendererUniform)2);
-		//		rc.shaderProgram->applyUniform("SPHL_Coefs", RendererUniform(GL_FLOAT_VEC4, 9, GL_FALSE, (GLubyte*)sphl.coefs));
-		//		rc.shaderProgram->applyUniform("SPHL_LightProbe", (RendererUniform)0);
+		//		rc.shaderProgram->applyUniform("SPHL_Coefs", RendererUniform(GL_FLOAT_VEC4, 9, GL_FALSE,
+		//(GLubyte*)sphl.coefs)); 		rc.shaderProgram->applyUniform("SPHL_LightProbe", (RendererUniform)0);
 
 		//		Matrix4f worldMatrix;
 		//		worldMatrix.Translate(sphl.position.x, sphl.position.y, sphl.position.z);
@@ -170,7 +167,7 @@ namespace SSPHH
 		//	glActiveTexture(GL_TEXTURE0);
 		//}
 
-		//if (0) //(!Interface.ssphh.enableBasicShowSPHLs)
+		// if (0) //(!Interface.ssphh.enableBasicShowSPHLs)
 		//{
 		//	for (auto& sphl : ssgUserData->ssphhLights) {
 		//		double S = 0.25;
@@ -236,7 +233,7 @@ namespace SSPHH
 		//		FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 		//	}
 		//}
-		//sph_renderer.restoreGLState();
+		// sph_renderer.restoreGLState();
 	}
 
 	void SSPHH_Application::RenderGL11Hierarchies() {
@@ -244,9 +241,11 @@ namespace SSPHH
 			glMatrixMode(GL_PROJECTION);
 			glPushMatrix();
 			glLoadIdentity();
-			glMultMatrixf(rendererContext.rendererConfigs["default"].projectionMatrix.const_ptr());
-			glMultMatrixf(rendererContext.rendererConfigs["default"].cameraMatrix.const_ptr());
-
+			auto& rc = rendererContext->rendererConfigs["default"];
+			if (rc) {
+				glMultMatrixf(rc->projectionMatrix.const_ptr());
+				glMultMatrixf(rc->cameraMatrix.const_ptr());
+			}
 			glMatrixMode(GL_MODELVIEW);
 			glPushMatrix();
 			glLoadIdentity();
@@ -293,7 +292,7 @@ namespace SSPHH
 				vertices.push_back(v2);
 			}
 
-			//glLineWidth(4.0f);
+			// glLineWidth(4.0f);
 			glEnable(GL_LINE_SMOOTH);
 			glBegin(GL_LINES);
 			for (auto& v : vertices) {
@@ -301,7 +300,7 @@ namespace SSPHH
 				glVertex3fv(v.aPosition.const_ptr());
 			}
 			glEnd();
-			//glLineWidth(1.0f);
+			// glLineWidth(1.0f);
 			glDisable(GL_LINE_SMOOTH);
 
 			glPopMatrix();
@@ -310,16 +309,16 @@ namespace SSPHH
 			glMatrixMode(GL_MODELVIEW);
 		}
 
-		//glMatrixMode(GL_PROJECTION);
-		//glPushMatrix();
-		//glLoadIdentity();
-		//glMultMatrixf(rc.projectionMatrix.const_ptr());
-		//glMultMatrixf(rc.cameraMatrix_.const_ptr());
+		// glMatrixMode(GL_PROJECTION);
+		// glPushMatrix();
+		// glLoadIdentity();
+		// glMultMatrixf(rc.projectionMatrix.const_ptr());
+		// glMultMatrixf(rc.cameraMatrix_.const_ptr());
 
-		//glMatrixMode(GL_MODELVIEW);
-		//glPushMatrix();
-		//glLoadIdentity();
-		//for (auto & it : sphls)
+		// glMatrixMode(GL_MODELVIEW);
+		// glPushMatrix();
+		// glLoadIdentity();
+		// for (auto & it : sphls)
 		//{
 		//	auto & sphl = it.second;
 		//	if (!sphl.enabled) continue;
@@ -329,10 +328,10 @@ namespace SSPHH
 		//	FxDrawGL1SolidSphere(1.0, 16, 16);
 		//	glPopMatrix();
 		//}
-		//glPopMatrix();
-		//glMatrixMode(GL_PROJECTION);
-		//glPopMatrix();
-		//glMatrixMode(GL_MODELVIEW);
+		// glPopMatrix();
+		// glMatrixMode(GL_PROJECTION);
+		// glPopMatrix();
+		// glMatrixMode(GL_MODELVIEW);
 	}
 
-}
+} // namespace SSPHH

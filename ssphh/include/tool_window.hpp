@@ -14,7 +14,7 @@ public:
 
 
 private:
-	Fluxions::SimpleSceneGraph* ssg{ nullptr };
+	Fluxions::SimpleSceneGraphPtr ssg;
 };
 
 using ToolWindowPtr = std::shared_ptr<ToolWindow>;

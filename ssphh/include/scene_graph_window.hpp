@@ -13,7 +13,7 @@ public:
 
 
 private:
-	Fluxions::SimpleSceneGraph* ssg{ nullptr };
+	Fluxions::SimpleSceneGraphPtr ssg;
 };
 
 using SceneGraphWindowPtr = std::shared_ptr<SceneGraphWindow>;

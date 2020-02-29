@@ -9,38 +9,38 @@ RendererConfigWindow::~RendererConfigWindow() {}
 
 void RendererConfigWindow::OnUpdate(double timestamp) {
 	if (!ssphh_widget_ptr) {
-		context = nullptr;
+		rendererContext = nullptr;
 		return;
 	}
 
 	Vf::Window::OnUpdate(timestamp);
 
-	if (context != &ssphh_widget_ptr->rendererContext)
-		context = &ssphh_widget_ptr->rendererContext;
+	if (rendererContext != ssphh_widget_ptr->rendererContext)
+		rendererContext = ssphh_widget_ptr->rendererContext;
 
-	if (!context) return;
+	if (!rendererContext) return;
 
-	if (renderConfigList.size() != context->rendererConfigs.size()) {
+	if (renderConfigList.size() != rendererContext->rendererConfigs.size()) {
 		rc = nullptr;
 		renderConfigList.clear();
 	}
-	renderConfigList.resize(context->rendererConfigs.size());
+	renderConfigList.resize(rendererContext->rendererConfigs.size());
 	int i = 0;
-	for (const auto& [k, v] : context->rendererConfigs) {
-		renderConfigList[i++] = v.name();
+	for (const auto& [k, v] : rendererContext->rendererConfigs) {
+		renderConfigList[i++] = v->name();
 	}
 	if (curRendererConfigIndex >= renderConfigList.size()) {
 		rc = nullptr;
 		curRendererConfigIndex = 0;
 	}
 	else {
-		rc = context->getRendererConfig(renderConfigList[curRendererConfigIndex]);
+		rc = rendererContext->getRendererConfig(renderConfigList[curRendererConfigIndex]);
 	}
 }
 
 void RendererConfigWindow::OnRenderDearImGui() {
-	if (!context) return;
-	if (renderConfigList.size() != context->rendererConfigs.size()) {
+	if (!rendererContext) return;
+	if (renderConfigList.size() != rendererContext->rendererConfigs.size()) {
 		return;
 	}
 	if (!beginWindow()) return;

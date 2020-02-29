@@ -104,9 +104,9 @@ public:
 	std::string worker_endpoint = "tcp://127.0.0.1:9081";
 	std::string client_endpoint = "tcp://127.0.0.1:9081";
 
-	void Lock() { uf_mutex.lock(); }
-	bool TryLock() { return uf_mutex.try_lock(); }
-	void Unlock() { uf_mutex.unlock(); }
+	inline void Lock() { uf_mutex.lock(); }
+	inline bool TryLock() { return uf_mutex.try_lock(); }
+	inline void Unlock() { uf_mutex.unlock(); }
 
 	void LockRead() { Lock(); }
 	bool TryLockRead() { return TryLock(); }

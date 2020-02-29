@@ -1,4 +1,5 @@
 #include "pch.hpp"
+#include <fluxions_image_loader.hpp>
 #include <ssphhapp.hpp>
 
 namespace SSPHH
@@ -7,6 +8,8 @@ namespace SSPHH
 		Widget::OnUpdate(timeStamp);
 		double deltaTime = GetFrameTime();
 		framesPerSecond = 1.0 / deltaTime;
+
+		Fluxions::UpdateAsyncs();
 
 		Hf::StopWatch stopwatch;
 		DoInterfaceUpdate(deltaTime);
@@ -24,9 +27,9 @@ namespace SSPHH
 		//	pbskyAge = 0.0;
 		//}
 
-		ssg.environment.Update(ssg.getBoundingBox());
+		ssg->environment.Update(ssg->getBoundingBox());
 		if (Interface.recomputeSky) {
-			ssg.environment.ComputePBSky();
+			ssg->environment.ComputePBSky();
 			Interface.recomputeSky = false;
 		}
 
@@ -44,7 +47,7 @@ namespace SSPHH
 
 			//Interface.preCameraMatrix
 
-			//	for (auto geoIt = ssg.geometryGroups_.begin(); geoIt != ssg.geometryGroups_.end(); geoIt++)
+			//	for (auto geoIt = ssg->geometryGroups_.begin(); geoIt != ssg->geometryGroups_.end(); geoIt++)
 			//	{
 			//		if (geoIt->second.objectName == "teapot")
 			//		{
@@ -72,14 +75,14 @@ namespace SSPHH
 		}
 
 		//GLuint defaultCubeSamplerId = rendererContext.samplers["defaultCube"].getId();
-		//ssg.environment.pbskyColorMapSamplerId = defaultCubeSamplerId;
-		//ssg.environment.enviroColorMapSamplerId = defaultCubeSamplerId;
-		//ssg.environment.sunColorMapSamplerId = defaultCubeSamplerId;
-		//ssg.environment.sunDepthMapSamplerId = defaultCubeSamplerId;
+		//ssg->environment.pbskyColorMapSamplerId = defaultCubeSamplerId;
+		//ssg->environment.enviroColorMapSamplerId = defaultCubeSamplerId;
+		//ssg->environment.sunColorMapSamplerId = defaultCubeSamplerId;
+		//ssg->environment.sunDepthMapSamplerId = defaultCubeSamplerId;
 
 		stopwatch.Stop();
 		my_hud_info.onUpdateTime = stopwatch.GetMillisecondsElapsed();
-		my_hud_info.pbskyTime = ssg.environment.LastSkyGenTime();
+		my_hud_info.pbskyTime = ssg->environment.LastSkyGenTime();
 
 		if (Interface.saveCoronaSCN) {
 			Interface.saveCoronaSCN = false;
@@ -88,7 +91,7 @@ namespace SSPHH
 
 		if (Interface.saveCoronaCubeMapSCN) {
 			Interface.saveCoronaCubeMapSCN = false;
-			Vector3f cameraPosition = ssg.camera.origin();
+			Vector3f cameraPosition = ssg->camera.origin();
 			coronaScene.writeCubeMapSCN("output_cubemap.scn", ssg, cameraPosition);
 		}
 
@@ -158,8 +161,8 @@ namespace SSPHH
 		double mdy = mousemvmt ? mouse.dragStates[0].currentDelta.y : 0.0;
 
 		Vector2f dimensions{
-			(float)rendererContext.getDeferredRect().w,
-			(float)rendererContext.getDeferredRect().h
+			(float)rendererContext->getDeferredRect().w,
+			(float)rendererContext->getDeferredRect().h
 		};
 		double rectLength = dimensions.length();
 		double scale = -180.0 / rectLength;
@@ -223,7 +226,7 @@ namespace SSPHH
 		Interface.preCameraMatrix.MultMatrix(trans);
 		Interface.inversePreCameraMatrix = Interface.preCameraMatrix.AsInverse();
 
-		ssg.camera.fov = Interface.ssg.cameraFOV;
+		ssg->camera.fov = Interface.ssg.cameraFOV;
 
 		Interface.postCameraMatrix.LoadIdentity();
 		//Interface.postCameraMatrix.Translate(0.0f, 0.0f, Interface.cameraOrbit.z);
@@ -234,12 +237,12 @@ namespace SSPHH
 		Interface.postCameraMatrix.Translate(0.0f, 0.0f, Interface.cameraOrbit.z);
 		Interface.inversePostCameraMatrix = Interface.postCameraMatrix.AsInverse();
 
-		Interface.finalCameraMatrix = Interface.preCameraMatrix * ssg.camera.viewMatrix() * Interface.postCameraMatrix;
+		Interface.finalCameraMatrix = Interface.preCameraMatrix * ssg->camera.viewMatrix() * Interface.postCameraMatrix;
 		Interface.inverseFinalCameraMatrix = Interface.finalCameraMatrix.AsInverse();
 		Interface.cameraPosition = Interface.finalCameraMatrix.col4();
 
-		float pbskyLatitude = ssg.environment.pbsky.GetLatitude();
-		float pbskyLongitude = ssg.environment.pbsky.GetLongitude();
+		float pbskyLatitude = ssg->environment.pbsky.GetLatitude();
+		float pbskyLongitude = ssg->environment.pbsky.GetLongitude();
 
 		if (Interface.increaseLatitude) {
 			pbskyLatitude += 5.0f * (float)deltaTime;
@@ -255,7 +258,7 @@ namespace SSPHH
 		}
 
 		if (Interface.increaseLatitude || Interface.decreaseLatitude || Interface.increaseLongitude || Interface.decreaseLongitude) {
-			ssg.environment.pbsky.SetLocation(pbskyLatitude, pbskyLongitude);
+			ssg->environment.pbsky.SetLocation(pbskyLatitude, pbskyLongitude);
 			Sun_AdvanceClock(0.0, true);
 		}
 	}

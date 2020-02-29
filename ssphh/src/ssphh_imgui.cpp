@@ -1,18 +1,18 @@
 #include "pch.hpp"
-#include <viperfish_dear_imgui.hpp>
-#include <ssphhapp.hpp>
-#include <unicornfish_corona_scene_file.hpp>
-#include <unicornfish_corona_job.hpp>
 #include <fluxions_ssphh.hpp>
 #include <fluxions_ssphh_utilities.hpp>
+#include <ssphhapp.hpp>
+#include <unicornfish_corona_job.hpp>
+#include <unicornfish_corona_scene_file.hpp>
+#include <viperfish_dear_imgui.hpp>
 
 using namespace Fluxions;
 
 static const int AllBands = -100;
 static const int AllDegrees = -1;
 
-//static float imguiWinX = 64.0f;
-//static float imguiWinW = 384.0f;
+// static float imguiWinX = 64.0f;
+// static float imguiWinW = 384.0f;
 
 #ifdef __APPLE__
 #define __unix__
@@ -24,7 +24,7 @@ auto DeleteFile = unlink;
 
 Uf::CoronaSceneFile coronaScene;
 
-//struct COLORS
+// struct COLORS
 //{
 //	ImVec4 Red = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
 //	ImVec4 Green = ImVec4(0.0f, 1.0f, 0.0f, 1.0f);
@@ -36,41 +36,40 @@ Uf::CoronaSceneFile coronaScene;
 //	ImVec4 White = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 //} Colors;
 
-static const std::string DebugShaderChoices[21] = {
-	" 0 - Default",
-	" 1 - Kd - Material Diffuse Color",
-	" 2 - Ks - Material Specular Color",
-	" 3 - N - Material Normal Map",
-	" 4 - V - View Vector",
-	" 5 - R - Reflection Vector",
-	" 6 - L - Light Vector",
-	" 7 - H - Half Vector",
-	" 8 - N.L - I/pi * N.L",
-	" 9 - Mobile BRDF 1",
-	"10 - Mobile BRDF 2 + c_e",
-	"11 - BRDF Diffuse Only",
-	"12 - BRDF Specular Only",
-	"13 - BRDF Environment Only",
-	"14 - BRDF in toto",
-	"15 - BRDF in toto + c_e",
-	"16 - BRDF in toto + c_e + c_a",
-	"17 - Closest SPHL only + Sun",
-	"18 - N.L + shadow",
-	"19 - ",
-	"20 - " };
+static const std::string DebugShaderChoices[21] = { " 0 - Default",
+													" 1 - Kd - Material Diffuse Color",
+													" 2 - Ks - Material Specular Color",
+													" 3 - N - Material Normal Map",
+													" 4 - V - View Vector",
+													" 5 - R - Reflection Vector",
+													" 6 - L - Light Vector",
+													" 7 - H - Half Vector",
+													" 8 - N.L - I/pi * N.L",
+													" 9 - Mobile BRDF 1",
+													"10 - Mobile BRDF 2 + c_e",
+													"11 - BRDF Diffuse Only",
+													"12 - BRDF Specular Only",
+													"13 - BRDF Environment Only",
+													"14 - BRDF in toto",
+													"15 - BRDF in toto + c_e",
+													"16 - BRDF in toto + c_e + c_a",
+													"17 - Closest SPHL only + Sun",
+													"18 - N.L + shadow",
+													"19 - ",
+													"20 - " };
 
-#define NEWLINE_SEPARATOR \
-	ImGui::Separator();   \
+#define NEWLINE_SEPARATOR                                                                                              \
+	ImGui::Separator();                                                                                                \
 	ImGui::NewLine();
-#define SEPARATOR_NEWLINE \
-	ImGui::NewLine();     \
+#define SEPARATOR_NEWLINE                                                                                              \
+	ImGui::NewLine();                                                                                                  \
 	ImGui::Separator();
 
 namespace SSPHH {
 	void SSPHH_Application::InitImGui() {
-		//ImGuiIO& io = ImGui::GetIO();
-		//io.Fonts->AddFontDefault();
-		//io.Fonts->AddFontFromFileTTF("resources/fonts/dock-medium.otf", 16.0f);
+		// ImGuiIO& io = ImGui::GetIO();
+		// io.Fonts->AddFontDefault();
+		// io.Fonts->AddFontFromFileTTF("resources/fonts/dock-medium.otf", 16.0f);
 	}
 
 	void SSPHH_Application::RenderImGuiHUD() {
@@ -90,7 +89,7 @@ namespace SSPHH {
 		imguiShowTestWindow();
 		vcPbsky->show();
 
-		//ImGui::ShowUserGuide();
+		// ImGui::ShowUserGuide();
 	}
 
 	void SSPHH_Application::imguiShowMenuBar() {
@@ -182,7 +181,7 @@ namespace SSPHH {
 		// T O O L   W I N D O W //////////////////////////////////
 		///////////////////////////////////////////////////////////
 
-		//ImGui::SetNextWindowSize(ImVec2(320, 200));
+		// ImGui::SetNextWindowSize(ImVec2(320, 200));
 		ImGui::SetNextWindowContentSize({ imguiWinW, -1 });
 		ImGui::SetNextWindowPos(ImVec2(imguiWinX, 64));
 		ImGui::Begin("Tool Window");
@@ -221,7 +220,7 @@ namespace SSPHH {
 		ImGui::Checkbox("Render Config", &Interface.tools.showRenderConfigWindow);
 		ImGui::Checkbox("Tests", &Interface.tools.showTestsWindow);
 		ImGui::SameLine();
-		ImGui::Checkbox("Debug view", &(rendererContext.rendererConfigs["default"].enableDebugView));
+		ImGui::Checkbox("Debug view", &(rendererContext->rendererConfigs["default"]->enableDebugView));
 		ImGui::Checkbox("Sphl Editor", &Interface.tools.showSphlEditor);
 		ImGui::PushID(1234);
 		ImGui::SameLine();
@@ -259,8 +258,8 @@ namespace SSPHH {
 
 		ImGui::Separator();
 
-		ImGui::DragFloat("Exposure", &ssg.environment.toneMapExposure(), 0.1f, -12.0f, 12.0f, "%.1f");
-		ImGui::DragFloat("Gamma", &ssg.environment.toneMapGamma(), 0.1f, 1.0f, 6.0f, "%.1f");
+		ImGui::DragFloat("Exposure", &ssg->environment.toneMapExposure(), 0.1f, -12.0f, 12.0f, "%.1f");
+		ImGui::DragFloat("Gamma", &ssg->environment.toneMapGamma(), 0.1f, 1.0f, 6.0f, "%.1f");
 
 		ImGui::Separator();
 
@@ -302,11 +301,16 @@ namespace SSPHH {
 		}
 
 		ImGui::Separator();
-		ImGui::Text("CAMERA POS: % 3.2f/% 3.2f/ % 3.2f", Interface.cameraPosition.x, Interface.cameraPosition.y, Interface.cameraPosition.z);
-		ImGui::Text("CAMERA POS: % 3.2f/% 3.2f/ % 3.2f",
-					rendererContext.rendererConfigs["default"].cameraPosition.x,
-					rendererContext.rendererConfigs["default"].cameraPosition.y,
-					rendererContext.rendererConfigs["default"].cameraPosition.z);
+		ImGui::Text(
+			"CAMERA POS: % 3.2f/% 3.2f/ % 3.2f",
+			Interface.cameraPosition.x,
+			Interface.cameraPosition.y,
+			Interface.cameraPosition.z);
+		ImGui::Text(
+			"CAMERA POS: % 3.2f/% 3.2f/ % 3.2f",
+			rendererContext->rendererConfigs["default"]->cameraPosition.x,
+			rendererContext->rendererConfigs["default"]->cameraPosition.y,
+			rendererContext->rendererConfigs["default"]->cameraPosition.z);
 		if (ImGui::SmallButton("LoadIdentity()")) {
 			Interface.preCameraMatrix.LoadIdentity();
 		}
@@ -363,10 +367,25 @@ namespace SSPHH {
 		}
 
 		ImGui::TextColored(Colors::Yellow, "Sun: ");
-		ImGui::TextColored(Colors::Yellow, "%0.4fi %0.4fj %0.4fk", ssg.environment.curSunDirTo.x, ssg.environment.curSunDirTo.y, ssg.environment.curSunDirTo.z);
-		//ImGui::TextColored(Colors::Yellow, "Shadow map time: %.3fms", ssg.environment.sunShadowMapTime);
-		ImGui::TextColored(Colors::Yellow, "Sun: %3.1f %3.1f %3.1f", ssg.environment.curSunDiskRadiance.r, ssg.environment.curSunDiskRadiance.g, ssg.environment.curSunDiskRadiance.b);
-		ImGui::TextColored(Colors::Red, "Gnd: %3.1f %3.1f %3.1f", ssg.environment.curGroundRadiance.r, ssg.environment.curGroundRadiance.g, ssg.environment.curGroundRadiance.b);
+		ImGui::TextColored(
+			Colors::Yellow,
+			"%0.4fi %0.4fj %0.4fk",
+			ssg->environment.curSunDirTo.x,
+			ssg->environment.curSunDirTo.y,
+			ssg->environment.curSunDirTo.z);
+		// ImGui::TextColored(Colors::Yellow, "Shadow map time: %.3fms", ssg->environment.sunShadowMapTime);
+		ImGui::TextColored(
+			Colors::Yellow,
+			"Sun: %3.1f %3.1f %3.1f",
+			ssg->environment.curSunDiskRadiance.r,
+			ssg->environment.curSunDiskRadiance.g,
+			ssg->environment.curSunDiskRadiance.b);
+		ImGui::TextColored(
+			Colors::Red,
+			"Gnd: %3.1f %3.1f %3.1f",
+			ssg->environment.curGroundRadiance.r,
+			ssg->environment.curGroundRadiance.g,
+			ssg->environment.curGroundRadiance.b);
 		ImGui::Checkbox("Sun Cycle", &Interface.enableSunCycle);
 		ImGui::SameLine();
 		if (ImGui::SmallButton("+ 1hr")) {
@@ -386,16 +405,14 @@ namespace SSPHH {
 		if (ImGui::Button("Show SPHs")) {
 			if (counter != 0) {
 				counter = 0;
-			}
-			else {
+			} else {
 				counter = -1;
 			}
 		}
 		if (ImGui::Button("Show Sun Shadow Map")) {
 			if (counter != 1) {
 				counter = 1;
-			}
-			else {
+			} else {
 				counter = -1;
 			}
 		}
@@ -403,16 +420,14 @@ namespace SSPHH {
 
 			if (counter != 2) {
 				counter = 2;
-			}
-			else {
+			} else {
 				counter = -1;
 			}
 		}
 		if (ImGui::Button("Show Enviro Cube Map")) {
 			if (counter != 3) {
 				counter = 3;
-			}
-			else {
+			} else {
 				counter = -1;
 			}
 		}
@@ -447,9 +462,14 @@ namespace SSPHH {
 			ImGui::Text("GL_VERSION:  %s", Interface.tools.gl_version.c_str());
 			ImGui::Text("GL_EXTENSIONS: %d", (int)Interface.tools.gl_extensions.size());
 			if (!Interface.tools.gl_extensions.empty()) {
-				//ImGui::SetNext
+				// ImGui::SetNext
 				ImGui::PushItemWidth(imguiWinW - 16);
-				ImGui::ListBox("##empty", &Interface.tools.gl_extensions_curitem, &Interface.tools.gl_extensions_cstr[0], (int)Interface.tools.gl_extensions.size(), 16);
+				ImGui::ListBox(
+					"##empty",
+					&Interface.tools.gl_extensions_curitem,
+					&Interface.tools.gl_extensions_cstr[0],
+					(int)Interface.tools.gl_extensions.size(),
+					16);
 				ImGui::PopItemWidth();
 			}
 		}
@@ -464,51 +484,50 @@ namespace SSPHH {
 		}
 		ImGui::SetNextWindowPos(ImVec2(imguiWinX + imguiWinW + 32, 64));
 		ImGui::Begin("Render Configuration");
-		ImGui::Checkbox("Debug view", &rendererContext.rendererConfigs["default"].enableDebugView);
-		ImGui::Checkbox("Depth Test", &rendererContext.rendererConfigs["default"].enableDepthTest);
-		ImGui::Checkbox("Blend", &rendererContext.rendererConfigs["default"].enableBlend);
-		ImGui::Checkbox("Cull Face", &rendererContext.rendererConfigs["default"].enableCullFace);
-		ImGui::Checkbox("sRGB Framebuffer", &rendererContext.rendererConfigs["default"].enableSRGB);
-		ImGui::Checkbox("Shadow color buffer", &rendererContext.rendererConfigs["default"].enableZColorBuffer);
+		auto& rc = rendererContext->rendererConfigs["default"];
+		ImGui::Checkbox("Debug view", &rc->enableDebugView);
+		ImGui::Checkbox("Depth Test", &rc->enableDepthTest);
+		ImGui::Checkbox("Blend", &rc->enableBlend);
+		ImGui::Checkbox("Cull Face", &rc->enableCullFace);
+		ImGui::Checkbox("sRGB Framebuffer", &rc->enableSRGB);
+		ImGui::Checkbox("Shadow color buffer", &rc->enableZColorBuffer);
 		ImGui::Separator();
-		ImGui::Text("ZNEAR: % .3f / ZFAR % .3f",
-					rendererContext.rendererConfigs["default"].viewportZNear,
-					rendererContext.rendererConfigs["default"].viewportZFar);
+		ImGui::Text("ZNEAR: % .3f / ZFAR % .3f", rc->viewportZNear, rc->viewportZFar);
 
 		// TODO: Fix DirToLight Shadows
-		//ImGui::Separator();
-		//ImGui::Text("Sun Shadows");
-		//ImGui::Text("ZNEAR: % .3f / ZFAR % .3f",
+		// ImGui::Separator();
+		// ImGui::Text("Sun Shadows");
+		// ImGui::Text("ZNEAR: % .3f / ZFAR % .3f",
 		//			rendererContext.rendererConfigs["rectShadow"].viewportZNear,
 		//			rendererContext.rendererConfigs["rectShadow"].viewportZFar);
-		//ImGui::SliderInt("2^N", &Interface.renderconfig.sunShadowMapSizeChoice, 6, 12);
-		//ImGui::SameLine();
-		//ImGui::Text("= %d", 2 << Interface.renderconfig.sunShadowMapSizeChoice);
-		//Interface.renderconfig.sunShadowMapSize = 2 << Interface.renderconfig.sunShadowMapSizeChoice;
-		//ImGui::SliderFloat("Shadow Map Zoom", &ssg.environment.sunShadowMapZoom, 0.1f, 2.0f);
-		//Vector2f before = ssg.environment.sunShadowMapOffset;
-		//ImGui::SliderFloat2("Offset", ssg.environment.sunShadowMapOffset.ptr(), -20.0f, 20.0f);
-		//if (before != ssg.environment.sunShadowMapOffset) {
+		// ImGui::SliderInt("2^N", &Interface.renderconfig.sunShadowMapSizeChoice, 6, 12);
+		// ImGui::SameLine();
+		// ImGui::Text("= %d", 2 << Interface.renderconfig.sunShadowMapSizeChoice);
+		// Interface.renderconfig.sunShadowMapSize = 2 << Interface.renderconfig.sunShadowMapSizeChoice;
+		// ImGui::SliderFloat("Shadow Map Zoom", &ssg.environment.sunShadowMapZoom, 0.1f, 2.0f);
+		// Vector2f before = ssg->environment.sunShadowMapOffset;
+		// ImGui::SliderFloat2("Offset", ssg->environment.sunShadowMapOffset.ptr(), -20.0f, 20.0f);
+		// if (before != ssg->environment.sunShadowMapOffset) {
 		//	ssg.environment.Update(ssg.getBoundingBox());
 		//}
-		//ImGui::SameLine();
-		//if (ImGui::Button("0")) {
+		// ImGui::SameLine();
+		// if (ImGui::Button("0")) {
 		//	ssg.environment.sunShadowMapZoom = 1.0;
 		//	ssg.environment.sunShadowMapOffset.reset();
 		//}
-		//ImGui::SameLine();
-		//if (ImGui::Button("!")) {
+		// ImGui::SameLine();
+		// if (ImGui::Button("!")) {
 		//	ssg.environment.Update(ssg.getBoundingBox());
 		//}
-		//ImGui::Checkbox("Shadow Cull Face", &rendererContext.rendererConfigs["rectShadow"].enableCullFace);
-		//static bool frontOrBack = true;
-		//ImGui::Checkbox("Shadow Cull Front/Back", &frontOrBack);
-		//if (frontOrBack)
+		// ImGui::Checkbox("Shadow Cull Face", &rendererContext.rendererConfigs["rectShadow"].enableCullFace);
+		// static bool frontOrBack = true;
+		// ImGui::Checkbox("Shadow Cull Front/Back", &frontOrBack);
+		// if (frontOrBack)
 		//	rendererContext.rendererConfigs["rectShadow"].cullFaceMode = GL_FRONT;
-		//else
+		// else
 		//	rendererContext.rendererConfigs["rectShadow"].cullFaceMode = GL_BACK;
-		//ImGui::SameLine();
-		//ImGui::Text("%s", frontOrBack ? "Front" : "Back");
+		// ImGui::SameLine();
+		// ImGui::Text("%s", frontOrBack ? "Front" : "Back");
 
 		ImGui::Separator();
 
@@ -534,15 +553,21 @@ namespace SSPHH {
 			static int sceneNumber = 0;
 			static char scenenameBuffer[128];
 			static const char* scenes = "test_indoor_scene\0test_outside_scene\0test_mitsuba_scene\0\0";
-			//static const char *scenes = "indoor\0outside\0mitsuba\0\0";
+			// static const char *scenes = "indoor\0outside\0mitsuba\0\0";
 			int lastSceneNumber = sceneNumber;
 			ImGui::Combo("Scene", &sceneNumber, scenes);
 
-			if (ImGui::Button("Reset")) { Interface.ssg.resetScene = true; }
+			if (ImGui::Button("Reset")) {
+				Interface.ssg.resetScene = true;
+			}
 			ImGui::SameLine();
-			if (ImGui::Button("Save")) { Interface.ssg.saveScene = true; }
+			if (ImGui::Button("Save")) {
+				Interface.ssg.saveScene = true;
+			}
 			ImGui::SameLine();
-			if (ImGui::Button("Load")) { Interface.ssg.loadScene = true; }
+			if (ImGui::Button("Load")) {
+				Interface.ssg.loadScene = true;
+			}
 			if (lastSceneNumber != sceneNumber) {
 				switch (sceneNumber) {
 				case 0:
@@ -572,57 +597,100 @@ namespace SSPHH {
 				ReloadRenderConfigs();
 			}
 			ImGui::Text("Load time: %3.2f msec", Interface.lastRenderConfigLoadTime);
-			BoundingBoxf sceneBBox = ssg.getBoundingBox();
-			Vector3f sceneMin(trunc(sceneBBox.minBounds.x - 0.5f), trunc(sceneBBox.minBounds.x - 0.5f), trunc(sceneBBox.minBounds.z - 0.5f));
-			Vector3f sceneMax(trunc(sceneBBox.maxBounds.x + 0.5f), trunc(sceneBBox.maxBounds.y + 0.5f), trunc(sceneBBox.maxBounds.z + 0.5f));
+			BoundingBoxf sceneBBox = ssg->getBoundingBox();
+			Vector3f sceneMin(
+				trunc(sceneBBox.minBounds.x - 0.5f),
+				trunc(sceneBBox.minBounds.x - 0.5f),
+				trunc(sceneBBox.minBounds.z - 0.5f));
+			Vector3f sceneMax(
+				trunc(sceneBBox.maxBounds.x + 0.5f),
+				trunc(sceneBBox.maxBounds.y + 0.5f),
+				trunc(sceneBBox.maxBounds.z + 0.5f));
 			Vector3f sceneSize(trunc(sceneBBox.X() + 0.5f), trunc(sceneBBox.Y() + 0.5f), trunc(sceneBBox.Z() + 0.5f));
-			ImGui::Text("scene dimensions (%.1f %.1f %.1f)/(%.1f, %.1f, %.1f) [%.1f, %.1f, %.1f]",
-						sceneMin.x, sceneMin.y, sceneMin.z,
-						sceneMax.x, sceneMax.y, sceneMax.z,
-						sceneSize.x, sceneSize.y, sceneSize.z);
+			ImGui::Text(
+				"scene dimensions (%.1f %.1f %.1f)/(%.1f, %.1f, %.1f) [%.1f, %.1f, %.1f]",
+				sceneMin.x,
+				sceneMin.y,
+				sceneMin.z,
+				sceneMax.x,
+				sceneMax.y,
+				sceneMax.z,
+				sceneSize.x,
+				sceneSize.y,
+				sceneSize.z);
 
 			ImGui::Checkbox("Environment", &Interface.ssg.showEnvironment);
 			if (Interface.ssg.showEnvironment) {
-				//ImGui::Checkbox("Environment Details", &Interface.ssg.showEnvironmentDetails);
-				//if (Interface.ssg.showEnvironmentDetails) {
+				// ImGui::Checkbox("Environment Details", &Interface.ssg.showEnvironmentDetails);
+				// if (Interface.ssg.showEnvironmentDetails) {
 				//	NEWLINE_SEPARATOR
-				//	ImGui::Text("sunColorMap      Unit/Id/SamplerId: %2d/%2d/%2d", ssg.environment.sunColorMapUnit, ssg.environment.sunColorMapId, ssg.environment.sunColorMapSamplerId);
-				//	ImGui::Text("sunDepthMap      Unit/Id/SamplerId: %2d/%2d/%2d", ssg.environment.sunDepthMapUnit, ssg.environment.sunDepthMapId, ssg.environment.sunDepthMapSamplerId);
-				//	ImGui::Text("enviroColorMap   Unit/Id/SamplerId: %2d/%2d/%2d", ssg.environment.enviroColorMapUnit, ssg.environment.enviroColorMapId, ssg.environment.enviroColorMapSamplerId);
-				//	ImGui::Text("enviroDepthMap   Unit/Id/SamplerId: %2d/%2d/%2d", ssg.environment.enviroDepthMapUnit, ssg.environment.enviroDepthMapId, ssg.environment.enviroDepthMapSamplerId);
-				//	ImGui::Text("pbskyColorMap    Unit/Id/SamplerId: %2d/%2d/%2d", ssg.environment.pbskyColorMapUnit, ssg.environment.pbskyColorMapId, ssg.environment.pbskyColorMapSamplerId);
-				//	ImGui::Text("shadow map: znear: %.1f, zfar: %0.1f, origin(%.1f, %.1f, %.1f), target(%.1f, %.1f, %.1f), up(%.2f, %.2f, %.2f)",
+				//	ImGui::Text("sunColorMap      Unit/Id/SamplerId: %2d/%2d/%2d", ssg->environment.sunColorMapUnit,
+				// ssg->environment.sunColorMapId, ssg->environment.sunColorMapSamplerId); 	ImGui::Text("sunDepthMap
+				// Unit/Id/SamplerId: %2d/%2d/%2d", ssg->environment.sunDepthMapUnit, ssg->environment.sunDepthMapId,
+				// ssg->environment.sunDepthMapSamplerId); 	ImGui::Text("enviroColorMap   Unit/Id/SamplerId:
+				// %2d/%2d/%2d", ssg->environment.enviroColorMapUnit, ssg->environment.enviroColorMapId,
+				// ssg->environment.enviroColorMapSamplerId); 	ImGui::Text("enviroDepthMap   Unit/Id/SamplerId:
+				//%2d/%2d/%2d", ssg->environment.enviroDepthMapUnit, ssg->environment.enviroDepthMapId,
+				// ssg->environment.enviroDepthMapSamplerId); 	ImGui::Text("pbskyColorMap    Unit/Id/SamplerId:
+				//%2d/%2d/%2d", ssg->environment.pbskyColorMapUnit, ssg->environment.pbskyColorMapId,
+				// ssg->environment.pbskyColorMapSamplerId); 	ImGui::Text("shadow map: znear: %.1f, zfar: %0.1f,
+				// origin(%.1f, %.1f, %.1f), target(%.1f, %.1f, %.1f), up(%.2f, %.2f, %.2f)",
 				//				ssg.environment.sunShadowMapNearZ,
 				//				ssg.environment.sunShadowMapFarZ,
-				//				ssg.environment.sunShadowMapOrigin.x, ssg.environment.sunShadowMapOrigin.y, ssg.environment.sunShadowMapOrigin.z,
-				//				ssg.environment.sunShadowMapTarget.x, ssg.environment.sunShadowMapTarget.y, ssg.environment.sunShadowMapTarget.z,
-				//				ssg.environment.sunShadowMapUp.x, ssg.environment.sunShadowMapUp.y, ssg.environment.sunShadowMapUp.z);
-				//	SEPARATOR_NEWLINE
+				//				ssg.environment.sunShadowMapOrigin.x, ssg->environment.sunShadowMapOrigin.y,
+				// ssg->environment.sunShadowMapOrigin.z, 				ssg.environment.sunShadowMapTarget.x,
+				// ssg->environment.sunShadowMapTarget.y, ssg->environment.sunShadowMapTarget.z,
+				//				ssg.environment.sunShadowMapUp.x, ssg->environment.sunShadowMapUp.y,
+				// ssg->environment.sunShadowMapUp.z); 	SEPARATOR_NEWLINE
 				//}
 
 				ImGui::TextColored(Colors::Red, "Camera: ");
 				ImGui::DragFloat("FOV: ", &Interface.ssg.cameraFOV);
-				Matrix4f m = ssg.camera.viewMatrix();
+				Matrix4f m = ssg->camera.viewMatrix();
 				ImGui::Text(
 					"viewMatrix: % 3.2f % 3.2f % 3.2f % 3.2f\n"
 					"            % 3.2f % 3.2f % 3.2f % 3.2f\n"
 					"            % 3.2f % 3.2f % 3.2f % 3.2f\n"
 					"            % 3.2f % 3.2f % 3.2f % 3.2f",
-					m.m11, m.m12, m.m13, m.m14,
-					m.m21, m.m22, m.m23, m.m24,
-					m.m31, m.m32, m.m33, m.m34,
-					m.m41, m.m42, m.m43, m.m44);
+					m.m11,
+					m.m12,
+					m.m13,
+					m.m14,
+					m.m21,
+					m.m22,
+					m.m23,
+					m.m24,
+					m.m31,
+					m.m32,
+					m.m33,
+					m.m34,
+					m.m41,
+					m.m42,
+					m.m43,
+					m.m44);
 				m = Interface.preCameraMatrix;
 				ImGui::Text(
 					"altMatrix:  % 3.2f % 3.2f % 3.2f % 3.2f\n"
 					"            % 3.2f % 3.2f % 3.2f % 3.2f\n"
 					"            % 3.2f % 3.2f % 3.2f % 3.2f\n"
 					"            % 3.2f % 3.2f % 3.2f % 3.2f",
-					m.m11, m.m12, m.m13, m.m14,
-					m.m21, m.m22, m.m23, m.m24,
-					m.m31, m.m32, m.m33, m.m34,
-					m.m41, m.m42, m.m43, m.m44);
-				Vector3f O = ssg.camera.origin();
+					m.m11,
+					m.m12,
+					m.m13,
+					m.m14,
+					m.m21,
+					m.m22,
+					m.m23,
+					m.m24,
+					m.m31,
+					m.m32,
+					m.m33,
+					m.m34,
+					m.m41,
+					m.m42,
+					m.m43,
+					m.m44);
+				Vector3f O = ssg->camera.origin();
 				ImGui::Text("CAMERA POS: % 3.2f/% 3.2f/ % 3.2f", O.x, O.y, O.z);
 				if (ImGui::SmallButton("LoadIdentity()")) {
 					Interface.preCameraMatrix.LoadIdentity();
@@ -681,11 +749,15 @@ namespace SSPHH {
 					Interface.cameraOrbit.z += 1.0f;
 				}
 
-				ImGui::Text("WxH: %4.fx%4.f / FOV: %3.2f", ssg.camera.imageWidth, ssg.camera.imageHeight, ssg.camera.fov);
-				ImGui::Text("ZNEAR: %1.4f / ZFAR: %4.1f", ssg.camera.imageNearZ, ssg.camera.imageFarZ);
+				ImGui::Text(
+					"WxH: %4.fx%4.f / FOV: %3.2f",
+					ssg->camera.imageWidth,
+					ssg->camera.imageHeight,
+					ssg->camera.fov);
+				ImGui::Text("ZNEAR: %1.4f / ZFAR: %4.1f", ssg->camera.imageNearZ, ssg->camera.imageFarZ);
 				NEWLINE_SEPARATOR
 
-					ImGui::TextColored(Colors::Yellow, "Sun: ");
+				ImGui::TextColored(Colors::Yellow, "Sun: ");
 				ImGui::SameLine();
 				if (ImGui::SmallButton("+ 1hr")) {
 					Sun_AdvanceClock(3600.0, true);
@@ -695,7 +767,7 @@ namespace SSPHH {
 					Sun_AdvanceClock(-3600.0, true);
 				}
 
-				double turbidity = ssg.environment.pbsky.GetTurbidity();
+				double turbidity = ssg->environment.pbsky.GetTurbidity();
 				double lastTurbidity = turbidity;
 				ImGui::Text("Turbidity: % 2.1f", turbidity);
 				ImGui::SameLine();
@@ -707,52 +779,62 @@ namespace SSPHH {
 					turbidity -= 1.0;
 				}
 				turbidity = Fluxions::clamp<double>(turbidity, 1.0, 10.0);
-				ssg.environment.pbsky.SetTurbidity((float)turbidity);
+				ssg->environment.pbsky.SetTurbidity((float)turbidity);
 				if (turbidity != lastTurbidity) {
-					ssg.environment.pbsky.computeAstroFromLocale();
-					ssg.environment.ComputePBSky();
+					ssg->environment.pbsky.computeAstroFromLocale();
+					ssg->environment.ComputePBSky();
 				}
 
-				ImGui::Text("DATE: %02d/%02d/%04d %02d:%02d:%02d%.3f -- LST : %2.3f",
-							ssg.environment.pbsky.getMonth(),
-							ssg.environment.pbsky.getDay(),
-							ssg.environment.pbsky.getYear(),
-							ssg.environment.pbsky.getHour(),
-							ssg.environment.pbsky.getMin(),
-							ssg.environment.pbsky.getSec(),
-							ssg.environment.pbsky.getSecFract(),
-							ssg.environment.pbsky.getLST());
-				ImGui::Text("LAT: % 2.2f LONG: % 3.2f",
-							ssg.environment.pbsky.GetLatitude(),
-							ssg.environment.pbsky.GetLongitude());
+				ImGui::Text(
+					"DATE: %02d/%02d/%04d %02d:%02d:%02d%.3f -- LST : %2.3f",
+					ssg->environment.pbsky.getMonth(),
+					ssg->environment.pbsky.getDay(),
+					ssg->environment.pbsky.getYear(),
+					ssg->environment.pbsky.getHour(),
+					ssg->environment.pbsky.getMin(),
+					ssg->environment.pbsky.getSec(),
+					ssg->environment.pbsky.getSecFract(),
+					ssg->environment.pbsky.getLST());
+				ImGui::Text(
+					"LAT: % 2.2f LONG: % 3.2f",
+					ssg->environment.pbsky.GetLatitude(),
+					ssg->environment.pbsky.GetLongitude());
 				NEWLINE_SEPARATOR
 			}
 
 			ImGui::Checkbox("Geometry", &Interface.ssg.showGeometry);
 			if (Interface.ssg.showGeometry) {
 				NEWLINE_SEPARATOR
-					if (Interface.ssg.geometryCollapsed.size() != ssg.geometryGroups.size()) {
-						Interface.ssg.geometryCollapsed.resize(ssg.geometryGroups.size());
-					}
+				if (Interface.ssg.geometryCollapsed.size() != ssg->geometryGroups.size()) {
+					Interface.ssg.geometryCollapsed.resize(ssg->geometryGroups.size());
+				}
 
 				int i = 0;
-				for (auto& [id, group] : ssg.geometryGroups) {
+				for (auto& [id, group] : ssg->geometryGroups) {
 					std::ostringstream label;
 					label << group.name_str() << "(" << i << ")";
 					ImGui::Checkbox(label.str().c_str(), &Interface.ssg.geometryCollapsed[i].second);
 					if (Interface.ssg.geometryCollapsed[i].second) {
 						ImGui::Text("name:     %s", group.name());
 						ImGui::Text("filename: %s", group.fpi.stem().c_str());
-						//ImGui::Text("mtllib:   %s", group.mtllibName.c_str());
+						// ImGui::Text("mtllib:   %s", group.mtllibName.c_str());
 						BoundingBoxf& bbox = group.bbox;
 						Vector3f meshSceneMin = bbox.minBounds;
 						Vector3f meshSceneMax = bbox.maxBounds;
 						Vector3f meshSceneSize = bbox.Size();
-						ImGui::Text("dimensions (%.1f %.1f %.1f)/(%.1f, %.1f, %.1f) [%.1f, %.1f, %.1f]",
-									meshSceneMin.x, meshSceneMin.y, meshSceneMin.z,
-									meshSceneMax.x, meshSceneMax.y, meshSceneMax.z,
-									meshSceneSize.x, meshSceneSize.y, meshSceneSize.z);
-						//ImGui::Text("dimensions: %.2f/%.2f/%.2f", g.second.bbox.MaxX(), g.second.bbox.MaxY(), g.second.bbox.MaxZ());
+						ImGui::Text(
+							"dimensions (%.1f %.1f %.1f)/(%.1f, %.1f, %.1f) [%.1f, %.1f, %.1f]",
+							meshSceneMin.x,
+							meshSceneMin.y,
+							meshSceneMin.z,
+							meshSceneMax.x,
+							meshSceneMax.y,
+							meshSceneMax.z,
+							meshSceneSize.x,
+							meshSceneSize.y,
+							meshSceneSize.z);
+						// ImGui::Text("dimensions: %.2f/%.2f/%.2f", g.second.bbox.MaxX(), g.second.bbox.MaxY(),
+						// g.second.bbox.MaxZ());
 
 						imguiMatrix4fEditControl(i, group.transform);
 					}
@@ -764,7 +846,7 @@ namespace SSPHH {
 			ImGui::Checkbox("Point Lights", &Interface.ssg.showPointLights);
 			if (Interface.ssg.showPointLights) {
 				int i = 0;
-				for (auto& [k, spl] : ssg.pointLights) {
+				for (auto& [k, spl] : ssg->pointLights) {
 					std::ostringstream ostr;
 					ImGui::Text("Name(%d): %s", i, spl.name());
 					ImGui::ColorEdit4("E0", spl.E0.ptr());
@@ -780,7 +862,7 @@ namespace SSPHH {
 
 	void SSPHH_Application::imguiMatrix4fEditControl(int id, Matrix4f& m) {
 		NEWLINE_SEPARATOR
-			ImGui::PushID(id);
+		ImGui::PushID(id);
 		ImGui::Text("Rotate: ");
 		if (ImGui::Button("LoadIdentity()")) {
 			m.LoadIdentity();
@@ -845,10 +927,22 @@ namespace SSPHH {
 			"           % 3.2f % 3.2f % 3.2f % 3.2f\n"
 			"           % 3.2f % 3.2f % 3.2f % 3.2f\n"
 			"           % 3.2f % 3.2f % 3.2f % 3.2f",
-			m.m11, m.m12, m.m13, m.m14,
-			m.m21, m.m22, m.m23, m.m24,
-			m.m31, m.m32, m.m33, m.m34,
-			m.m41, m.m42, m.m43, m.m44);
+			m.m11,
+			m.m12,
+			m.m13,
+			m.m14,
+			m.m21,
+			m.m22,
+			m.m23,
+			m.m24,
+			m.m31,
+			m.m32,
+			m.m33,
+			m.m34,
+			m.m41,
+			m.m42,
+			m.m43,
+			m.m44);
 		ImGui::PopID();
 	}
 
@@ -877,22 +971,21 @@ namespace SSPHH {
 			int i = 0;
 			const float stepSize = 0.1f;
 			int whichToDelete = -1;
+			
 			for (auto& sspl : ssgUserData->ssphhLights) {
 				std::ostringstream id;
 				id << "MS" << std::setfill('0') << std::setw(2) << i << " '" << sspl.name() << "'";
 				const void* ptr = &sspl;
 #ifdef _WIN32
-				//va_list args = nullptr;
+				// va_list args = nullptr;
 #elif __unix__
 				// va_list args = va_list();
 #endif
 				const char* colors[4] = { "R", "G", "B", "Mono" };
-				const ImVec4 mscolors[4] = {
-					{1.0f, 0.0f, 0.0f, 1.0f},
-					{0.0f, 1.0f, 0.0f, 1.0f},
-					{0.0f, 0.0f, 1.0f, 1.0f},
-					{1.0f, 1.0f, 1.0f, 1.0f}
-				};
+				const ImVec4 mscolors[4] = { { 1.0f, 0.0f, 0.0f, 1.0f },
+											 { 0.0f, 1.0f, 0.0f, 1.0f },
+											 { 0.0f, 0.0f, 1.0f, 1.0f },
+											 { 1.0f, 1.0f, 1.0f, 1.0f } };
 				float minValue = -5.0f;
 				float maxValue = 5.0f;
 				ImGui::PushID(i);
@@ -960,18 +1053,21 @@ namespace SSPHH {
 					if (position0 != sspl.position) {
 						sspl.depthSphlMap.dirty = true;
 					}
-					//sspl.position.w = Fluxions::clamp(sspl.position.w, 0.0f, 1.0f);
+					// sspl.position.w = Fluxions::clamp(sspl.position.w, 0.0f, 1.0f);
 					ImGui::DragFloat("E0", &sspl.E0, stepSize, 0.0f, 10000.0f);
 					ImGui::DragFloat("Falloff Radius", &sspl.falloffRadius, stepSize, 0.0f, 1000.0f);
 
-					ImGui::Text("status: dirty? %d / shadow map? %d", sspl.dirty ? 1 : 0, sspl.depthSphlMap.dirty ? 1 : 0);
+					ImGui::Text(
+						"status: dirty? %d / shadow map? %d",
+						sspl.dirty ? 1 : 0,
+						sspl.depthSphlMap.dirty ? 1 : 0);
 
 					for (int j = 0; j < 4; j++) {
 						std::ostringstream label;
 						label << "Multispectral " << colors[j];
 						ptr = &sspl.msph[j];
 						if (ImGui::TreeNode(ptr, "%s", label.str().c_str()))
-							// if (ImGui::TreeNodeV(ptr, label.str().c_str(), args))
+						// if (ImGui::TreeNodeV(ptr, label.str().c_str(), args))
 						{
 							ImGui::SameLine();
 							ImGui::TextColored(mscolors[j], "%s", label.str().c_str());
@@ -1015,7 +1111,7 @@ namespace SSPHH {
 									unsigned offset = sspl.msph[j].getCoefficientIndex(l, m);
 									std::ostringstream label;
 									label << "l = " << l << ", m = " << m << " (" << offset << ")"
-										<< "##" << std::setw(2) << std::setfill('0') << i << j;
+										  << "##" << std::setw(2) << std::setfill('0') << i << j;
 
 									if (ImGui::SmallButton("iso")) {
 										sspl.isolateCoefficient(j, l, m);
@@ -1053,7 +1149,7 @@ namespace SSPHH {
 										sspl.setCoefficient(j, l, m, maxValue);
 									}
 
-									if (0) //m == 0)
+									if (0) // m == 0)
 									{
 										ImGui::PushID(-l);
 										ImGui::SameLine();
@@ -1095,8 +1191,7 @@ namespace SSPHH {
 								ImGui::PopID();
 							}
 							ImGui::TreePop();
-						}
-						else {
+						} else {
 							ImGui::SameLine();
 							ImGui::TextColored(mscolors[j], "%s", label.str().c_str());
 							ImGui::PushID(j);
@@ -1129,8 +1224,7 @@ namespace SSPHH {
 					}
 
 					ImGui::TreePop();
-					}
-				else {
+				} else {
 					ImGui::SameLine();
 					ImGui::Checkbox("", &sspl.enabled);
 					ImGui::SameLine();
@@ -1180,118 +1274,119 @@ namespace SSPHH {
 				}
 				ImGui::PopID();
 				i++;
-				}
+			}
 			if (whichToDelete >= 0) {
 				ssgUserData->ssphhLights.erase(ssgUserData->ssphhLights.begin() + whichToDelete);
 			}
 			ImGui::End();
-			}
 		}
+	}
 
 	void SSPHH_Application::imguiShowMaterialEditor() {
 		///////////////////////////////////////////////////////////
 		// M A T E R I A L   E D I T O R //////////////////////////
 		///////////////////////////////////////////////////////////
 
-//		if (Interface.tools.showMaterialEditor) {
-//			imguiWinX += imguiWinW + 64.0f;
-//			ImGui::SetNextWindowContentWidth(imguiWinW);
-//			ImGui::SetNextWindowPos(ImVec2(imguiWinX, 64));
-//			ImGui::Begin("Material Editor");
-//			//if (Interface.mtls.mtlsCollapsed.size() != ssg.materials.size())
-//			//{
-//			//	Interface.mtls.mtlsCollapsed.resize(ssg.materials.size());
-//			//}
-//
-//			ImGui::Checkbox("Maps", &Interface.mtls.showMaps);
-//			if (Interface.mtls.showMaps) {
-//				int i = 0;
-//				SEPARATOR_NEWLINE
-//					for (auto& mtllib : ssg.materialSystem) {
-//						ImGui::Text("Mtllib %i: %s", mtllib.first, mtllib.second.name.c_str());
-//						for (auto& map : mtllib.second.maps) {
-//							ImGui::Text("map: %s", map.second.mapName.c_str());
-//						}
-//						i++;
-//					}
-//				NEWLINE_SEPARATOR
-//			}
-//
-//			ImGui::Checkbox("Mtls", &Interface.mtls.showMtls);
-//			if (Interface.mtls.showMtls) {
-//				int i = 0;
-//				for (auto& mtllib : ssg.materialSystem) {
-//					std::string mtllib_key = mtllib.second.fpi.fullfname;
-//					bool* mtllib_collapsed = nullptr;
-//					if (Interface.mtls.mtllibsCollapsed.find(mtllib_key) == Interface.mtls.mtllibsCollapsed.end()) {
-//						Interface.mtls.mtllibsCollapsed[mtllib_key] = false;
-//					}
-//					mtllib_collapsed = &Interface.mtls.mtllibsCollapsed[mtllib_key];
-//					if (mtllib_collapsed == nullptr)
-//						continue;
-//					ImGui::TextColored(Colors::Red, "MtlLib %i %s", mtllib.first, mtllib.second.fpi.fullfname.c_str());
-//					ImGui::SameLine();
-//					ImGui::Checkbox(mtllib_key.c_str(), mtllib_collapsed);
-//					if (*mtllib_collapsed) {
-//						int j = 0;
-//						for (auto& mtl : mtllib.second.mtls) {
-//							std::string mtl_name = mtllib.second.mtls.getNameFromHandle(mtl.first);
-//							std::string mtllib_mtl_key = mtllib_key + "!!" + mtl_name;
-//							bool* mtl_collapsed = nullptr;
-//							if (Interface.mtls.mtlsCollapsed.find(mtllib_mtl_key) == Interface.mtls.mtlsCollapsed.end()) {
-//								Interface.mtls.mtlsCollapsed[mtllib_mtl_key] = false;
-//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].Ka = mtl.second.Ka.ptr();
-//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].Kd = mtl.second.Kd.ptr();
-//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].Ks = mtl.second.Ks.ptr();
-//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].Ke = mtl.second.Ke.ptr();
-//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].PBm = &mtl.second.PBm;
-//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].PBk = &mtl.second.PBk;
-//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].PBior = &mtl.second.PBior;
-//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].PBKdm = &mtl.second.PBKdm;
-//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].PBKsm = &mtl.second.PBKsm;
-//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].PBGGXgamma = &mtl.second.PBGGXgamma;
-//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].map_Kd = mtl.second.map_Kd.c_str();
-//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].map_Ks = mtl.second.map_Ks.c_str();
-//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].map_bump = mtl.second.map_bump.c_str();
-//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].map_normal = mtl.second.map_normal.c_str();
-//							}
-//							mtl_collapsed = &Interface.mtls.mtlsCollapsed[mtllib_mtl_key];
-//							if (mtl_collapsed == nullptr)
-//								continue;
-//
-//							ImGui::TextColored(Colors::Yellow, "Material Name: %i", mtl.first);
-//							ImGui::SameLine();
-//							ImGui::Checkbox(mtl_name.c_str(), mtl_collapsed);
-//							if (*mtl_collapsed) {
-//								auto pmtl = Interface.mtls.mtls_ptrs[mtllib_mtl_key];
-//								NEWLINE_SEPARATOR
-//									const float stepSize = 0.01f;
-//								// const float minSize = -5.0f;
-//								// const float maxSize = 5.0f;
-//#define JOIN(x) (x + ("##" + mtllib_mtl_key)).c_str()
-//								ImGui::DragFloat(JOIN("PBk"), pmtl.PBk, stepSize, 0.0f, 10.0f);
-//								ImGui::DragFloat(JOIN("PBior"), pmtl.PBior, stepSize, 0.0f, 2.5f);
-//								ImGui::DragFloat(JOIN("PBkdm"), pmtl.PBKdm, stepSize, -1.0f, 1.0f);
-//								ImGui::DragFloat(JOIN("PBksm"), pmtl.PBKsm, stepSize, -1.0f, 1.0f);
-//								ImGui::DragFloat(JOIN("PBGGXgamma"), pmtl.PBGGXgamma, stepSize, 0.0f, 1.0f);
-//								ImGui::DragFloat3(JOIN("Kd"), pmtl.Kd, stepSize, 0.0f, 1.0f);
-//								ImGui::Text(JOIN("map_Kd: %s"), pmtl.map_Kd);
-//								ImGui::DragFloat3(JOIN("Ks"), pmtl.Ks, stepSize, 0.0f, 1.0f);
-//								ImGui::Text(JOIN("map_Ks: %s"), pmtl.map_Ks);
-//								ImGui::Text(JOIN("map_bump: %s"), pmtl.map_bump);
-//								ImGui::Text(JOIN("map_normal: %s"), pmtl.map_normal);
-//#undef JOIN
-//							}
-//							j++;
-//							ImGui::Separator();
-//						}
-//						ImGui::Separator();
-//					}
-//					i++;
-//				}
-//			}
-//			ImGui::End();
-//		}
+		//		if (Interface.tools.showMaterialEditor) {
+		//			imguiWinX += imguiWinW + 64.0f;
+		//			ImGui::SetNextWindowContentWidth(imguiWinW);
+		//			ImGui::SetNextWindowPos(ImVec2(imguiWinX, 64));
+		//			ImGui::Begin("Material Editor");
+		//			//if (Interface.mtls.mtlsCollapsed.size() != ssg->materials.size())
+		//			//{
+		//			//	Interface.mtls.mtlsCollapsed.resize(ssg.materials.size());
+		//			//}
+		//
+		//			ImGui::Checkbox("Maps", &Interface.mtls.showMaps);
+		//			if (Interface.mtls.showMaps) {
+		//				int i = 0;
+		//				SEPARATOR_NEWLINE
+		//					for (auto& mtllib : ssg->materialSystem) {
+		//						ImGui::Text("Mtllib %i: %s", mtllib.first, mtllib.second.name.c_str());
+		//						for (auto& map : mtllib.second.maps) {
+		//							ImGui::Text("map: %s", map.second.mapName.c_str());
+		//						}
+		//						i++;
+		//					}
+		//				NEWLINE_SEPARATOR
+		//			}
+		//
+		//			ImGui::Checkbox("Mtls", &Interface.mtls.showMtls);
+		//			if (Interface.mtls.showMtls) {
+		//				int i = 0;
+		//				for (auto& mtllib : ssg->materialSystem) {
+		//					std::string mtllib_key = mtllib.second.fpi.fullfname;
+		//					bool* mtllib_collapsed = nullptr;
+		//					if (Interface.mtls.mtllibsCollapsed.find(mtllib_key) ==
+		// Interface.mtls.mtllibsCollapsed.end()) { 						Interface.mtls.mtllibsCollapsed[mtllib_key]
+		// = false;
+		//					}
+		//					mtllib_collapsed = &Interface.mtls.mtllibsCollapsed[mtllib_key];
+		//					if (mtllib_collapsed == nullptr)
+		//						continue;
+		//					ImGui::TextColored(Colors::Red, "MtlLib %i %s", mtllib.first,
+		// mtllib.second.fpi.fullfname.c_str()); 					ImGui::SameLine();
+		// ImGui::Checkbox(mtllib_key.c_str(),
+		// mtllib_collapsed); 					if (*mtllib_collapsed) { 						int j = 0; 						for (auto& mtl
+		// : mtllib.second.mtls) { 							std::string mtl_name =
+		// mtllib.second.mtls.getNameFromHandle(mtl.first); std::string mtllib_mtl_key = mtllib_key + "!!" + mtl_name;
+		// bool* mtl_collapsed = nullptr; 							if
+		// (Interface.mtls.mtlsCollapsed.find(mtllib_mtl_key)
+		// ==
+		// Interface.mtls.mtlsCollapsed.end()) { Interface.mtls.mtlsCollapsed[mtllib_mtl_key] = false;
+		// Interface.mtls.mtls_ptrs[mtllib_mtl_key].Ka = mtl.second.Ka.ptr();
+		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].Kd = mtl.second.Kd.ptr();
+		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].Ks = mtl.second.Ks.ptr();
+		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].Ke = mtl.second.Ke.ptr();
+		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].PBm = &mtl.second.PBm;
+		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].PBk = &mtl.second.PBk;
+		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].PBior = &mtl.second.PBior;
+		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].PBKdm = &mtl.second.PBKdm;
+		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].PBKsm = &mtl.second.PBKsm;
+		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].PBGGXgamma = &mtl.second.PBGGXgamma;
+		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].map_Kd = mtl.second.map_Kd.c_str();
+		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].map_Ks = mtl.second.map_Ks.c_str();
+		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].map_bump = mtl.second.map_bump.c_str();
+		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].map_normal =
+		// mtl.second.map_normal.c_str();
+		//							}
+		//							mtl_collapsed = &Interface.mtls.mtlsCollapsed[mtllib_mtl_key];
+		//							if (mtl_collapsed == nullptr)
+		//								continue;
+		//
+		//							ImGui::TextColored(Colors::Yellow, "Material Name: %i", mtl.first);
+		//							ImGui::SameLine();
+		//							ImGui::Checkbox(mtl_name.c_str(), mtl_collapsed);
+		//							if (*mtl_collapsed) {
+		//								auto pmtl = Interface.mtls.mtls_ptrs[mtllib_mtl_key];
+		//								NEWLINE_SEPARATOR
+		//									const float stepSize = 0.01f;
+		//								// const float minSize = -5.0f;
+		//								// const float maxSize = 5.0f;
+		//#define JOIN(x) (x + ("##" + mtllib_mtl_key)).c_str()
+		//								ImGui::DragFloat(JOIN("PBk"), pmtl.PBk, stepSize, 0.0f, 10.0f);
+		//								ImGui::DragFloat(JOIN("PBior"), pmtl.PBior, stepSize, 0.0f, 2.5f);
+		//								ImGui::DragFloat(JOIN("PBkdm"), pmtl.PBKdm, stepSize, -1.0f, 1.0f);
+		//								ImGui::DragFloat(JOIN("PBksm"), pmtl.PBKsm, stepSize, -1.0f, 1.0f);
+		//								ImGui::DragFloat(JOIN("PBGGXgamma"), pmtl.PBGGXgamma, stepSize, 0.0f, 1.0f);
+		//								ImGui::DragFloat3(JOIN("Kd"), pmtl.Kd, stepSize, 0.0f, 1.0f);
+		//								ImGui::Text(JOIN("map_Kd: %s"), pmtl.map_Kd);
+		//								ImGui::DragFloat3(JOIN("Ks"), pmtl.Ks, stepSize, 0.0f, 1.0f);
+		//								ImGui::Text(JOIN("map_Ks: %s"), pmtl.map_Ks);
+		//								ImGui::Text(JOIN("map_bump: %s"), pmtl.map_bump);
+		//								ImGui::Text(JOIN("map_normal: %s"), pmtl.map_normal);
+		//#undef JOIN
+		//							}
+		//							j++;
+		//							ImGui::Separator();
+		//						}
+		//						ImGui::Separator();
+		//					}
+		//					i++;
+		//				}
+		//			}
+		//			ImGui::End();
+		//		}
 	}
 
 	void SSPHH_Application::imguiSphlAdd() {
@@ -1300,7 +1395,7 @@ namespace SSPHH {
 		std::ostringstream name;
 		name << "New SSPL " << ssgUserData->ssphhLights.size();
 		sphl.setName(name.str());
-		//sphl.name.reserve(32);
+		// sphl.name.reserve(32);
 		sphl.changeDegrees(DefaultSphlDegree);
 
 		for (auto& sphl : ssgUserData->ssphhLights) {
@@ -1342,10 +1437,10 @@ namespace SSPHH {
 		if (ssgUserData->ssphhLights.empty() && ssgUserData->ssphhLights.size() <= which)
 			return;
 
-		RendererTextureCube& enviroSkyBoxTexture = rendererContext.textureCubes["enviroSkyBox"];
-		enviroSkyBoxTexture.loadMap("export_cubemap.png", true);
-		//enviroSkyBoxTexture.loadTextureCoronaCubeMap("export_cubemap.png", true);
-
+		RendererTextureCubePtr enviroSkyBoxTexture = rendererContext->textureCubes["enviroSkyBox"];
+		if (enviroSkyBoxTexture) {
+			enviroSkyBoxTexture->loadMap("export_cubemap.png", true);
+		}
 		SphlSampler sphlSampler;
 		sphlSampler.resize(64, 32);
 		sphlSampler.saveSampleMap("sample_stratification.ppm", 4);
@@ -1363,8 +1458,8 @@ namespace SSPHH {
 	}
 
 	void SSPHH_Application::imguiSphlSaveToOBJ() {
-		//int i = 0;
-		//for (auto &it : sphls)
+		// int i = 0;
+		// for (auto &it : sphls)
 		//{
 		//	auto &sphl = it.second;
 
@@ -1377,7 +1472,7 @@ namespace SSPHH {
 		size_t i = 0;
 		for (auto& sphl : ssgUserData->ssphhLights) {
 			std::ostringstream ostr;
-			ostr << ssg.name() << "_sphl_" << std::setw(2) << std::setfill('0') << i;
+			ostr << ssg->name() << "_sphl_" << std::setw(2) << std::setfill('0') << i;
 			sphl.saveOBJ("output", ostr.str());
 			std::string path = "output/" + ostr.str();
 			sphl.savePtrcLightProbe(path + ".ppm");
@@ -1386,17 +1481,11 @@ namespace SSPHH {
 		}
 	}
 
-	void SSPHH_Application::imguiToolsTakeScreenshot() {
-		Interface.saveScreenshot = true;
-	}
+	void SSPHH_Application::imguiToolsTakeScreenshot() { Interface.saveScreenshot = true; }
 
-	void SSPHH_Application::imguiToolsSaveStats() {
-		Hf::Log.saveStats(ssg.name_str() + "_");
-	}
+	void SSPHH_Application::imguiToolsSaveStats() { Hf::Log.saveStats(ssg->name_str() + "_"); }
 
-	void SSPHH_Application::imguiToolsResetStats() {
-		Hf::Log.resetStat("frametime");
-	}
+	void SSPHH_Application::imguiToolsResetStats() { Hf::Log.resetStat("frametime"); }
 
 
 	void SSPHH_Application::imguiShowUfWindow() {
@@ -1409,12 +1498,12 @@ namespace SSPHH {
 		}
 		ImGui::Begin("Unicornfish");
 		if (Interface.uf.uf_type == UfType::None) {
-			//if (ImGui::Button("UF CLIENT GLES30")) { Interface.uf.uf_type = UfType::Client; }
-			//if (ImGui::Button("UF CLIENT GLES20")) { Interface.uf.uf_type = UfType::ClientGLES20; }
-			//if (ImGui::Button("UF BROKER")) { Interface.uf.uf_type = UfType::Broker; }
-			//if (ImGui::Button("UF WORKER ECHO")) { Interface.uf.uf_type = UfType::WorkerEcho; }
-			//if (ImGui::Button("UF WORKER CORONA")) { Interface.uf.uf_type = UfType::Worker; }
-			//ImGui::Separator();
+			// if (ImGui::Button("UF CLIENT GLES30")) { Interface.uf.uf_type = UfType::Client; }
+			// if (ImGui::Button("UF CLIENT GLES20")) { Interface.uf.uf_type = UfType::ClientGLES20; }
+			// if (ImGui::Button("UF BROKER")) { Interface.uf.uf_type = UfType::Broker; }
+			// if (ImGui::Button("UF WORKER ECHO")) { Interface.uf.uf_type = UfType::WorkerEcho; }
+			// if (ImGui::Button("UF WORKER CORONA")) { Interface.uf.uf_type = UfType::Worker; }
+			// ImGui::Separator();
 			ImGui::Checkbox("Standalone CLIENT", &Interface.uf.standalone_client);
 			ImGui::Checkbox("Standalone BROKER", &Interface.uf.standalone_broker);
 			ImGui::Checkbox("Standalone WORKER", &Interface.uf.standalone_worker);
@@ -1431,10 +1520,12 @@ namespace SSPHH {
 			}
 			ImGui::TextColored(Colors::Cyan, "CLIENT: %s", ssphhUf.GetUIMessage(Unicornfish::NodeType::Client).c_str());
 			ImGui::TextColored(Colors::Rose, "BROKER: %s", ssphhUf.GetUIMessage(Unicornfish::NodeType::Broker).c_str());
-			ImGui::TextColored(Colors::Yellow, "WORKER: %s", ssphhUf.GetUIMessage(Unicornfish::NodeType::Worker).c_str());
+			ImGui::TextColored(
+				Colors::Yellow,
+				"WORKER: %s",
+				ssphhUf.GetUIMessage(Unicornfish::NodeType::Worker).c_str());
 			ImGui::TextColored(Colors::Green, "GI STATUS: %s", Interface.ssphh.gi_status.c_str());
-		}
-		else {
+		} else {
 			if (ImGui::Button("STOP")) {
 				Interface.uf.uf_stop = true;
 			}
@@ -1479,4 +1570,4 @@ namespace SSPHH {
 
 		ImGui::End();
 	}
-	}
+} // namespace SSPHH

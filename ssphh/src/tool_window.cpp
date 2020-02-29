@@ -12,8 +12,8 @@ void ToolWindow::OnUpdate(double timestamp) {
 		ssg = nullptr;
 		return;
 	}
-	else if (ssg != &ssphh_widget_ptr->ssg) {
-		ssg = &ssphh_widget_ptr->ssg;
+	else if (ssg != ssphh_widget_ptr->ssg) {
+		ssg = ssphh_widget_ptr->ssg;
 	}
 	if (!ssg) return;
 	Vf::Window::OnUpdate(timestamp);

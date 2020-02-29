@@ -12,7 +12,7 @@ namespace SSPHH {
 		frameno *= 8.0f;
 		int frame1 = int(frameno) % FRAME_COUNT;
 		int frame2 = (frame1 + 1) % FRAME_COUNT;
-		float t = frameno - int(frameno);
+		float t = (float)(frameno - int(frameno));
 
 		Matrix4f M;
 		M.Translate(0.0f, 3.0f, 0.0f);
@@ -25,7 +25,7 @@ namespace SSPHH {
 			if (mesh_frames[i].Surfaces[frame2].count < NUM_POINTS) continue;
 			glBegin(GL_LINE_LOOP);
 			for (int pt = 0; pt < NUM_POINTS; pt++) {
-				auto& vtx1 = mesh_frames[i].Vertices[start1 + pt];
+				auto& vtx1 = mesh_frames[i].Vertices[(int64_t)start1 + pt];
 				auto& vtx2 = mesh_frames[i].Vertices[start2 + pt];
 				Color4f c = Fluxions::lerp(t, vtx1.color, vtx2.color);
 				Vector3f pos = Fluxions::lerp(t, vtx1.position, vtx2.position);

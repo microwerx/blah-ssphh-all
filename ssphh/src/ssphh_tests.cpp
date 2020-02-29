@@ -31,7 +31,7 @@ namespace SSPHH
 		size_t count = 0;
 		for (auto &sphl : ssgUserData->ssphhLights) {
 			std::ostringstream ostr;
-			ostr << ssg.name() << "_sphl" << count;
+			ostr << ssg->name() << "_sphl" << count;
 			if (!sphl.saveOBJ("output", ostr.str())) {
 				HFLOGWARN("sphl.saveOBJ() failed to save %s", ostr.str().c_str());
 				break;

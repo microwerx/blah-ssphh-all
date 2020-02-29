@@ -1,7 +1,7 @@
 #include "pch.hpp"
 #include <camera_animation.hpp>
 
-void CameraAnimation::calcgraph(Vf::AnimPathWindowPtr& mw) {
+void CameraAnimation::calcgraph(Vf::AnimPathWindowPtr mw) {
 	constexpr int nump = 32;
 	constexpr int numq = 8;
 

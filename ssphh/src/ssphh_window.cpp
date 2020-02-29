@@ -12,8 +12,8 @@ void SsphhWindow::OnUpdate(double timestamp) {
 		ssg = nullptr;
 		return;
 	}
-	else if (ssg != &ssphh_widget_ptr->ssg) {
-		ssg = &ssphh_widget_ptr->ssg;
+	else if (ssg != ssphh_widget_ptr->ssg) {
+		ssg = ssphh_widget_ptr->ssg;
 	}
 	if (!ssg) return;
 	Vf::Window::OnUpdate(timestamp);
@@ -155,7 +155,7 @@ void SsphhWindow::OnRenderDearImGui() {
 
 	ImGui::Checkbox("Enable shadow map VIZ", &app.Interface.ssphh.enableShadowColorMap);
 	ImGui::SameLine();
-	ImGui::Checkbox("Enable sRGB", &app.rendererContext.rendererConfigs["default"].enableSRGB);
+	ImGui::Checkbox("Enable sRGB", &app.rendererContext->rendererConfigs["default"]->enableSRGB);
 	ImGui::Text("REF:");
 	ImGuiAlignAt(vgrWidth, "ABCD");
 	ImGui::Checkbox("2D", &app.Interface.ssphh.enableREF);

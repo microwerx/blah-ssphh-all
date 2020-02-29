@@ -7,7 +7,7 @@ namespace SSPHH
 	const std::string ssg_default_scene_path{ "resources/scenes/test_texture_scene/" };
 
 	void SSPHH_Application::SSG_ReloadScene() {
-		ssg.reset();
+		ssg->reset();
 		Hf::StopWatch stopwatch;
 		SSG_LoadScene();
 		stopwatch.Stop();
@@ -17,14 +17,14 @@ namespace SSPHH
 
 	void SSPHH_Application::Sun_AdvanceClock(double numSeconds, bool recomputeSky) {
 		pbsky_timeOffsetInSeconds += numSeconds;
-		ssg.environment.pbsky.SetTime(pbsky_localtime, (float)pbsky_timeOffsetInSeconds);
+		ssg->environment.pbsky.SetTime(pbsky_localtime, (float)pbsky_timeOffsetInSeconds);
 		Interface.recomputeSky = recomputeSky;
 	}
 
 	void SSPHH_Application::Sun_ResetClock() {
-		ssg.environment.pbsky.SetCivilDateTime(ssg.environment.pbsky_dtg);
-		ssg.environment.pbsky.computeAstroFromLocale();
-		pbsky_localtime = ssg.environment.pbsky.GetTime();
+		ssg->environment.pbsky.SetCivilDateTime(ssg->environment.pbsky_dtg);
+		ssg->environment.pbsky.computeAstroFromLocale();
+		pbsky_localtime = ssg->environment.pbsky.GetTime();
 		pbsky_timeOffsetInSeconds = 0.0;
 		Interface.recomputeSky = true;
 		Sun_AdvanceClock(0.0, true);
@@ -35,21 +35,21 @@ namespace SSPHH
 		pbsky_localtime = time(NULL);
 		pbsky_timeOffsetInSeconds = 0.0;
 
-		ssg.environment.pbsky.SetTime(time(NULL), 0.0);
-		ssg.environment.pbsky.computeAstroFromLocale();
+		ssg->environment.pbsky.SetTime(time(NULL), 0.0);
+		ssg->environment.pbsky.computeAstroFromLocale();
 		Interface.recomputeSky = true;
 		Sky_RegenHosekWilkieTextures();
 	}
 
 	void SSPHH_Application::Sun_SetLights() {
-		if (!sun) sun = ssg.dirToLights.getPtr("sun");
-		if (sun) sun->dirTo = ssg.environment.curSunDirTo;
+		if (!sun) sun = ssg->dirToLights.getPtr("sun");
+		if (sun) sun->dirTo = ssg->environment.curSunDirTo;
 		if (!moon) {
-			moon = ssg.dirToLights.getPtr("moon");
-			moonGG = ssg.geometryGroups.getPtr("moon");
+			moon = ssg->dirToLights.getPtr("moon");
+			moonGG = ssg->geometryGroups.getPtr("moon");
 		}
 		if (moon) {
-			moon->dirTo = ssg.environment.curMoonDirTo;
+			moon->dirTo = ssg->environment.curMoonDirTo;
 			moonGG->transform = Matrix4f::MakeTranslation(moon->dirTo.xyz() * 95.0f);
 		}
 	}
@@ -60,29 +60,29 @@ namespace SSPHH
 			return;
 		}
 
-		ssg.addPath("resources/models/");
-		ssg.addPath("resources/textures/");
-		ssg.addPath("resources/scenes/");
-		ssg.addPath("resources/scenes/test_texture_scene/");
-		ssg.Load(sceneFilename);
+		ssg->addPath("resources/models/");
+		ssg->addPath("resources/textures/");
+		ssg->addPath("resources/scenes/");
+		ssg->addPath("resources/scenes/test_texture_scene/");
+		ssg->Load(sceneFilename);
 
 		// Configure astronomical models/textures/lights
-		ssg.environment.hasMoon = true;
-		ssg.environment.hasSun = true;
-		ssg.addDirToLight("sun");
-		ssg.addDirToLight("moon");
-		ssg.currentTransform.LoadIdentity();
-		ssg.currentTransform.Translate(0.0f, 2.0f, 0.0f);
-		ssg.addGeometryGroup("moon", "resources/models/moon.obj");
+		ssg->environment.hasMoon = true;
+		ssg->environment.hasSun = true;
+		ssg->addDirToLight("sun");
+		ssg->addDirToLight("moon");
+		ssg->currentTransform.LoadIdentity();
+		ssg->currentTransform.Translate(0.0f, 2.0f, 0.0f);
+		ssg->addGeometryGroup("moon", "resources/models/moon.obj");
 
-		Interface.sceneName = ssg.name_str();
+		Interface.sceneName = ssg->name_str();
 	}
 
 	void SSPHH_Application::SSG_OptimizeClippingPlanes() {
-		//Matrix4f cameraMatrix_ = defaultRenderConfig.preCameraMatrix * ssg.camera.actualViewMatrix * defaultRenderConfig.postCameraMatrix;
+		//Matrix4f cameraMatrix_ = defaultRenderConfig.preCameraMatrix * ssg->camera.actualViewMatrix * defaultRenderConfig.postCameraMatrix;
 		//cameraMatrix_.AsInverse().col4()
-		Matrix4f cameraMatrix = ssg.camera.actualViewMatrix.AsInverse();
-		const BoundingBoxf& bbox = ssg.getBoundingBox();
+		Matrix4f cameraMatrix = ssg->camera.actualViewMatrix.AsInverse();
+		const BoundingBoxf& bbox = ssg->getBoundingBox();
 		const Matrix4f& frameOfReference = cameraMatrix;
 		const Vector3f& position = frameOfReference.col4().xyz();
 		float znear;
@@ -95,8 +95,8 @@ namespace SSPHH
 
 		//rendererContext.rendererConfigs["default"].znear = znear;
 		//rendererContext.rendererConfigs["default"].zfar = zfar;
-		//rendererContext.rendererConfigs["rectShadow"].znear = std::max(0.1f, ssg.environment.sunShadowMapNearZ);
-		//rendererContext.rendererConfigs["rectShadow"].zfar = std::min(1000.0f, ssg.environment.sunShadowMapFarZ);
+		//rendererContext.rendererConfigs["rectShadow"].znear = std::max(0.1f, ssg->environment.sunShadowMapNearZ);
+		//rendererContext.rendererConfigs["rectShadow"].zfar = std::min(1000.0f, ssg->environment.sunShadowMapFarZ);
 	}
 
 	void SSPHH_Application::SSG_ProcessInterfaceTasks() {
@@ -104,12 +104,12 @@ namespace SSPHH
 			Interface.ssg.saveScene = false;
 			sceneFilename = ssg_default_scene_path;
 			sceneFilename += Interface.ssg.scenename;
-			ssg.Save(sceneFilename);
+			ssg->Save(sceneFilename);
 		}
 
 		if (Interface.ssg.resetScene) {
 			Interface.ssg.resetScene = false;
-			ssg.reset();
+			ssg->reset();
 		}
 
 		if (Interface.ssg.createScene) {

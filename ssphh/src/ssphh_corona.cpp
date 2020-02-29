@@ -76,8 +76,8 @@ namespace SSPHH {
 		// generate export_corona_ground_truth.png (1280x720)
 		// run corona to generate export_corona_cubemap.png      (64x64)
 		// run corona to generate export_corona_ground_truth.png (1280x720)
-		ssg.requestedResolution.x = getWidth();
-		ssg.requestedResolution.y = getHeight();
+		ssg->requestedResolution.x = getWidth();
+		ssg->requestedResolution.y = getHeight();
 
 		for (int i = 0; i < MaxShLights; i++) {
 			if (i >= sphls.size()) break;
@@ -161,8 +161,8 @@ namespace SSPHH {
 		Interface.ssphh.viz_times.resize(numLights, 0.0);
 
 		for (int sendLight = 0; sendLight < numLights; sendLight++) {
-			if (rendererContext.rendererConfigs["default"].shaderDebugSphl >= 0 &&
-				sendLight != rendererContext.rendererConfigs["default"].shaderDebugSphl)
+			if (rendererContext->rendererConfigs["default"]->shaderDebugSphl >= 0 &&
+				sendLight != rendererContext->rendererConfigs["default"]->shaderDebugSphl)
 				continue;
 
 			auto& sphl = ssgUserData->ssphhLights[sendLight];
@@ -241,8 +241,8 @@ namespace SSPHH {
 		Hf::StopWatch stopwatch;
 		Interface.ssphh.gen_times.resize(numLights, 0.0);
 		for (int sendLight = 0; sendLight < numLights; sendLight++) {
-			if (rendererContext.rendererConfigs["default"].shaderDebugSphl >= 0 &&
-				sendLight != rendererContext.rendererConfigs["default"].shaderDebugSphl)
+			if (rendererContext->rendererConfigs["default"]->shaderDebugSphl >= 0 &&
+				sendLight != rendererContext->rendererConfigs["default"]->shaderDebugSphl)
 				continue;
 			auto& sphl = ssgUserData->ssphhLights[sendLight];
 			sphl.vizgenLightProbes.resize(numLights);
@@ -443,7 +443,7 @@ namespace SSPHH {
 		// Render Ground Truth First
 		coronaScene.currentConfig.clearCache = true;
 		coronaScene.currentConfig.enableSpecular = true;
-		coronaScene.writeSCN(ssg.name_str(), ssg);
+		coronaScene.writeSCN(ssg->name_str(), ssg);
 		for (auto& mrd : maxRayDepths) {
 			for (auto& pl : passes) {
 				coronaScene.REF.maxRayDepth = mrd;
@@ -467,7 +467,7 @@ namespace SSPHH {
 		for (auto& ks : specular) {
 			coronaScene.currentConfig.clearCache = true;
 			coronaScene.currentConfig.enableSpecular = ks != 0;
-			coronaScene.writeSCN(ssg.name_str(), ssg);
+			coronaScene.writeSCN(ssg->name_str(), ssg);
 			for (auto& mrd : maxRayDepths) {
 				for (auto& pl : passes) {
 					coronaScene.GEN.maxRayDepth = mrd;

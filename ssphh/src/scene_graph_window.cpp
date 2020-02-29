@@ -5,19 +5,22 @@
 SceneGraphWindow::SceneGraphWindow(const std::string& name)
 	: Vf::Window(name) {}
 
+
 SceneGraphWindow::~SceneGraphWindow() {}
+
 
 void SceneGraphWindow::OnUpdate(double timestamp) {
 	if (!ssphh_widget_ptr) {
 		ssg = nullptr;
 		return;
 	}
-	else if (ssg != &ssphh_widget_ptr->ssg) {
-		ssg = &ssphh_widget_ptr->ssg;
+	else if (ssg != ssphh_widget_ptr->ssg) {
+		ssg = ssphh_widget_ptr->ssg;
 	}
 	if (!ssg) return;
 	Vf::Window::OnUpdate(timestamp);
 }
+
 
 void SceneGraphWindow::OnRenderDearImGui() {
 	if (!ssg) return;

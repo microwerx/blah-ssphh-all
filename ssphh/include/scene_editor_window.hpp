@@ -12,7 +12,7 @@ public:
 	void OnUpdate(double timeStamp) override;
 	void OnRenderDearImGui() override;
 private:
-	Fluxions::SimpleSceneGraph* ssg{ nullptr };
+	Fluxions::SimpleSceneGraphPtr ssg;
 	Fluxions::BaseDirToLight* moon{ nullptr };
 	Fluxions::BaseDirToLight* sun{ nullptr };
 };

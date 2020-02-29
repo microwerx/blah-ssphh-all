@@ -13,7 +13,7 @@ public:
 	void OnRenderDearImGui() override;
 
 private:
-	Fluxions::SimpleSceneGraph* ssg{ nullptr };
+	Fluxions::SimpleSceneGraphPtr ssg;
 	float buttonWidth{ 0.0f };
 	float vgrWidth{ 0.0f };
 	void alignat(float& width, const char* referencestr = nullptr);

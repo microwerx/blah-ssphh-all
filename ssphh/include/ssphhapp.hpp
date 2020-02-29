@@ -6,7 +6,7 @@
 #include <viperfish_mouse.hpp>
 #include <viperfish_widget.hpp>
 #include <fluxions_sphl.hpp>
-#include <imgui.h>
+#include <viperfish_dear_imgui.hpp>
 #include <ssphh_ppmcompare.hpp>
 #include <ssphh_unicornfish.hpp>
 #include <fluxions_ssg_ssphh_renderer_plugin.hpp>
@@ -96,9 +96,9 @@ namespace SSPHH {
 		//std::string sceneFilename = "resources/scenes/rungholt_scene/rungholt.scn";
 
 		//Uf::CoronaDatabase sceneDB;
-		Fluxions::SimpleSceneGraph ssg;
+		Fluxions::SimpleSceneGraphPtr ssg;
 		Fluxions::SimpleSSPHH ssphh;
-		Fluxions::SSG_SSPHHRendererPlugin* ssgUserData = nullptr;
+		Fluxions::SSG_SSPHHRendererPluginPtr ssgUserData;
 		Uf::CoronaSceneFile coronaScene;
 		std::vector<Uf::CoronaJob> coronaJobs;
 
@@ -474,16 +474,12 @@ namespace SSPHH {
 		//TMatrix4<GLfloat> screenPerspMatrix;
 		TMatrix4<GLfloat> screenOrthoMatrix;
 
-		RendererContext rendererContext;
-		//Fluxions::SimpleRenderer_GLuint renderer;
-		//Fluxions::RendererGLES30 sph_renderer{ "sph_renderer" };
-		//Fluxions::RendererGLES30 gles30{ "gles30" };
-		//Fluxions::RendererGLES30 gles30CubeMap{ "gles30CubeMap" };
+		RendererContextPtr rendererContext;
 
 		void RenderFixedFunctionGL();
 		void RenderGLES20();
 		void RenderGLES30();
-		void RenderGLES30Scene();
+		//void RenderGLES30Scene();
 		void RenderGLES30Shadows();
 		void RenderGLES30SPHLs();
 		void RenderGL11Hierarchies();

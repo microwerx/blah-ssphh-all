@@ -64,17 +64,17 @@ namespace SSPHH
 
 	void SSPHH_Application::LoadRenderConfigs() {
 		HFLOGINFO("resetting and loading render configs...");
-		rendererContext.reset();
-		rendererContext.resize(getWidthi(), getHeighti());
+		rendererContext->reset();
+		rendererContext->resize(getWidthi(), getHeighti());
 
-		if (!rendererContext.loadConfig(default_renderconfig_path)) {
+		if (!rendererContext->loadConfig(default_renderconfig_path)) {
 			HFLOGERROR("%s file not found.", default_renderconfig_path);
 		}
 
-		rendererContext.loadShaders();
-		rendererContext.loadTextures();
-		rendererContext.loadMaps(ssg.materials.maps);
-		rendererContext.makeFramebuffers();
+		rendererContext->loadShaders();
+		rendererContext->loadTextures();
+		rendererContext->loadMaps(ssg->materials.maps);
+		rendererContext->makeFramebuffers();
 
 		//RendererConfig& defaultRenderConfig = rendererContext.rendererConfigs["default"];
 		//defaultRenderConfig.zShaderProgram = rendererContext.findProgram("pb_monolithic", "DefaultZProgram");

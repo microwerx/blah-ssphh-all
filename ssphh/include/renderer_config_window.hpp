@@ -14,10 +14,10 @@ public:
 
 
 private:
-	Fluxions::RendererContext* context{ nullptr };
+	Fluxions::RendererContextPtr rendererContext;
 	int curRendererConfigIndex{ 0 };
 	std::vector<const char*> renderConfigList;
-	Fluxions::RendererConfig* rc{ nullptr };
+	Fluxions::RendererConfigPtr rc;
 	float defaultParameterWidth{ 100.0f };
 };
 

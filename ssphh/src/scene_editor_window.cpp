@@ -9,11 +9,11 @@ SceneEditorWindow::~SceneEditorWindow() {}
 
 void SceneEditorWindow::OnUpdate(double timestamp) {
 	if (!ssphh_widget_ptr) {
-		ssg = nullptr;
+		ssg->reset();
 		return;
 	}
-	else if (ssg != &ssphh_widget_ptr->ssg) {
-		ssg = &ssphh_widget_ptr->ssg;
+	else if (ssg != ssphh_widget_ptr->ssg) {
+		ssg = ssphh_widget_ptr->ssg;
 	}
 	if (!ssg) return;
 
@@ -58,13 +58,13 @@ void SceneEditorWindow::OnRenderDearImGui() {
 	}
 
 	if (sun && ImGui::TreeNode("Sun")) {
-		auto L = ssg->dirToLights["sun"];
+		SimpleDirToLight& sun = ssg->dirToLights["sun"];
 		ImGui::TextColored(Colors::Azure, "Sun");
-		ImGui::ColorEdit3("sunE0", sun->E0.ptr());
-		ImGui::DragFloat3("sunDirTo", sun->dirTo.ptr(), 0.01f, -1.0f, 1.0f);
-		if (ImGui::Button("unit")) sun->dirTo.normalize();
+		ImGui::ColorEdit3("sunE0", sun.E0.ptr());
+		ImGui::DragFloat3("sunDirTo", sun.dirTo.ptr(), 0.01f, -1.0f, 1.0f);
+		if (ImGui::Button("unit")) sun.dirTo.normalize();
 		if (ImGui::Button("real")) {
-			sun->dirTo = ssg->environment.curSunDirTo;
+			sun.dirTo = ssg->environment.curSunDirTo;
 		}
 		ImGui::TreePop();
 	}

@@ -10,42 +10,42 @@ RendererWindow::~RendererWindow() {}
 
 void RendererWindow::OnUpdate(double timeStamp) {
 	if (!ssphh_widget_ptr) {
-		context = nullptr;
+		rendererContext = nullptr;
 		return;
 	}
 
 	Vf::Window::OnUpdate(timeStamp);
 
-	if (context != &ssphh_widget_ptr->rendererContext)
-		context = &ssphh_widget_ptr->rendererContext;
+	if (rendererContext != ssphh_widget_ptr->rendererContext)
+		rendererContext = ssphh_widget_ptr->rendererContext;
 }
 
 void RendererWindow::OnRenderDearImGui() {
-	if (!context || !beginWindow()) return;
+	if (!rendererContext || !beginWindow()) return;
 	Vf::Window::OnRenderDearImGui();
 
 	if (ImGui::Button("Reset")) {
-		context->reset();
+		rendererContext->reset();
 		endWindow();
 		return;
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("Defaults")) context->set_default_parameters();
+	if (ImGui::Button("Defaults")) rendererContext->set_default_parameters();
 
 	ImGui::Value("Render Mode", ssphh_widget_ptr->renderMode);
 	ImGui::Value("Render Time", (float)ssphh_widget_ptr->my_hud_info.totalRenderTime);
 
-	if (ImGui::Button("Load Configs")) HFCLOCKSf(lastConfigsLoadTime, context->loadConfig(SSPHH::default_renderconfig_path))
+	if (ImGui::Button("Load Configs")) HFCLOCKSf(lastConfigsLoadTime, rendererContext->loadConfig(SSPHH::default_renderconfig_path))
 		ImGui::Value("configs load", lastConfigsLoadTime);
 
-	if (ImGui::Button("Load Shaders")) HFCLOCKSf(lastShadersLoadTime, context->loadShaders());
+	if (ImGui::Button("Load Shaders")) HFCLOCKSf(lastShadersLoadTime, rendererContext->loadShaders());
 	ImGui::Value("shaders load", lastShadersLoadTime);
 
-	if (ImGui::Button("Load Textures")) HFCLOCKSf(lastTextureLoadTime, context->loadTextures());
+	if (ImGui::Button("Load Textures")) HFCLOCKSf(lastTextureLoadTime, rendererContext->loadTextures());
 	ImGui::Value("texture load", lastTextureLoadTime);
 
 	static float lastFramebufferTime{ 0 };
-	if (ImGui::Button("Make Framebuffers")) HFCLOCKSf(lastFramebufferTime, context->makeFramebuffers());
+	if (ImGui::Button("Make Framebuffers")) HFCLOCKSf(lastFramebufferTime, rendererContext->makeFramebuffers());
 	ImGui::Value("framebuffer time", lastFramebufferTime);
 
 	ImGui::Separator();
@@ -59,56 +59,56 @@ void RendererWindow::OnRenderDearImGui() {
 	ImGui::Separator();
 
 	if (ImGui::TreeNode("programs")) {
-		for (auto& [k, ro] : context->programs) {
-			ImGui::Text("%s [%s, %s]", ro.name(), ro.status(), (ro.usable() ? "usable" : "not usable"));
+		for (auto& [k, ro] : rendererContext->programs) {
+			ImGui::Text("%s [%s, %s]", ro->name(), ro->status(), (ro->usable() ? "usable" : "not usable"));
 		}
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("renderers")) {
-		for (auto& [k, ro] : context->renderers) {
-			ImGui::Text("%s [%s, %s]", ro.name(), ro.status(), (ro.usable() ? "usable" : "not usable"));
+		for (auto& [k, ro] : rendererContext->renderers) {
+			ImGui::Text("%s [%s, %s]", ro->name(), ro->status(), (ro->usable() ? "usable" : "not usable"));
 		}
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("rendererconfigs")) {
-		for (auto& [k, ro] : context->rendererConfigs) {
-			ImGui::Text("%s [%s, %s]", ro.name(), ro.status(), (ro.usable() ? "usable" : "not usable"));
+		for (auto& [k, ro] : rendererContext->rendererConfigs) {
+			ImGui::Text("%s [%s, %s]", ro->name(), ro->status(), (ro->usable() ? "usable" : "not usable"));
 		}
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("fbos")) {
-		for (auto& [k, ro] : context->fbos) {
-			ImGui::Text("%s [%s, %s]", ro.name(), ro.status(), (ro.usable() ? "usable" : "not usable"));
+		for (auto& [k, ro] : rendererContext->fbos) {
+			ImGui::Text("%s [%s, %s]", ro->name(), ro->status(), (ro->usable() ? "usable" : "not usable"));
 		}
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("texture2Ds")) {
-		for (auto& [k, ro] : context->texture2Ds) {
-			ImGui::Text("%s [%s, %s]", ro.name(), ro.status(), (ro.usable() ? "usable" : "not usable"));
+		for (auto& [k, ro] : rendererContext->texture2Ds) {
+			ImGui::Text("%s [%s, %s]", ro->name(), ro->status(), (ro->usable() ? "usable" : "not usable"));
 		}
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("textureCubes")) {
-		for (auto& [k, ro] : context->textureCubes) {
-			ImGui::Text("%s [%s, %s]", ro.name(), ro.status(), (ro.usable() ? "usable" : "not usable"));
+		for (auto& [k, ro] : rendererContext->textureCubes) {
+			ImGui::Text("%s [%s, %s]", ro->name(), ro->status(), (ro->usable() ? "usable" : "not usable"));
 		}
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("samplers")) {
-		for (auto& [k, ro] : context->samplers) {
-			ImGui::Text("%s [%s, %s]", ro.name(), ro.status(), (ro.usable() ? "usable" : "not usable"));
+		for (auto& [k, ro] : rendererContext->samplers) {
+			ImGui::Text("%s [%s, %s]", ro->name(), ro->status(), (ro->usable() ? "usable" : "not usable"));
 		}
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("vars")) {
-		for (auto& [k, v] : context->vars.variables) {
+		for (auto& [k, v] : rendererContext->vars.variables) {
 			if (v.IsInteger()) ImGui::Value(k.c_str(), v.ival);
 			if (v.IsDouble()) ImGui::Value(k.c_str(), (float)v.dval);
 			if (v.IsStringOrIdentifier()) ImGui::Value(k.c_str(), v.sval.c_str());
