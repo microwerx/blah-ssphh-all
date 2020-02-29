@@ -224,22 +224,23 @@ namespace SSPHH
 		if (uIsHemisphere >= 0)
 			glUniform1i(uIsHemisphere, ssg.environment.isHemisphere);
 
-		glBindBuffer(GL_ARRAY_BUFFER, abo);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eabo);
-		glVertexAttribPointer(vloc, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 6, (const void*)0);
-		glVertexAttribPointer(tloc, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 6, (const void*)12);
-		if (vloc >= 0)
-			glEnableVertexAttribArray(vloc);
-		if (tloc >= 0)
-			glEnableVertexAttribArray(tloc);
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0);
-		if (vloc >= 0)
-			glDisableVertexAttribArray(vloc);
-		if (tloc >= 0)
-			glDisableVertexAttribArray(tloc);
+		FxDrawBufferElementsV3fT3f(abo, eabo, vloc, tloc, GL_TRIANGLES, GL_UNSIGNED_SHORT, 36);
+		// glBindBuffer(GL_ARRAY_BUFFER, abo);
+		// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eabo);
+		// glVertexAttribPointer(vloc, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 6, (const void*)0);
+		// glVertexAttribPointer(tloc, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 6, (const void*)12);
+		// if (vloc >= 0)
+		// 	glEnableVertexAttribArray(vloc);
+		// if (tloc >= 0)
+		// 	glEnableVertexAttribArray(tloc);
+		// glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0);
+		// if (vloc >= 0)
+		// 	glDisableVertexAttribArray(vloc);
+		// if (tloc >= 0)
+		// 	glDisableVertexAttribArray(tloc);
 
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		// glBindBuffer(GL_ARRAY_BUFFER, 0);
+		// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glUseProgram(0);
 	}
 }

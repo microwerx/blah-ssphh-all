@@ -153,14 +153,14 @@ namespace SSPHH {
 			"resources/aurora/tertiaryCurtain.data",
 			"resources/aurora/tertiaryCurtain-1.data",
 			"resources/aurora/clouds.data" };
-		static char* uvfiles[NUM_SPLINES] =
+		static const char* uvfiles[NUM_SPLINES] =
 		{ "resources/aurora/curtainMain.uv",
 		  "resources/aurora/secondaryCurtain.uv",
 		  "resources/aurora/secondaryCurtain-1.uv",
 		  "resources/aurora/tertiaryCurtain.uv",
 		  "resources/aurora/tertiaryCurtain-1.uv",
 		  "resources/aurora/clouds.uv" };
-		static char* brightfiles[NUM_SPLINES] =
+		static const char* brightfiles[NUM_SPLINES] =
 		{ "resources/aurora/curtainMain.brightness",
 		  "resources/aurora/secondaryCurtain.brightness",
 		  "resources/aurora/secondaryCurtain.brightness",
