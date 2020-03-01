@@ -209,9 +209,12 @@ namespace SSPHH {
 		// Initialize Simple Scene Graph
 		FxSetErrorMessage(__FILE__, __LINE__, "initializing scene graph");
 
-		ssg = MakeSimpleSceneGraph();
-		rendererContext = MakeRendererContext();
-		ssgUserData = std::make_shared<SSG_SSPHHRendererPlugin>(ssg);
+		if (!root)
+			root = MakeBaseObject("root");
+		ssg = MakeSimpleSceneGraph("ssg", root);
+		rendererContext = MakeRendererContext("maincontext", root);
+		ssgUserData = std::make_shared<SSG_SSPHHRendererPlugin>();
+		ssgUserData->plugin(ssg);
 		SSG_LoadScene();
 		cameraAnimation.create();
 

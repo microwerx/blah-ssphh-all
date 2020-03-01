@@ -289,9 +289,9 @@ namespace SSPHH
 				Interface.cameraOrbit.x += 5.0f;
 
 			if (key == "[")
-				ssg->environment.toneMapExposure() = Fluxions::clamp(ssg->environment.toneMapExposure() - 0.5f, -12.0f, 12.0f);
+				ssg->environment->toneMapExposure() = Fluxions::clamp(ssg->environment->toneMapExposure() - 0.5f, -12.0f, 12.0f);
 			if (key == "]")
-				ssg->environment.toneMapExposure() = Fluxions::clamp(ssg->environment.toneMapExposure ()+ 0.5f, -12.0f, 12.0f);
+				ssg->environment->toneMapExposure() = Fluxions::clamp(ssg->environment->toneMapExposure ()+ 0.5f, -12.0f, 12.0f);
 			if (key == ";")
 				Interface.tools.shaderDebugChoice = Fluxions::clamp(Interface.tools.shaderDebugChoice - 1, 0, 20);
 			if (key == "'")

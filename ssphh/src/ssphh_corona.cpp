@@ -166,7 +166,7 @@ namespace SSPHH {
 				continue;
 
 			auto& sphl = ssgUserData->ssphhLights[sendLight];
-			sphl.vizgenLightProbes.resize(numLights);
+			sphl->vizgenLightProbes.resize(numLights);
 
 			for (int recvLight = 0; recvLight < numLights; recvLight++) {
 				if (recvLight == sendLight)
@@ -245,9 +245,9 @@ namespace SSPHH {
 				sendLight != rendererContext->rendererConfigs["default"]->shaderDebugSphl)
 				continue;
 			auto& sphl = ssgUserData->ssphhLights[sendLight];
-			sphl.vizgenLightProbes.resize(numLights);
+			sphl->vizgenLightProbes.resize(numLights);
 
-			//sphl.index = sendLight;
+			//sphl->index = sendLight;
 			int mrd = coronaScene.GEN.maxRayDepth;
 			int pl = coronaScene.GEN.passLimit;
 			Uf::CoronaJob job(Interface.sceneName,

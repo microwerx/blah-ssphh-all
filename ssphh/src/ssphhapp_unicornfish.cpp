@@ -85,40 +85,40 @@ namespace SSPHH
 			recvLight = job.GetVIZRecvLightIndex();
 		}
 
-		SimpleSSPHHLight& sphl = ssgUserData->ssphhLights[sendLight];
+		SimpleSSPHHLightPtr sphl = ssgUserData->ssphhLights[sendLight];
 		Sph4f sph;
 		if (job.IsVIZ()) {
 			if (useEXR) {
-				sphl.vizgenLightProbes[recvLight].loadEXR(fpi.shortestPath());
+				sphl->vizgenLightProbes[recvLight].loadEXR(fpi.shortestPath());
 			}
 			else {
-				sphl.vizgenLightProbes[recvLight].loadPPM(fpi.shortestPath());
+				sphl->vizgenLightProbes[recvLight].loadPPM(fpi.shortestPath());
 			}
-			sphl.vizgenLightProbes[recvLight].convertRectToCubeMap();
-			sphl.lightProbeToSph(sphl.vizgenLightProbes[recvLight], sph.msph);
+			sphl->vizgenLightProbes[recvLight].convertRectToCubeMap();
+			sphl->lightProbeToSph(sphl->vizgenLightProbes[recvLight], sph.msph);
 			job.CopySPH(sph);
 			return true;
 		}
 		else if (job.IsGEN()) {
-			sphl.readPtrcLightProbe(job.GetOutputPath(useEXR));
-			sphl.savePtrcLightProbe(job.GetName() + "_" + std::to_string(sendLight) + "_sph.exr");
+			sphl->readPtrcLightProbe(job.GetOutputPath(useEXR));
+			sphl->savePtrcLightProbe(job.GetName() + "_" + std::to_string(sendLight) + "_sph.exr");
 
 			//if (ssgUserData->ssphh.saveJSONs)
-			//	sphl.SaveJsonSph(job.GetName() + "_sph.json");
+			//	sphl->SaveJsonSph(job.GetName() + "_sph.json");
 			if (ssphh.saveJSONs)
-				sphl.saveJsonSph(job.GetName() + "_sph.json");
+				sphl->saveJsonSph(job.GetName() + "_sph.json");
 
 			if (useEXR) {
-				sphl.vizgenLightProbes[sendLight].loadEXR(fpi.shortestPath());
+				sphl->vizgenLightProbes[sendLight].loadEXR(fpi.shortestPath());
 			}
 			else {
-				sphl.vizgenLightProbes[sendLight].loadPPM(fpi.shortestPath());
+				sphl->vizgenLightProbes[sendLight].loadPPM(fpi.shortestPath());
 
 			}
-			sphl.vizgenLightProbes[sendLight].convertRectToCubeMap();
-			sphl.lightProbeToSph(sphl.vizgenLightProbes[sendLight], sph.msph);
+			sphl->vizgenLightProbes[sendLight].convertRectToCubeMap();
+			sphl->lightProbeToSph(sphl->vizgenLightProbes[sendLight], sph.msph);
 			job.CopySPH(sph);
-			sphl.uploadLightProbe(sphl.vizgenLightProbes[sendLight], sphl.hierLightProbeTexture);
+			sphl->uploadLightProbe(sphl->vizgenLightProbes[sendLight], sphl->hierLightProbeTexture);
 			return true;
 		}
 		return false;
@@ -135,16 +135,16 @@ namespace SSPHH
 			recvLight = job.GetVIZRecvLightIndex();
 		}
 
-		SimpleSSPHHLight& sphl = ssgUserData->ssphhLights[sendLight];
+		SimpleSSPHHLightPtr sphl = ssgUserData->ssphhLights[sendLight];
 		Sph4f sph;
 		job.CopySPHToSph4f(sph);
 		if (job.IsVIZ()) {
-			sphl.sphToLightProbe(sph.msph, sphl.vizgenLightProbes[recvLight]);
+			sphl->sphToLightProbe(sph.msph, sphl->vizgenLightProbes[recvLight]);
 			return true;
 		}
 		else if (job.IsGEN()) {
-			sphl.sphToLightProbe(sph.msph, sphl.vizgenLightProbes[sendLight]);
-			sphl.uploadLightProbe(sphl.vizgenLightProbes[sendLight], sphl.hierLightProbeTexture);
+			sphl->sphToLightProbe(sph.msph, sphl->vizgenLightProbes[sendLight]);
+			sphl->uploadLightProbe(sphl->vizgenLightProbes[sendLight], sphl->hierLightProbeTexture);
 			return true;
 		}
 		return false;

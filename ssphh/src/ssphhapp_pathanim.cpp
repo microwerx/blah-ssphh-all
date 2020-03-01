@@ -148,7 +148,7 @@ namespace SSPHH
 		Matrix4f m;
 		m.Translate(p.x, p.y, p.z);
 		m.MultMatrix((animpath_window_ptr->q * q).toMatrix4());
-		ssg->camera.viewMatrix(m.AsInverse());
+		ssg->camera->viewMatrix(m.AsInverse());
 
 		cameraAnimation.calcgraph(animpath_window_ptr);
 	}

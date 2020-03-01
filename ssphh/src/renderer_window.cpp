@@ -25,7 +25,7 @@ void RendererWindow::OnRenderDearImGui() {
 	Vf::Window::OnRenderDearImGui();
 
 	if (ImGui::Button("Reset")) {
-		rendererContext->reset();
+		rendererContext->reinit();
 		endWindow();
 		return;
 	}

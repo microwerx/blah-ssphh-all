@@ -17,14 +17,14 @@ namespace SSPHH
 
 	void SSPHH_Application::Sun_AdvanceClock(double numSeconds, bool recomputeSky) {
 		pbsky_timeOffsetInSeconds += numSeconds;
-		ssg->environment.pbsky.SetTime(pbsky_localtime, (float)pbsky_timeOffsetInSeconds);
+		ssg->environment->pbsky.SetTime(pbsky_localtime, (float)pbsky_timeOffsetInSeconds);
 		Interface.recomputeSky = recomputeSky;
 	}
 
 	void SSPHH_Application::Sun_ResetClock() {
-		ssg->environment.pbsky.SetCivilDateTime(ssg->environment.pbsky_dtg);
-		ssg->environment.pbsky.computeAstroFromLocale();
-		pbsky_localtime = ssg->environment.pbsky.GetTime();
+		ssg->environment->pbsky.SetCivilDateTime(ssg->environment->pbsky_dtg);
+		ssg->environment->pbsky.computeAstroFromLocale();
+		pbsky_localtime = ssg->environment->pbsky.GetTime();
 		pbsky_timeOffsetInSeconds = 0.0;
 		Interface.recomputeSky = true;
 		Sun_AdvanceClock(0.0, true);
@@ -35,21 +35,21 @@ namespace SSPHH
 		pbsky_localtime = time(NULL);
 		pbsky_timeOffsetInSeconds = 0.0;
 
-		ssg->environment.pbsky.SetTime(time(NULL), 0.0);
-		ssg->environment.pbsky.computeAstroFromLocale();
+		ssg->environment->pbsky.SetTime(time(NULL), 0.0);
+		ssg->environment->pbsky.computeAstroFromLocale();
 		Interface.recomputeSky = true;
 		Sky_RegenHosekWilkieTextures();
 	}
 
 	void SSPHH_Application::Sun_SetLights() {
-		if (!sun) sun = ssg->dirToLights.getPtr("sun");
-		if (sun) sun->dirTo = ssg->environment.curSunDirTo;
+		if (!sun) sun = &*ssg->dirToLights["sun"];
+		if (sun) sun->dirTo = ssg->environment->curSunDirTo;
 		if (!moon) {
-			moon = ssg->dirToLights.getPtr("moon");
-			moonGG = ssg->geometryGroups.getPtr("moon");
+			moon = &*ssg->dirToLights["moon"];
+			moonGG = ssg->geometryGroups["moon"];
 		}
 		if (moon) {
-			moon->dirTo = ssg->environment.curMoonDirTo;
+			moon->dirTo = ssg->environment->curMoonDirTo;
 			moonGG->transform = Matrix4f::MakeTranslation(moon->dirTo.xyz() * 95.0f);
 		}
 	}
@@ -67,8 +67,8 @@ namespace SSPHH
 		ssg->Load(sceneFilename);
 
 		// Configure astronomical models/textures/lights
-		ssg->environment.hasMoon = true;
-		ssg->environment.hasSun = true;
+		ssg->environment->hasMoon = true;
+		ssg->environment->hasSun = true;
 		ssg->addDirToLight("sun");
 		ssg->addDirToLight("moon");
 		ssg->currentTransform.LoadIdentity();
@@ -81,7 +81,7 @@ namespace SSPHH
 	void SSPHH_Application::SSG_OptimizeClippingPlanes() {
 		//Matrix4f cameraMatrix_ = defaultRenderConfig.preCameraMatrix * ssg->camera.actualViewMatrix * defaultRenderConfig.postCameraMatrix;
 		//cameraMatrix_.AsInverse().col4()
-		Matrix4f cameraMatrix = ssg->camera.actualViewMatrix.AsInverse();
+		Matrix4f cameraMatrix = ssg->camera->actualViewMatrix.AsInverse();
 		const BoundingBoxf& bbox = ssg->getBoundingBox();
 		const Matrix4f& frameOfReference = cameraMatrix;
 		const Vector3f& position = frameOfReference.col4().xyz();
@@ -95,8 +95,8 @@ namespace SSPHH
 
 		//rendererContext.rendererConfigs["default"].znear = znear;
 		//rendererContext.rendererConfigs["default"].zfar = zfar;
-		//rendererContext.rendererConfigs["rectShadow"].znear = std::max(0.1f, ssg->environment.sunShadowMapNearZ);
-		//rendererContext.rendererConfigs["rectShadow"].zfar = std::min(1000.0f, ssg->environment.sunShadowMapFarZ);
+		//rendererContext.rendererConfigs["rectShadow"].znear = std::max(0.1f, ssg->environment->sunShadowMapNearZ);
+		//rendererContext.rendererConfigs["rectShadow"].zfar = std::min(1000.0f, ssg->environment->sunShadowMapFarZ);
 	}
 
 	void SSPHH_Application::SSG_ProcessInterfaceTasks() {

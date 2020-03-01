@@ -64,7 +64,7 @@ namespace SSPHH
 
 	void SSPHH_Application::LoadRenderConfigs() {
 		HFLOGINFO("resetting and loading render configs...");
-		rendererContext->reset();
+		rendererContext->reinit();
 		rendererContext->resize(getWidthi(), getHeighti());
 
 		if (!rendererContext->loadConfig(default_renderconfig_path)) {

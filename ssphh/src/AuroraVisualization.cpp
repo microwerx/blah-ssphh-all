@@ -84,7 +84,7 @@ namespace SSPHH {
 					istr >> frameno;
 					frameIndex = frameno - FRAME_START;
 					visibleFrames[which][frameIndex] = visible ? 1 : 0;
-					mesh_frames[which].beginSurface(Fluxions::SimpleGeometryMesh::LineLoop);
+					mesh_frames[which].beginLineLoop();
 					if (!visible) frameno = -1;
 					continue;
 				}
