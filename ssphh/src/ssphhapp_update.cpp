@@ -11,8 +11,7 @@ namespace SSPHH
 
 		Fluxions::UpdateAsyncs();
 		rendererContext->loadShaders();
-
-		for (auto& renderers: rendererContext)
+		rendererContext->syncSceneGraph();
 
 		Hf::StopWatch stopwatch;
 		DoInterfaceUpdate(deltaTime);

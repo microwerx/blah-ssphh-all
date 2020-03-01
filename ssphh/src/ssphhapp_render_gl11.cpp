@@ -81,7 +81,7 @@ namespace SSPHH
 
 			glPushMatrix();
 			glTranslatef(center.x, center.y, center.z);
-			FxDrawGL1WireCube(ssg.staticMeshes[g->second.objectId].bbox.MaxSize());
+			FxDrawGL1WireCube(ssg.staticMeshes[g->second.objectId].bbox.maxSize());
 			glPopMatrix();
 
 			glEnable(GL_LIGHTING);

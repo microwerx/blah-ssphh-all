@@ -89,7 +89,7 @@ namespace SSPHH
 		float zfar;
 
 		float distanceToBoxCenter = (position - bbox.Center()).length() + 1.0f;
-		float boxRadius = bbox.RadiusRounded();
+		float boxRadius = bbox.radiusRounded();
 		znear = std::max(0.1f, distanceToBoxCenter - boxRadius);
 		zfar = distanceToBoxCenter + 2 * boxRadius; // min(1000.0f, distanceToBoxCenter + boxRadius);
 

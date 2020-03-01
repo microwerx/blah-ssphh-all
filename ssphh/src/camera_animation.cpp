@@ -13,9 +13,9 @@ void CameraAnimation::calcgraph(Vf::AnimPathWindowPtr mw) {
 	for (auto& kf : keyframes) {
 		kfbbox += kf.p();
 	}
-	const float scale = 200.0f / kfbbox.MaxSize();
-	const float ox = kfbbox.MinX() - 0.1f * scale;
-	const float oy = kfbbox.MinZ() - 0.1f * scale;
+	const float scale = 200.0f / kfbbox.maxSize();
+	const float ox = kfbbox.minX() - 0.1f * scale;
+	const float oy = kfbbox.minZ() - 0.1f * scale;
 
 	bool lerp = mw->blerp;
 	bool squad = mw->bsquad;

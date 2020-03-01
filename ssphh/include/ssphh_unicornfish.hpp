@@ -35,7 +35,7 @@ enum class UfType {
 //
 //	void Push(const string &msg);
 //	void Pop(string &msg);
-//	size_t Size() const;
+//	size_t size() const;
 //private:
 //	vector<string> messages;
 //	mutable mutex messagesMutex;
@@ -64,7 +64,7 @@ enum class UfType {
 //	messages.pop_back();
 //}
 //
-//size_t UfStringQueue::Size() const
+//size_t UfStringQueue::size() const
 //{
 //	lock_guard<mutex> guard(messagesMutex);
 //	return messages.size();

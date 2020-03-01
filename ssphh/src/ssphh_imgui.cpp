@@ -821,7 +821,7 @@ namespace SSPHH {
 						BoundingBoxf& bbox = group->bbox;
 						Vector3f meshSceneMin = bbox.minBounds;
 						Vector3f meshSceneMax = bbox.maxBounds;
-						Vector3f meshSceneSize = bbox.Size();
+						Vector3f meshSceneSize = bbox.size();
 						ImGui::Text(
 							"dimensions (%.1f %.1f %.1f)/(%.1f, %.1f, %.1f) [%.1f, %.1f, %.1f]",
 							meshSceneMin.x,
@@ -833,8 +833,8 @@ namespace SSPHH {
 							meshSceneSize.x,
 							meshSceneSize.y,
 							meshSceneSize.z);
-						// ImGui::Text("dimensions: %.2f/%.2f/%.2f", g.second.bbox.MaxX(), g.second.bbox.MaxY(),
-						// g.second.bbox.MaxZ());
+						// ImGui::Text("dimensions: %.2f/%.2f/%.2f", g.second.bbox.maxX(), g.second.bbox.maxY(),
+						// g.second.bbox.maxZ());
 
 						imguiMatrix4fEditControl(i, group->transform);
 					}
