@@ -44,15 +44,16 @@ namespace SSPHH
 		// r.Render();
 
 		Hf::StopWatch stopwatch;
-		if (renderMode == 0) {
-			RenderFixedFunctionGL();
-		}
-		else if (renderMode == 1) {
-			RenderGLES20();
-		}
-		else if (renderMode == 2) {
-			RenderGLES30();
-		}
+		//if (renderMode == 0) {
+		//	RenderFixedFunctionGL();
+		//}
+		//else if (renderMode == 1) {
+		//	RenderGLES20();
+		//}
+		//else if (renderMode == 2) {
+		//	RenderGLES30();
+		//}
+		RenderGLES30();
 		double dt = stopwatch.Stop_ms();
 		if (dt < 1000.0) {
 			Hf::Log.takeStat("frametime", my_hud_info.totalRenderTime);

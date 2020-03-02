@@ -87,8 +87,7 @@ namespace SSPHH {
 		}
 
 		RendererUtility viz_renderer(ssg, rendererContext, "viz");
-		viz_renderer.render(RendererGLES30::UPDATE_VIZ);
-		const std::string renderername{ "viz" };
+		viz_renderer.render();
 	}
 
 

@@ -19,14 +19,14 @@ namespace SSPHH {
 		M.Scale(0.001f, 0.001f, 0.001f);
 		for (int i = 0; i < NUM_SPLINES; i++) {
 			if (!visibleFrames[i][frame1] && !visibleFrames[i][frame2]) continue;
-			auto start1 = mesh_frames[i].Surfaces[frame1].first;
-			auto start2 = mesh_frames[i].Surfaces[frame2].first;
-			if (mesh_frames[i].Surfaces[frame1].count < NUM_POINTS) continue;
-			if (mesh_frames[i].Surfaces[frame2].count < NUM_POINTS) continue;
+			auto start1 = mesh_frames[i].surfaces[frame1].first;
+			auto start2 = mesh_frames[i].surfaces[frame2].first;
+			if (mesh_frames[i].surfaces[frame1].count < NUM_POINTS) continue;
+			if (mesh_frames[i].surfaces[frame2].count < NUM_POINTS) continue;
 			glBegin(GL_LINE_LOOP);
 			for (int pt = 0; pt < NUM_POINTS; pt++) {
-				auto& vtx1 = mesh_frames[i].Vertices[(int64_t)start1 + pt];
-				auto& vtx2 = mesh_frames[i].Vertices[start2 + pt];
+				auto& vtx1 = mesh_frames[i].vertices[(int64_t)start1 + pt];
+				auto& vtx2 = mesh_frames[i].vertices[start2 + pt];
 				Color4f c = Fluxions::lerp(t, vtx1.color, vtx2.color);
 				Vector3f pos = Fluxions::lerp(t, vtx1.position, vtx2.position);
 				pos *= 1.0f / 6471.0f;
@@ -36,8 +36,8 @@ namespace SSPHH {
 			glEnd();
 			glBegin(GL_LINES);
 			for (int pt = 0; pt < NUM_POINTS; pt++) {
-				auto& vtx1 = mesh_frames[i].Vertices[start1 + pt];
-				auto& vtx2 = mesh_frames[i].Vertices[start2 + pt];
+				auto& vtx1 = mesh_frames[i].vertices[start1 + pt];
+				auto& vtx2 = mesh_frames[i].vertices[start2 + pt];
 				Color4f c = Fluxions::lerp(t, vtx1.color, vtx2.color);
 				Vector3f pos1 = Fluxions::lerp(t, vtx1.position, vtx2.position);
 				pos1 *= 1.0f / 6471.0f;

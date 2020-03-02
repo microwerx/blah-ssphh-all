@@ -1,16 +1,16 @@
 #include "pch.hpp"
-#include <fluxions_image_loader.hpp>
+#include <fluxions_async_manager.hpp>
 #include <ssphhapp.hpp>
 
-namespace SSPHH
-{
+namespace SSPHH {
 	void SSPHH_Application::OnUpdate(double timeStamp) {
 		Widget::OnUpdate(timeStamp);
 		double deltaTime = GetFrameTime();
 		framesPerSecond = 1.0 / deltaTime;
 
-		Fluxions::UpdateAsyncs();
-		rendererContext->loadShaders();
+		if (Fluxions::UpdateAsyncs())
+			ssg->processLoaded();
+		rendererContext->syncRendererObjects();
 		rendererContext->syncSceneGraph();
 
 		Hf::StopWatch stopwatch;
@@ -23,8 +23,8 @@ namespace SSPHH
 			auroraViz.OnUpdate(deltaTime);
 		}
 
-		//pbskyAge += deltaTime;
-		//if (pbskyAge > pbskyMaxAge) {
+		// pbskyAge += deltaTime;
+		// if (pbskyAge > pbskyMaxAge) {
 		//	Interface.recomputeSky = true;
 		//	pbskyAge = 0.0;
 		//}
@@ -45,9 +45,10 @@ namespace SSPHH
 			rotZ += (float)deltaTime;
 
 			Interface.cameraOrbit.x += (float)deltaTime;
-			Interface.cameraOrbit.y = 0.5f * (float)deltaTime * (Interface.cameraOrbit.y); // +(float)sin(0.25 * rotY) * 15.0f - 15.0f);
+			Interface.cameraOrbit.y =
+				0.5f * (float)deltaTime * (Interface.cameraOrbit.y); // +(float)sin(0.25 * rotY) * 15.0f - 15.0f);
 
-			//Interface.preCameraMatrix
+			// Interface.preCameraMatrix
 
 			//	for (auto geoIt = ssg->geometryGroups_.begin(); geoIt != ssg->geometryGroups_.end(); geoIt++)
 			//	{
@@ -76,11 +77,11 @@ namespace SSPHH
 			//	}
 		}
 
-		//GLuint defaultCubeSamplerId = rendererContext.samplers["defaultCube"].getId();
-		//ssg->environment->pbskyColorMapSamplerId = defaultCubeSamplerId;
-		//ssg->environment->enviroColorMapSamplerId = defaultCubeSamplerId;
-		//ssg->environment->sunColorMapSamplerId = defaultCubeSamplerId;
-		//ssg->environment->sunDepthMapSamplerId = defaultCubeSamplerId;
+		// GLuint defaultCubeSamplerId = rendererContext.samplers["defaultCube"].getId();
+		// ssg->environment->pbskyColorMapSamplerId = defaultCubeSamplerId;
+		// ssg->environment->enviroColorMapSamplerId = defaultCubeSamplerId;
+		// ssg->environment->sunColorMapSamplerId = defaultCubeSamplerId;
+		// ssg->environment->sunDepthMapSamplerId = defaultCubeSamplerId;
 
 		stopwatch.Stop();
 		my_hud_info.onUpdateTime = stopwatch.GetMillisecondsElapsed();
@@ -129,7 +130,7 @@ namespace SSPHH
 		double gpMoveRate = 1.0;
 		double gpTurnRate = 1.0;
 
-		if (!Interface.showImGui) //gamepads[0].IsConnected())
+		if (!Interface.showImGui) // gamepads[0].IsConnected())
 		{
 			Interface.moveLeft = gamepads[0].lthumbLeft() || kbgamepad.lthumbLeft();
 			Interface.moveRight = gamepads[0].lthumbRight() || kbgamepad.lthumbRight();
@@ -146,14 +147,12 @@ namespace SSPHH
 
 			if (gamepads[0].lthumbAmount() > 0.0f) {
 				gpMoveRate = gamepads[0].lthumbAmount();
-			}
-			else {
+			} else {
 				gpMoveRate = 1.0;
 			}
 			if (gamepads[0].rthumbAmount() > 0.0f) {
 				gpTurnRate = gamepads[0].rthumbAmount();
-			}
-			else {
+			} else {
 				gpTurnRate = 1.0;
 			}
 		}
@@ -162,10 +161,7 @@ namespace SSPHH
 		double mdx = mousemvmt ? mouse.dragStates[0].currentDelta.x : 0.0;
 		double mdy = mousemvmt ? mouse.dragStates[0].currentDelta.y : 0.0;
 
-		Vector2f dimensions{
-			(float)rendererContext->getDeferredRect().w,
-			(float)rendererContext->getDeferredRect().h
-		};
+		Vector2f dimensions{ (float)rendererContext->getDeferredRect().w, (float)rendererContext->getDeferredRect().h };
 		double rectLength = dimensions.length();
 		double scale = -180.0 / rectLength;
 		mdx *= scale;
@@ -183,18 +179,18 @@ namespace SSPHH
 		turnX = gamepads[0].rthumb_y() + kbgamepad.rthumb_y() + mdy;
 		turnZ = gamepads[0].r2() - gamepads[0].l2() - kbgamepad.r2() + kbgamepad.l2();
 
-		//if (Interface.moveLeft) moveX -= 1.0;
-		//if (Interface.moveRight) moveX += 1.0;
-		//if (Interface.moveUp) moveY += 1.0;
-		//if (Interface.moveDown) moveY -= 1.0;
-		//if (Interface.moveForward) moveZ -= 1.0;
-		//if (Interface.moveBackward) moveZ += 1.0;
-		//if (Interface.yawLeft) turnY += 1.0;
-		//if (Interface.yawRight) turnY -= 1.0;
-		//if (Interface.rollLeft) turnZ += 1.0;
-		//if (Interface.rollRight) turnZ -= 1.0;
-		//if (Interface.pitchUp) turnX += 1.0;
-		//if (Interface.pitchDown) turnX -= 1.0;
+		// if (Interface.moveLeft) moveX -= 1.0;
+		// if (Interface.moveRight) moveX += 1.0;
+		// if (Interface.moveUp) moveY += 1.0;
+		// if (Interface.moveDown) moveY -= 1.0;
+		// if (Interface.moveForward) moveZ -= 1.0;
+		// if (Interface.moveBackward) moveZ += 1.0;
+		// if (Interface.yawLeft) turnY += 1.0;
+		// if (Interface.yawRight) turnY -= 1.0;
+		// if (Interface.rollLeft) turnZ += 1.0;
+		// if (Interface.rollRight) turnZ -= 1.0;
+		// if (Interface.pitchUp) turnX += 1.0;
+		// if (Interface.pitchDown) turnX -= 1.0;
 
 		if (moveX == 0)
 			Interface.moveX = 0;
@@ -231,15 +227,16 @@ namespace SSPHH
 		ssg->camera->fov = Interface.ssg.cameraFOV;
 
 		Interface.postCameraMatrix.LoadIdentity();
-		//Interface.postCameraMatrix.Translate(0.0f, 0.0f, Interface.cameraOrbit.z);
-		//Interface.postCameraMatrix.Rotate(Interface.cameraOrbit.y, 1.0f, 0.0f, 0.0f);
-		//Interface.postCameraMatrix.Rotate(Interface.cameraOrbit.X, 0.0f, 1.0f, 0.0f);
+		// Interface.postCameraMatrix.Translate(0.0f, 0.0f, Interface.cameraOrbit.z);
+		// Interface.postCameraMatrix.Rotate(Interface.cameraOrbit.y, 1.0f, 0.0f, 0.0f);
+		// Interface.postCameraMatrix.Rotate(Interface.cameraOrbit.X, 0.0f, 1.0f, 0.0f);
 		Interface.postCameraMatrix.Rotate(Interface.cameraOrbit.x, 0.0f, 1.0f, 0.0f);
 		Interface.postCameraMatrix.Rotate(Interface.cameraOrbit.y, 1.0f, 0.0f, 0.0f);
 		Interface.postCameraMatrix.Translate(0.0f, 0.0f, Interface.cameraOrbit.z);
 		Interface.inversePostCameraMatrix = Interface.postCameraMatrix.AsInverse();
 
-		Interface.finalCameraMatrix = Interface.preCameraMatrix * ssg->camera->viewMatrix() * Interface.postCameraMatrix;
+		Interface.finalCameraMatrix =
+			Interface.preCameraMatrix * ssg->camera->viewMatrix() * Interface.postCameraMatrix;
 		Interface.inverseFinalCameraMatrix = Interface.finalCameraMatrix.AsInverse();
 		Interface.cameraPosition = Interface.finalCameraMatrix.col4();
 
@@ -259,9 +256,10 @@ namespace SSPHH
 			pbskyLongitude -= 5.0f * (float)deltaTime;
 		}
 
-		if (Interface.increaseLatitude || Interface.decreaseLatitude || Interface.increaseLongitude || Interface.decreaseLongitude) {
+		if (Interface.increaseLatitude || Interface.decreaseLatitude || Interface.increaseLongitude ||
+			Interface.decreaseLongitude) {
 			ssg->environment->pbsky.SetLocation(pbskyLatitude, pbskyLongitude);
 			Sun_AdvanceClock(0.0, true);
 		}
 	}
-}
+} // namespace SSPHH

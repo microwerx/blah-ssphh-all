@@ -154,8 +154,9 @@ void SsphhWindow::OnRenderDearImGui() {
 	ImGui::Separator();
 
 	ImGui::Checkbox("Enable shadow map VIZ", &app.Interface.ssphh.enableShadowColorMap);
-	ImGui::SameLine();
-	ImGui::Checkbox("Enable sRGB", &app.rendererContext->rendererConfigs["default"]->enableSRGB);
+	//ImGui::SameLine();
+	//ImGui::Checkbox("Enable sRGB", &app.rendererContext->rendererConfigs["default"]->enableSRGB);
+	
 	ImGui::Text("REF:");
 	ImGuiAlignAt(vgrWidth, "ABCD");
 	ImGui::Checkbox("2D", &app.Interface.ssphh.enableREF);
