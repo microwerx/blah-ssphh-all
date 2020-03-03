@@ -15,7 +15,7 @@ ReflectGlossiness 0.55
 Ni 1.333
 Ns 10
 
-#map_Kd noise15-diffuse.png
+map_Kd noise15-diffuse.png
 map_normal noise15-normal_lite.png
 #map_Kd 8012-diffuse.jpg
 #map_normal 8012-normal.jpg

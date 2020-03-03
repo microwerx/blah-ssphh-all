@@ -11,6 +11,7 @@ public:
 
 	void OnUpdate(double timeStamp) override;
 	void OnRenderDearImGui() override;
+	void OnKill() override { rendererContext.reset(); }
 
 private:
 	Fluxions::RendererContextPtr rendererContext;

@@ -35,19 +35,19 @@ namespace SSPHH {
 		// if (counter == 3)
 		//	RenderTest3EnviroCubeMap();
 
-		if (Interface.drawSkyBox) {
+		if (Interface->drawSkyBox) {
 			RenderGLES30_SkyBox();
 		}
 
-		if (Interface.drawPBR) {
+		if (Interface->drawPBR) {
 			RenderGLES30_SceneGraph();
 		}
 
-		if (Interface.drawVIZ) {
+		if (Interface->drawVIZ) {
 			RenderGLES30_VIZ();
 		}
 
-		if (Interface.drawPOST) {
+		if (Interface->drawPOST) {
 			RenderGLES30_PostProcess();
 		}
 
@@ -110,16 +110,16 @@ namespace SSPHH {
 	// defaultRenderConfig.viewportRect.y = 0;
 	// defaultRenderConfig.viewportRect.w = (size_t)screenWidth;
 	// defaultRenderConfig.viewportRect.h = (size_t)screenHeight;
-	// defaultRenderConfig.preCameraMatrix = Interface.inversePreCameraMatrix;
-	// defaultRenderConfig.postCameraMatrix = Interface.inversePostCameraMatrix;
-	// defaultRenderConfig.fov = Interface.ssg.cameraFOV;
+	// defaultRenderConfig.preCameraMatrix = Interface->inversePreCameraMatrix;
+	// defaultRenderConfig.postCameraMatrix = Interface->inversePostCameraMatrix;
+	// defaultRenderConfig.fov = Interface->ssg.cameraFOV;
 	// defaultRenderConfig.isCubeMap = false;
 	// defaultRenderConfig.useSceneCamera = true;
 	// defaultRenderConfig.useZOnly = false;
 	// defaultRenderConfig.useMaterials = true;
-	// defaultRenderConfig.shaderDebugChoice = Interface.tools.shaderDebugChoice;
-	// defaultRenderConfig.shaderDebugLight = Interface.tools.shaderDebugLight;
-	// defaultRenderConfig.shaderDebugSphl = Interface.tools.shaderDebugSphl;
+	// defaultRenderConfig.shaderDebugChoice = Interface->tools.shaderDebugChoice;
+	// defaultRenderConfig.shaderDebugLight = Interface->tools.shaderDebugLight;
+	// defaultRenderConfig.shaderDebugSphl = Interface->tools.shaderDebugSphl;
 
 		FxCheckErrors();
 	const std::string renderername{ "skybox" };
@@ -132,7 +132,7 @@ namespace SSPHH {
 	while (glGetError())
 		HFLOGWARN("AdvancedRender() ERROR!");
 
-	if (Interface.drawSkyBox) {
+	if (Interface->drawSkyBox) {
 		FxSetErrorMessage(__FILE__, __LINE__, "skybox");
 		glEnable(GL_DEPTH_TEST);
 		Sky_Render();

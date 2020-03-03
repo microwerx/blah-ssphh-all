@@ -32,15 +32,15 @@ namespace SSPHH
 	}
 
 	void SSPHH_Application::PathAnim_Play() {
-		Interface.enableAnimation = true;
+		Interface->enableAnimation = true;
 	}
 
 	void SSPHH_Application::PathAnim_Stop() {
-		Interface.enableAnimation = false;
+		Interface->enableAnimation = false;
 	}
 
 	void SSPHH_Application::PathAnim_Toggle() {
-		Interface.enableAnimation = !Interface.enableAnimation;
+		Interface->enableAnimation = !Interface->enableAnimation;
 	}
 
 	void SSPHH_Application::PathAnim_Update() {
@@ -51,7 +51,7 @@ namespace SSPHH
 		cameraAnimationKeyframe = animpath_window_ptr->key;
 		int i = cameraAnimationKeyframe;
 
-		if (Interface.enableAnimation) {
+		if (Interface->enableAnimation) {
 			cameraAnimationTime += cameraAnimationSpeed * (float)GetFrameTime();
 			if (cameraAnimationTime > (float)cameraAnimation.size()) {
 				cameraAnimationTime -= std::floor(cameraAnimationTime);

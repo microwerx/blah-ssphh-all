@@ -15,8 +15,8 @@ namespace SSPHH
 		//rectShadowRenderConfig.clearDepthBuffer = true;
 		//rectShadowRenderConfig.viewportRect.x = 0;
 		//rectShadowRenderConfig.viewportRect.y = 0;
-		//rectShadowRenderConfig.viewportRect.w = Interface.renderconfig.sunShadowMapSize;
-		//rectShadowRenderConfig.viewportRect.h = Interface.renderconfig.sunShadowMapSize;
+		//rectShadowRenderConfig.viewportRect.w = Interface->renderconfig.sunShadowMapSize;
+		//rectShadowRenderConfig.viewportRect.h = Interface->renderconfig.sunShadowMapSize;
 		//rectShadowRenderConfig.fov = 90.0;
 		//rectShadowRenderConfig.isCubeMap = false;
 		//rectShadowRenderConfig.useSceneCamera = false;
@@ -115,6 +115,6 @@ namespace SSPHH
 		LoadRenderConfigs();
 		stopwatch.Stop();
 		HFLOGINFO("reload took %4.2f milliseconds", stopwatch.GetMillisecondsElapsed());
-		Interface.lastRenderConfigLoadTime = stopwatch.GetMillisecondsElapsed();
+		Interface->lastRenderConfigLoadTime = stopwatch.GetMillisecondsElapsed();
 	}
 } // namespace SSPHH

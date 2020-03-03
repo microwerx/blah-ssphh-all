@@ -32,7 +32,7 @@ transform 1.0 0.0 0.0 -4.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0 4.0
 
 
 transform 0.0 0.0 2.0 0.0 0.0 2.0 0.0 -2.0 2.0 0.0 0.0 0.0
-mtllib sponza.obj.mtl
+mtllib sponza.mtl
 geometryGroup sponza.obj
 
 # Floor

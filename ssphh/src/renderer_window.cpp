@@ -64,13 +64,13 @@ void RendererWindow::OnRenderDearImGui() {
 
 	ImGui::TextColored(Colors::Azure, "Passes");
 	ImGui::SameLine();
-	ImGui::Checkbox("Sky Box", &ssphh_widget_ptr->Interface.drawSkyBox);
+	ImGui::Checkbox("Sky Box", &ssphh_widget_ptr->Interface->drawSkyBox);
 	ImGui::SameLine();
-	ImGui::Checkbox("PBR", &ssphh_widget_ptr->Interface.drawPBR);
+	ImGui::Checkbox("PBR", &ssphh_widget_ptr->Interface->drawPBR);
 	ImGui::SameLine();
-	ImGui::Checkbox("VIZ", &ssphh_widget_ptr->Interface.drawVIZ);
+	ImGui::Checkbox("VIZ", &ssphh_widget_ptr->Interface->drawVIZ);
 	ImGui::SameLine();
-	ImGui::Checkbox("POST", &ssphh_widget_ptr->Interface.drawPOST);
+	ImGui::Checkbox("POST", &ssphh_widget_ptr->Interface->drawPOST);
 
 	ImGui::Separator();
 

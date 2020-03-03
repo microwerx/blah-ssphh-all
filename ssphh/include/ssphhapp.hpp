@@ -557,7 +557,7 @@ namespace SSPHH {
 		virtual void DoInterfaceUpdate(double deltaTime);
 		const Matrix4f& GetCameraMatrix() const;
 
-		const std::string& GetSceneName() const { return Interface.sceneName; }
+		const std::string& GetSceneName() const { return Interface->sceneName; }
 
 		CameraAnimation cameraAnimation;
 		float cameraAnimationSpeed{ 1.0f };
@@ -570,7 +570,7 @@ namespace SSPHH {
 		void PathAnim_Toggle();
 		void PathAnim_Update();
 
-		InterfaceInfo Interface;
+		std::unique_ptr<InterfaceInfo> Interface = std::make_unique<InterfaceInfo>();
 		int counter = 0;
 		double framesPerSecond = 0.0;
 

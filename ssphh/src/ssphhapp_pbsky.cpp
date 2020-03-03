@@ -45,7 +45,7 @@ namespace SSPHH
 	}
 
 	void SSPHH_Application::Sky_RegenCoronaSky() {
-		Uf::CoronaJob job(Interface.sceneName, "ssphh_sky", Uf::CoronaJob::Type::Sky);
+		Uf::CoronaJob job(Interface->sceneName, "ssphh_sky", Uf::CoronaJob::Type::Sky);
 
 		job.usePreviousRun(pbskyReuseCorona);
 		if (coronaScene.currentConfig.enableHQ)
@@ -207,7 +207,7 @@ namespace SSPHH
 			glUniformMatrix4fv(uProjectionMatrix, 1, GL_FALSE, projectionMatrix.const_ptr());
 		}
 		if (uCameraMatrix >= 0) {
-			Matrix4f viewMatrix = Interface.inversePreCameraMatrix * ssg->camera->viewMatrix();
+			Matrix4f viewMatrix = Interface->inversePreCameraMatrix * ssg->camera->viewMatrix();
 			viewMatrix.m14 = viewMatrix.m24 = viewMatrix.m34 = viewMatrix.m41 = viewMatrix.m42 = viewMatrix.m43 = 0.0f;
 			glUniformMatrix4fv(uCameraMatrix, 1, GL_FALSE, viewMatrix.const_ptr());
 		}

@@ -4,14 +4,14 @@
 namespace SSPHH
 {
 	void SSPHH_Application::InitUnicornfish() {
-		if (Interface.uf.uf_type != UfType::None) {
-			Interface.tools.showMaterialEditor = false;
-			Interface.tools.showSphlEditor = false;
-			Interface.tools.showScenegraphEditor = false;
-			Interface.tools.showDebugView = false;
-			Interface.tools.showSSPHHWindow = false;
-			Interface.tools.showRenderConfigWindow = false;
-			Interface.tools.showUnicornfishWindow = true;
+		if (Interface->uf.uf_type != UfType::None) {
+			Interface->tools.showMaterialEditor = false;
+			Interface->tools.showSphlEditor = false;
+			Interface->tools.showScenegraphEditor = false;
+			Interface->tools.showDebugView = false;
+			Interface->tools.showSSPHHWindow = false;
+			Interface->tools.showRenderConfigWindow = false;
+			Interface->tools.showUnicornfishWindow = true;
 		}
 	}
 
@@ -28,7 +28,7 @@ namespace SSPHH
 		std::ostringstream ostr;
 		ostr << "Scattered " << std::setw(2) << numScattered << "/";
 		ostr << "Finished  " << std::setw(2) << numFinished;
-		Interface.ssphh.gi_status = ostr.str();
+		Interface->ssphh.gi_status = ostr.str();
 		if (numFinished > 0) {
 			if (numScattered > 0) {
 				return 0;

@@ -162,13 +162,13 @@ namespace SSPHH {
 			}
 			if (ImGui::BeginMenu("Tools")) {
 				if (ImGui::MenuItem("Scenegraph Editor")) {
-					Interface.tools.showScenegraphEditor = true;
+					Interface->tools.showScenegraphEditor = true;
 				}
 				if (ImGui::MenuItem("Material Editor")) {
-					Interface.tools.showMaterialEditor = true;
+					Interface->tools.showMaterialEditor = true;
 				}
 				if (ImGui::MenuItem("SSPL Editor")) {
-					Interface.tools.showSphlEditor = true;
+					Interface->tools.showSphlEditor = true;
 				}
 				ImGui::EndMenu();
 			}
@@ -187,7 +187,7 @@ namespace SSPHH {
 		ImGui::Begin("Tool Window");
 		ImGui::PushID("ToolWindow");
 		if (ImGui::Button("Hide GUI")) {
-			Interface.showImGui = false;
+			Interface->showImGui = false;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Quit")) {
@@ -210,18 +210,18 @@ namespace SSPHH {
 		}
 		ImGui::SameLine();
 		if (ImGui::SmallButton("Shadows")) {
-			Interface.captureShadows = true;
+			Interface->captureShadows = true;
 		}
 
-		ImGui::Checkbox("Scenegraph Editor", &Interface.tools.showScenegraphEditor);
-		ImGui::Checkbox("Material Editor", &Interface.tools.showMaterialEditor);
-		ImGui::Checkbox("Unicornfish", &Interface.tools.showUnicornfishWindow);
-		ImGui::Checkbox("SSPHH", &Interface.tools.showSSPHHWindow);
-		ImGui::Checkbox("Render Config", &Interface.tools.showRenderConfigWindow);
-		ImGui::Checkbox("Tests", &Interface.tools.showTestsWindow);
-		ImGui::SameLine();
-		ImGui::Checkbox("Debug view", &(rendererContext->rendererConfigs["default"]->enableDebugView));
-		ImGui::Checkbox("Sphl Editor", &Interface.tools.showSphlEditor);
+		ImGui::Checkbox("Scenegraph Editor", &Interface->tools.showScenegraphEditor);
+		ImGui::Checkbox("Material Editor", &Interface->tools.showMaterialEditor);
+		ImGui::Checkbox("Unicornfish", &Interface->tools.showUnicornfishWindow);
+		ImGui::Checkbox("SSPHH", &Interface->tools.showSSPHHWindow);
+		ImGui::Checkbox("Render Config", &Interface->tools.showRenderConfigWindow);
+		ImGui::Checkbox("Tests", &Interface->tools.showTestsWindow);
+		//ImGui::SameLine();
+		//ImGui::Checkbox("Debug view", &(rendererContext->rendererConfigs["default"]->enableDebugView));
+		ImGui::Checkbox("Sphl Editor", &Interface->tools.showSphlEditor);
 		ImGui::PushID(1234);
 		ImGui::SameLine();
 		if (ImGui::SmallButton("+")) {
@@ -263,107 +263,107 @@ namespace SSPHH {
 
 		ImGui::Separator();
 
-		ImGui::Text("%s", DebugShaderChoices[Interface.tools.shaderDebugChoice].c_str());
-		ImGui::Text("Shader Debug Choice: %02d", Interface.tools.shaderDebugChoice);
+		ImGui::Text("%s", DebugShaderChoices[Interface->tools.shaderDebugChoice].c_str());
+		ImGui::Text("Shader Debug Choice: %02d", Interface->tools.shaderDebugChoice);
 		ImGui::SameLine();
 		if (ImGui::SmallButton("+")) {
-			Interface.tools.shaderDebugChoice++;
+			Interface->tools.shaderDebugChoice++;
 		}
 		ImGui::SameLine();
 		if (ImGui::SmallButton("-")) {
-			Interface.tools.shaderDebugChoice--;
+			Interface->tools.shaderDebugChoice--;
 		}
-		Interface.tools.shaderDebugChoice = Fluxions::clamp<int>(Interface.tools.shaderDebugChoice, 0, 20);
+		Interface->tools.shaderDebugChoice = Fluxions::clamp<int>(Interface->tools.shaderDebugChoice, 0, 20);
 
-		ImGui::DragInt("Debug Light", &Interface.tools.shaderDebugLight, 0.1f, -1, 16);
-		ImGui::DragInt("Debug SPHL ", &Interface.tools.shaderDebugSphl, 0.1f, -1, 16);
+		ImGui::DragInt("Debug Light", &Interface->tools.shaderDebugLight, 0.1f, -1, 16);
+		ImGui::DragInt("Debug SPHL ", &Interface->tools.shaderDebugSphl, 0.1f, -1, 16);
 
 		ImGui::SameLine();
 		if (ImGui::SmallButton("Same")) {
 			for (int i = 0; i < 4; i++) {
-				Interface.tools.shaderDebugChoices[i] = Interface.tools.shaderDebugChoice;
+				Interface->tools.shaderDebugChoices[i] = Interface->tools.shaderDebugChoice;
 			}
 		}
 
 		for (int i = 0; i < 4; i++) {
 			ImGui::PushID(i);
-			ImGui::Text("Shader %d / % 2d", i, Interface.tools.shaderDebugChoices[i]);
+			ImGui::Text("Shader %d / % 2d", i, Interface->tools.shaderDebugChoices[i]);
 			ImGui::SameLine();
 			if (ImGui::SmallButton("+")) {
-				Interface.tools.shaderDebugChoices[i]++;
+				Interface->tools.shaderDebugChoices[i]++;
 			}
 			ImGui::SameLine();
 			if (ImGui::SmallButton("-")) {
-				Interface.tools.shaderDebugChoices[i]--;
+				Interface->tools.shaderDebugChoices[i]--;
 			}
-			Interface.tools.shaderDebugChoices[i] = Fluxions::clamp<int>(Interface.tools.shaderDebugChoices[i], 0, 20);
+			Interface->tools.shaderDebugChoices[i] = Fluxions::clamp<int>(Interface->tools.shaderDebugChoices[i], 0, 20);
 			ImGui::PopID();
 		}
 
 		ImGui::Separator();
 		ImGui::Text(
 			"CAMERA POS: % 3.2f/% 3.2f/ % 3.2f",
-			Interface.cameraPosition.x,
-			Interface.cameraPosition.y,
-			Interface.cameraPosition.z);
+			Interface->cameraPosition.x,
+			Interface->cameraPosition.y,
+			Interface->cameraPosition.z);
 		ImGui::Text(
 			"CAMERA POS: % 3.2f/% 3.2f/ % 3.2f",
 			rendererContext->rendererConfigs["default"]->cameraPosition.x,
 			rendererContext->rendererConfigs["default"]->cameraPosition.y,
 			rendererContext->rendererConfigs["default"]->cameraPosition.z);
 		if (ImGui::SmallButton("LoadIdentity()")) {
-			Interface.preCameraMatrix.LoadIdentity();
+			Interface->preCameraMatrix.LoadIdentity();
 		}
 		if (ImGui::SmallButton("+X")) {
-			Interface.preCameraMatrix.Translate(1.0f, 0.0f, 0.0f);
+			Interface->preCameraMatrix.Translate(1.0f, 0.0f, 0.0f);
 		}
 		ImGui::SameLine();
 		if (ImGui::SmallButton("-X")) {
-			Interface.preCameraMatrix.Translate(-1.0f, 0.0f, 0.0f);
+			Interface->preCameraMatrix.Translate(-1.0f, 0.0f, 0.0f);
 		}
 		ImGui::SameLine();
 		if (ImGui::SmallButton("+Y")) {
-			Interface.preCameraMatrix.Translate(0.0f, 1.0f, 0.0f);
+			Interface->preCameraMatrix.Translate(0.0f, 1.0f, 0.0f);
 		}
 		ImGui::SameLine();
 		if (ImGui::SmallButton("-Y")) {
-			Interface.preCameraMatrix.Translate(0.0f, -1.0f, 0.0f);
+			Interface->preCameraMatrix.Translate(0.0f, -1.0f, 0.0f);
 		}
 		ImGui::SameLine();
 		if (ImGui::SmallButton("+Z")) {
-			Interface.preCameraMatrix.Translate(0.0f, 0.0f, 1.0f);
+			Interface->preCameraMatrix.Translate(0.0f, 0.0f, 1.0f);
 		}
 		ImGui::SameLine();
 		if (ImGui::SmallButton("-Z")) {
-			Interface.preCameraMatrix.Translate(0.0f, 0.0f, -1.0f);
+			Interface->preCameraMatrix.Translate(0.0f, 0.0f, -1.0f);
 		}
 		if (ImGui::SmallButton("Reset Orbit")) {
-			Interface.cameraOrbit.reset();
+			Interface->cameraOrbit.reset();
 		}
 		ImGui::SameLine();
-		ImGui::Checkbox("Enable Orbit", &Interface.enableOrbit);
+		ImGui::Checkbox("Enable Orbit", &Interface->enableOrbit);
 		if (ImGui::SmallButton("-Az")) {
-			Interface.cameraOrbit.x -= 5.0f;
+			Interface->cameraOrbit.x -= 5.0f;
 		}
 		ImGui::SameLine();
 		if (ImGui::SmallButton("+Az")) {
-			Interface.cameraOrbit.x += 5.0f;
+			Interface->cameraOrbit.x += 5.0f;
 		}
 		ImGui::SameLine();
 		if (ImGui::SmallButton("-Alt")) {
-			Interface.cameraOrbit.y -= 5.0f;
+			Interface->cameraOrbit.y -= 5.0f;
 		}
 		ImGui::SameLine();
 		if (ImGui::SmallButton("+Alt")) {
-			Interface.cameraOrbit.y += 5.0f;
+			Interface->cameraOrbit.y += 5.0f;
 		}
 		ImGui::SameLine();
 		if (ImGui::SmallButton("-R")) {
-			Interface.cameraOrbit.z -= 1.0f;
+			Interface->cameraOrbit.z -= 1.0f;
 		}
 		ImGui::SameLine();
 		if (ImGui::SmallButton("+R")) {
-			Interface.cameraOrbit.z += 1.0f;
+			Interface->cameraOrbit.z += 1.0f;
 		}
 
 		ImGui::TextColored(Colors::Yellow, "Sun: ");
@@ -386,7 +386,7 @@ namespace SSPHH {
 			ssg->environment->curGroundRadiance.r,
 			ssg->environment->curGroundRadiance.g,
 			ssg->environment->curGroundRadiance.b);
-		ImGui::Checkbox("Sun Cycle", &Interface.enableSunCycle);
+		ImGui::Checkbox("Sun Cycle", &Interface->enableSunCycle);
 		ImGui::SameLine();
 		if (ImGui::SmallButton("+ 1hr")) {
 			Sun_AdvanceClock(3600.0, true);
@@ -434,11 +434,11 @@ namespace SSPHH {
 
 		ImGui::Separator();
 
-		ImGui::Checkbox("GL Info", &Interface.tools.showGLInfo);
-		if (Interface.tools.showGLInfo) {
-			if (ImGui::Button("GL Extensions") || Interface.tools.gl_extensions.empty()) {
-				Interface.tools.gl_extensions.clear();
-				Interface.tools.gl_extensions_cstr.clear();
+		ImGui::Checkbox("GL Info", &Interface->tools.showGLInfo);
+		if (Interface->tools.showGLInfo) {
+			if (ImGui::Button("GL Extensions") || Interface->tools.gl_extensions.empty()) {
+				Interface->tools.gl_extensions.clear();
+				Interface->tools.gl_extensions_cstr.clear();
 				std::string extensions = (const char*)glGetString(GL_EXTENSIONS);
 				std::regex my_regex("\\w+");
 				std::sregex_iterator begin = std::sregex_iterator(extensions.begin(), extensions.end(), my_regex);
@@ -447,28 +447,28 @@ namespace SSPHH {
 					std::smatch match = *it;
 					if (match.str().size() < 3)
 						continue;
-					Interface.tools.gl_extensions.push_back(match.str());
+					Interface->tools.gl_extensions.push_back(match.str());
 				}
 
-				sort(Interface.tools.gl_extensions.begin(), Interface.tools.gl_extensions.end());
+				sort(Interface->tools.gl_extensions.begin(), Interface->tools.gl_extensions.end());
 
-				for (auto& s : Interface.tools.gl_extensions) {
-					Interface.tools.gl_extensions_cstr.push_back(s.c_str());
+				for (auto& s : Interface->tools.gl_extensions) {
+					Interface->tools.gl_extensions_cstr.push_back(s.c_str());
 				}
-				Interface.tools.gl_version = (const char*)glGetString(GL_VERSION);
-				Interface.tools.gl_renderer = (const char*)glGetString(GL_RENDERER);
+				Interface->tools.gl_version = (const char*)glGetString(GL_VERSION);
+				Interface->tools.gl_renderer = (const char*)glGetString(GL_RENDERER);
 			}
-			ImGui::Text("GL_RENDERER: %s", Interface.tools.gl_renderer.c_str());
-			ImGui::Text("GL_VERSION:  %s", Interface.tools.gl_version.c_str());
-			ImGui::Text("GL_EXTENSIONS: %d", (int)Interface.tools.gl_extensions.size());
-			if (!Interface.tools.gl_extensions.empty()) {
+			ImGui::Text("GL_RENDERER: %s", Interface->tools.gl_renderer.c_str());
+			ImGui::Text("GL_VERSION:  %s", Interface->tools.gl_version.c_str());
+			ImGui::Text("GL_EXTENSIONS: %d", (int)Interface->tools.gl_extensions.size());
+			if (!Interface->tools.gl_extensions.empty()) {
 				// ImGui::SetNext
 				ImGui::PushItemWidth(imguiWinW - 16);
 				ImGui::ListBox(
 					"##empty",
-					&Interface.tools.gl_extensions_curitem,
-					&Interface.tools.gl_extensions_cstr[0],
-					(int)Interface.tools.gl_extensions.size(),
+					&Interface->tools.gl_extensions_curitem,
+					&Interface->tools.gl_extensions_cstr[0],
+					(int)Interface->tools.gl_extensions.size(),
 					16);
 				ImGui::PopItemWidth();
 			}
@@ -479,7 +479,7 @@ namespace SSPHH {
 	}
 
 	void SSPHH_Application::imguiShowRenderConfigWindow() {
-		if (!Interface.tools.showRenderConfigWindow) {
+		if (!Interface->tools.showRenderConfigWindow) {
 			return;
 		}
 		ImGui::SetNextWindowPos(ImVec2(imguiWinX + imguiWinW + 32, 64));
@@ -500,10 +500,10 @@ namespace SSPHH {
 		// ImGui::Text("ZNEAR: % .3f / ZFAR % .3f",
 		//			rendererContext.rendererConfigs["rectShadow"].viewportZNear,
 		//			rendererContext.rendererConfigs["rectShadow"].viewportZFar);
-		// ImGui::SliderInt("2^N", &Interface.renderconfig.sunShadowMapSizeChoice, 6, 12);
+		// ImGui::SliderInt("2^N", &Interface->renderconfig.sunShadowMapSizeChoice, 6, 12);
 		// ImGui::SameLine();
-		// ImGui::Text("= %d", 2 << Interface.renderconfig.sunShadowMapSizeChoice);
-		// Interface.renderconfig.sunShadowMapSize = 2 << Interface.renderconfig.sunShadowMapSizeChoice;
+		// ImGui::Text("= %d", 2 << Interface->renderconfig.sunShadowMapSizeChoice);
+		// Interface->renderconfig.sunShadowMapSize = 2 << Interface->renderconfig.sunShadowMapSizeChoice;
 		// ImGui::SliderFloat("Shadow Map Zoom", &ssg.environment->sunShadowMapZoom, 0.1f, 2.0f);
 		// Vector2f before = ssg->environment->sunShadowMapOffset;
 		// ImGui::SliderFloat2("Offset", ssg->environment->sunShadowMapOffset.ptr(), -20.0f, 20.0f);
@@ -544,7 +544,7 @@ namespace SSPHH {
 		// S C E N E G R A P H   E D I T O R //////////////////////
 		///////////////////////////////////////////////////////////
 
-		if (Interface.tools.showScenegraphEditor) {
+		if (Interface->tools.showScenegraphEditor) {
 			imguiWinX += imguiWinW + 64.0f;
 			ImGui::SetNextWindowContentSize({ imguiWinW * 2, -1 });
 			ImGui::SetNextWindowPos(ImVec2(imguiWinX, 64));
@@ -558,26 +558,26 @@ namespace SSPHH {
 			ImGui::Combo("Scene", &sceneNumber, scenes);
 
 			if (ImGui::Button("Reset")) {
-				Interface.ssg.resetScene = true;
+				Interface->ssg.resetScene = true;
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Save")) {
-				Interface.ssg.saveScene = true;
+				Interface->ssg.saveScene = true;
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Load")) {
-				Interface.ssg.loadScene = true;
+				Interface->ssg.loadScene = true;
 			}
 			if (lastSceneNumber != sceneNumber) {
 				switch (sceneNumber) {
 				case 0:
-					Interface.ssg.scenename = "test_indoor_scene.scn";
+					Interface->ssg.scenename = "test_indoor_scene.scn";
 					break;
 				case 1:
-					Interface.ssg.scenename += "test_outdoor_scene.scn";
+					Interface->ssg.scenename += "test_outdoor_scene.scn";
 					break;
 				case 2:
-					Interface.ssg.scenename += "test_mitsuba_scene.scn";
+					Interface->ssg.scenename += "test_mitsuba_scene.scn";
 					break;
 				default:
 					sceneFilename += "simple_inside_scene.scn";
@@ -588,15 +588,15 @@ namespace SSPHH {
 				size_t size = std::min(input.size(), maxChars - 1);
 				memcpy(dest, input.data(), size);
 			};
-			safeCopy(scenenameBuffer, Interface.ssg.scenename, sizeof(scenenameBuffer));
+			safeCopy(scenenameBuffer, Interface->ssg.scenename, sizeof(scenenameBuffer));
 			ImGui::InputText("Scene", scenenameBuffer, sizeof(scenenameBuffer));
-			Interface.ssg.scenename = scenenameBuffer;
+			Interface->ssg.scenename = scenenameBuffer;
 
-			ImGui::Text("Load time: %3.2f msec", Interface.lastScenegraphLoadTime);
+			ImGui::Text("Load time: %3.2f msec", Interface->lastScenegraphLoadTime);
 			if (ImGui::Button("Reload Render Config")) {
 				ReloadRenderConfigs();
 			}
-			ImGui::Text("Load time: %3.2f msec", Interface.lastRenderConfigLoadTime);
+			ImGui::Text("Load time: %3.2f msec", Interface->lastRenderConfigLoadTime);
 			BoundingBoxf sceneBBox = ssg->getBoundingBox();
 			Vector3f sceneMin(
 				trunc(sceneBBox.minBounds.x - 0.5f),
@@ -619,10 +619,10 @@ namespace SSPHH {
 				sceneSize.y,
 				sceneSize.z);
 
-			ImGui::Checkbox("Environment", &Interface.ssg.showEnvironment);
-			if (Interface.ssg.showEnvironment) {
-				// ImGui::Checkbox("Environment Details", &Interface.ssg.showEnvironmentDetails);
-				// if (Interface.ssg.showEnvironmentDetails) {
+			ImGui::Checkbox("Environment", &Interface->ssg.showEnvironment);
+			if (Interface->ssg.showEnvironment) {
+				// ImGui::Checkbox("Environment Details", &Interface->ssg.showEnvironmentDetails);
+				// if (Interface->ssg.showEnvironmentDetails) {
 				//	NEWLINE_SEPARATOR
 				//	ImGui::Text("sunColorMap      Unit/Id/SamplerId: %2d/%2d/%2d", ssg->environment->sunColorMapUnit,
 				// ssg->environment->sunColorMapId, ssg->environment->sunColorMapSamplerId); 	ImGui::Text("sunDepthMap
@@ -645,7 +645,7 @@ namespace SSPHH {
 				//}
 
 				ImGui::TextColored(Colors::Red, "Camera: ");
-				ImGui::DragFloat("FOV: ", &Interface.ssg.cameraFOV);
+				ImGui::DragFloat("FOV: ", &Interface->ssg.cameraFOV);
 				Matrix4f m = ssg->camera->viewMatrix();
 				ImGui::Text(
 					"viewMatrix: % 3.2f % 3.2f % 3.2f % 3.2f\n"
@@ -668,7 +668,7 @@ namespace SSPHH {
 					m.m42,
 					m.m43,
 					m.m44);
-				m = Interface.preCameraMatrix;
+				m = Interface->preCameraMatrix;
 				ImGui::Text(
 					"altMatrix:  % 3.2f % 3.2f % 3.2f % 3.2f\n"
 					"            % 3.2f % 3.2f % 3.2f % 3.2f\n"
@@ -693,60 +693,60 @@ namespace SSPHH {
 				Vector3f O = ssg->camera->origin();
 				ImGui::Text("CAMERA POS: % 3.2f/% 3.2f/ % 3.2f", O.x, O.y, O.z);
 				if (ImGui::SmallButton("LoadIdentity()")) {
-					Interface.preCameraMatrix.LoadIdentity();
+					Interface->preCameraMatrix.LoadIdentity();
 				}
 				ImGui::SameLine();
 				if (ImGui::SmallButton("+X")) {
-					Interface.preCameraMatrix.Translate(1.0f, 0.0f, 0.0f);
+					Interface->preCameraMatrix.Translate(1.0f, 0.0f, 0.0f);
 				}
 				ImGui::SameLine();
 				if (ImGui::SmallButton("-X")) {
-					Interface.preCameraMatrix.Translate(-1.0f, 0.0f, 0.0f);
+					Interface->preCameraMatrix.Translate(-1.0f, 0.0f, 0.0f);
 				}
 				ImGui::SameLine();
 				if (ImGui::SmallButton("+Y")) {
-					Interface.preCameraMatrix.Translate(0.0f, 1.0f, 0.0f);
+					Interface->preCameraMatrix.Translate(0.0f, 1.0f, 0.0f);
 				}
 				ImGui::SameLine();
 				if (ImGui::SmallButton("-Y")) {
-					Interface.preCameraMatrix.Translate(0.0f, -1.0f, 0.0f);
+					Interface->preCameraMatrix.Translate(0.0f, -1.0f, 0.0f);
 				}
 				ImGui::SameLine();
 				if (ImGui::SmallButton("+Z")) {
-					Interface.preCameraMatrix.Translate(0.0f, 0.0f, 1.0f);
+					Interface->preCameraMatrix.Translate(0.0f, 0.0f, 1.0f);
 				}
 				ImGui::SameLine();
 				if (ImGui::SmallButton("-Z")) {
-					Interface.preCameraMatrix.Translate(0.0f, 0.0f, -1.0f);
+					Interface->preCameraMatrix.Translate(0.0f, 0.0f, -1.0f);
 				}
 				ImGui::Text("Orbit");
 				ImGui::SameLine();
 				if (ImGui::SmallButton("Reset Orbit")) {
-					Interface.cameraOrbit.reset();
+					Interface->cameraOrbit.reset();
 				}
 				ImGui::SameLine();
 				if (ImGui::SmallButton("-Az")) {
-					Interface.cameraOrbit.x -= 5.0f;
+					Interface->cameraOrbit.x -= 5.0f;
 				}
 				ImGui::SameLine();
 				if (ImGui::SmallButton("+Az")) {
-					Interface.cameraOrbit.x += 5.0f;
+					Interface->cameraOrbit.x += 5.0f;
 				}
 				ImGui::SameLine();
 				if (ImGui::SmallButton("-Alt")) {
-					Interface.cameraOrbit.y -= 5.0f;
+					Interface->cameraOrbit.y -= 5.0f;
 				}
 				ImGui::SameLine();
 				if (ImGui::SmallButton("+Alt")) {
-					Interface.cameraOrbit.y += 5.0f;
+					Interface->cameraOrbit.y += 5.0f;
 				}
 				ImGui::SameLine();
 				if (ImGui::SmallButton("-R")) {
-					Interface.cameraOrbit.z -= 1.0f;
+					Interface->cameraOrbit.z -= 1.0f;
 				}
 				ImGui::SameLine();
 				if (ImGui::SmallButton("+R")) {
-					Interface.cameraOrbit.z += 1.0f;
+					Interface->cameraOrbit.z += 1.0f;
 				}
 
 				ImGui::Text(
@@ -802,19 +802,19 @@ namespace SSPHH {
 				NEWLINE_SEPARATOR
 			}
 
-			ImGui::Checkbox("Geometry", &Interface.ssg.showGeometry);
-			if (Interface.ssg.showGeometry) {
+			ImGui::Checkbox("Geometry", &Interface->ssg.showGeometry);
+			if (Interface->ssg.showGeometry) {
 				NEWLINE_SEPARATOR
-				if (Interface.ssg.geometryCollapsed.size() != ssg->geometryGroups.size()) {
-					Interface.ssg.geometryCollapsed.resize(ssg->geometryGroups.size());
+				if (Interface->ssg.geometryCollapsed.size() != ssg->geometryGroups.size()) {
+					Interface->ssg.geometryCollapsed.resize(ssg->geometryGroups.size());
 				}
 
 				int i = 0;
 				for (auto& [id, group] : ssg->geometryGroups) {
 					std::ostringstream label;
 					label << group->name_str() << "(" << i << ")";
-					ImGui::Checkbox(label.str().c_str(), &Interface.ssg.geometryCollapsed[i].second);
-					if (Interface.ssg.geometryCollapsed[i].second) {
+					ImGui::Checkbox(label.str().c_str(), &Interface->ssg.geometryCollapsed[i].second);
+					if (Interface->ssg.geometryCollapsed[i].second) {
 						ImGui::Text("name:     %s", group->name());
 						ImGui::Text("filename: %s", group->fpi.stem().c_str());
 						// ImGui::Text("mtllib:   %s", group->mtllibName.c_str());
@@ -843,8 +843,8 @@ namespace SSPHH {
 				SEPARATOR_NEWLINE
 			}
 
-			ImGui::Checkbox("Point Lights", &Interface.ssg.showPointLights);
-			if (Interface.ssg.showPointLights) {
+			ImGui::Checkbox("Point Lights", &Interface->ssg.showPointLights);
+			if (Interface->ssg.showPointLights) {
 				int i = 0;
 				for (auto& [k, spl] : ssg->pointLights) {
 					std::ostringstream ostr;
@@ -955,7 +955,7 @@ namespace SSPHH {
 		static float w = 512.0f;
 		static float h = 256.0f;
 
-		if (Interface.tools.showSphlEditor) {
+		if (Interface->tools.showSphlEditor) {
 			if (!init) {
 				init = true;
 
@@ -1287,18 +1287,18 @@ namespace SSPHH {
 		// M A T E R I A L   E D I T O R //////////////////////////
 		///////////////////////////////////////////////////////////
 
-		//		if (Interface.tools.showMaterialEditor) {
+		//		if (Interface->tools.showMaterialEditor) {
 		//			imguiWinX += imguiWinW + 64.0f;
 		//			ImGui::SetNextWindowContentWidth(imguiWinW);
 		//			ImGui::SetNextWindowPos(ImVec2(imguiWinX, 64));
 		//			ImGui::Begin("Material Editor");
-		//			//if (Interface.mtls.mtlsCollapsed.size() != ssg->materials.size())
+		//			//if (Interface->mtls.mtlsCollapsed.size() != ssg->materials.size())
 		//			//{
-		//			//	Interface.mtls.mtlsCollapsed.resize(ssg.materials.size());
+		//			//	Interface->mtls.mtlsCollapsed.resize(ssg.materials.size());
 		//			//}
 		//
-		//			ImGui::Checkbox("Maps", &Interface.mtls.showMaps);
-		//			if (Interface.mtls.showMaps) {
+		//			ImGui::Checkbox("Maps", &Interface->mtls.showMaps);
+		//			if (Interface->mtls.showMaps) {
 		//				int i = 0;
 		//				SEPARATOR_NEWLINE
 		//					for (auto& mtllib : ssg->materialSystem) {
@@ -1311,17 +1311,17 @@ namespace SSPHH {
 		//				NEWLINE_SEPARATOR
 		//			}
 		//
-		//			ImGui::Checkbox("Mtls", &Interface.mtls.showMtls);
-		//			if (Interface.mtls.showMtls) {
+		//			ImGui::Checkbox("Mtls", &Interface->mtls.showMtls);
+		//			if (Interface->mtls.showMtls) {
 		//				int i = 0;
 		//				for (auto& mtllib : ssg->materialSystem) {
 		//					std::string mtllib_key = mtllib.second.fpi.fullfname;
 		//					bool* mtllib_collapsed = nullptr;
-		//					if (Interface.mtls.mtllibsCollapsed.find(mtllib_key) ==
-		// Interface.mtls.mtllibsCollapsed.end()) { 						Interface.mtls.mtllibsCollapsed[mtllib_key]
+		//					if (Interface->mtls.mtllibsCollapsed.find(mtllib_key) ==
+		// Interface->mtls.mtllibsCollapsed.end()) { 						Interface->mtls.mtllibsCollapsed[mtllib_key]
 		// = false;
 		//					}
-		//					mtllib_collapsed = &Interface.mtls.mtllibsCollapsed[mtllib_key];
+		//					mtllib_collapsed = &Interface->mtls.mtllibsCollapsed[mtllib_key];
 		//					if (mtllib_collapsed == nullptr)
 		//						continue;
 		//					ImGui::TextColored(Colors::Red, "MtlLib %i %s", mtllib.first,
@@ -1331,26 +1331,26 @@ namespace SSPHH {
 		// : mtllib.second.mtls) { 							std::string mtl_name =
 		// mtllib.second.mtls.getNameFromHandle(mtl.first); std::string mtllib_mtl_key = mtllib_key + "!!" + mtl_name;
 		// bool* mtl_collapsed = nullptr; 							if
-		// (Interface.mtls.mtlsCollapsed.find(mtllib_mtl_key)
+		// (Interface->mtls.mtlsCollapsed.find(mtllib_mtl_key)
 		// ==
-		// Interface.mtls.mtlsCollapsed.end()) { Interface.mtls.mtlsCollapsed[mtllib_mtl_key] = false;
-		// Interface.mtls.mtls_ptrs[mtllib_mtl_key].Ka = mtl.second.Ka.ptr();
-		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].Kd = mtl.second.Kd.ptr();
-		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].Ks = mtl.second.Ks.ptr();
-		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].Ke = mtl.second.Ke.ptr();
-		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].PBm = &mtl.second.PBm;
-		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].PBk = &mtl.second.PBk;
-		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].PBior = &mtl.second.PBior;
-		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].PBKdm = &mtl.second.PBKdm;
-		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].PBKsm = &mtl.second.PBKsm;
-		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].PBGGXgamma = &mtl.second.PBGGXgamma;
-		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].map_Kd = mtl.second.map_Kd.c_str();
-		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].map_Ks = mtl.second.map_Ks.c_str();
-		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].map_bump = mtl.second.map_bump.c_str();
-		//								Interface.mtls.mtls_ptrs[mtllib_mtl_key].map_normal =
+		// Interface->mtls.mtlsCollapsed.end()) { Interface->mtls.mtlsCollapsed[mtllib_mtl_key] = false;
+		// Interface->mtls.mtls_ptrs[mtllib_mtl_key].Ka = mtl.second.Ka.ptr();
+		//								Interface->mtls.mtls_ptrs[mtllib_mtl_key].Kd = mtl.second.Kd.ptr();
+		//								Interface->mtls.mtls_ptrs[mtllib_mtl_key].Ks = mtl.second.Ks.ptr();
+		//								Interface->mtls.mtls_ptrs[mtllib_mtl_key].Ke = mtl.second.Ke.ptr();
+		//								Interface->mtls.mtls_ptrs[mtllib_mtl_key].PBm = &mtl.second.PBm;
+		//								Interface->mtls.mtls_ptrs[mtllib_mtl_key].PBk = &mtl.second.PBk;
+		//								Interface->mtls.mtls_ptrs[mtllib_mtl_key].PBior = &mtl.second.PBior;
+		//								Interface->mtls.mtls_ptrs[mtllib_mtl_key].PBKdm = &mtl.second.PBKdm;
+		//								Interface->mtls.mtls_ptrs[mtllib_mtl_key].PBKsm = &mtl.second.PBKsm;
+		//								Interface->mtls.mtls_ptrs[mtllib_mtl_key].PBGGXgamma = &mtl.second.PBGGXgamma;
+		//								Interface->mtls.mtls_ptrs[mtllib_mtl_key].map_Kd = mtl.second.map_Kd.c_str();
+		//								Interface->mtls.mtls_ptrs[mtllib_mtl_key].map_Ks = mtl.second.map_Ks.c_str();
+		//								Interface->mtls.mtls_ptrs[mtllib_mtl_key].map_bump = mtl.second.map_bump.c_str();
+		//								Interface->mtls.mtls_ptrs[mtllib_mtl_key].map_normal =
 		// mtl.second.map_normal.c_str();
 		//							}
-		//							mtl_collapsed = &Interface.mtls.mtlsCollapsed[mtllib_mtl_key];
+		//							mtl_collapsed = &Interface->mtls.mtlsCollapsed[mtllib_mtl_key];
 		//							if (mtl_collapsed == nullptr)
 		//								continue;
 		//
@@ -1358,7 +1358,7 @@ namespace SSPHH {
 		//							ImGui::SameLine();
 		//							ImGui::Checkbox(mtl_name.c_str(), mtl_collapsed);
 		//							if (*mtl_collapsed) {
-		//								auto pmtl = Interface.mtls.mtls_ptrs[mtllib_mtl_key];
+		//								auto pmtl = Interface->mtls.mtls_ptrs[mtllib_mtl_key];
 		//								NEWLINE_SEPARATOR
 		//									const float stepSize = 0.01f;
 		//								// const float minSize = -5.0f;
@@ -1481,7 +1481,7 @@ namespace SSPHH {
 		}
 	}
 
-	void SSPHH_Application::imguiToolsTakeScreenshot() { Interface.saveScreenshot = true; }
+	void SSPHH_Application::imguiToolsTakeScreenshot() { Interface->saveScreenshot = true; }
 
 	void SSPHH_Application::imguiToolsSaveStats() { Hf::Log.saveStats(ssg->name_str() + "_"); }
 
@@ -1489,29 +1489,29 @@ namespace SSPHH {
 
 
 	void SSPHH_Application::imguiShowUfWindow() {
-		if (!Interface.tools.showUnicornfishWindow)
+		if (!Interface->tools.showUnicornfishWindow)
 			return;
-		if (!Interface.uf.windowInit) {
-			Interface.uf.windowInit = true;
+		if (!Interface->uf.windowInit) {
+			Interface->uf.windowInit = true;
 			ImGui::SetNextWindowContentSize({ 512.0f, -1 });
 			ImGui::SetNextWindowPos(ImVec2(imguiWinX + imguiWinW + 32, 64));
 		}
 		ImGui::Begin("Unicornfish");
-		if (Interface.uf.uf_type == UfType::None) {
-			// if (ImGui::Button("UF CLIENT GLES30")) { Interface.uf.uf_type = UfType::Client; }
-			// if (ImGui::Button("UF CLIENT GLES20")) { Interface.uf.uf_type = UfType::ClientGLES20; }
-			// if (ImGui::Button("UF BROKER")) { Interface.uf.uf_type = UfType::Broker; }
-			// if (ImGui::Button("UF WORKER ECHO")) { Interface.uf.uf_type = UfType::WorkerEcho; }
-			// if (ImGui::Button("UF WORKER CORONA")) { Interface.uf.uf_type = UfType::Worker; }
+		if (Interface->uf.uf_type == UfType::None) {
+			// if (ImGui::Button("UF CLIENT GLES30")) { Interface->uf.uf_type = UfType::Client; }
+			// if (ImGui::Button("UF CLIENT GLES20")) { Interface->uf.uf_type = UfType::ClientGLES20; }
+			// if (ImGui::Button("UF BROKER")) { Interface->uf.uf_type = UfType::Broker; }
+			// if (ImGui::Button("UF WORKER ECHO")) { Interface->uf.uf_type = UfType::WorkerEcho; }
+			// if (ImGui::Button("UF WORKER CORONA")) { Interface->uf.uf_type = UfType::Worker; }
 			// ImGui::Separator();
-			ImGui::Checkbox("Standalone CLIENT", &Interface.uf.standalone_client);
-			ImGui::Checkbox("Standalone BROKER", &Interface.uf.standalone_broker);
-			ImGui::Checkbox("Standalone WORKER", &Interface.uf.standalone_worker);
+			ImGui::Checkbox("Standalone CLIENT", &Interface->uf.standalone_client);
+			ImGui::Checkbox("Standalone BROKER", &Interface->uf.standalone_broker);
+			ImGui::Checkbox("Standalone WORKER", &Interface->uf.standalone_worker);
 			if (ImGui::Button("START")) {
 				ssphhUf.StartStandalone(
-					Interface.uf.standalone_client,
-					Interface.uf.standalone_broker,
-					Interface.uf.standalone_worker);
+					Interface->uf.standalone_client,
+					Interface->uf.standalone_broker,
+					Interface->uf.standalone_worker);
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("STOP")) {
@@ -1524,14 +1524,14 @@ namespace SSPHH {
 				Colors::Yellow,
 				"WORKER: %s",
 				ssphhUf.GetUIMessage(Unicornfish::NodeType::Worker).c_str());
-			ImGui::TextColored(Colors::Green, "GI STATUS: %s", Interface.ssphh.gi_status.c_str());
+			ImGui::TextColored(Colors::Green, "GI STATUS: %s", Interface->ssphh.gi_status.c_str());
 		} else {
 			if (ImGui::Button("STOP")) {
-				Interface.uf.uf_stop = true;
+				Interface->uf.uf_stop = true;
 			}
 			ImGui::Separator();
 
-			switch (Interface.uf.uf_type) {
+			switch (Interface->uf.uf_type) {
 			case UfType::Broker:
 				imguiUfBrokerControls();
 				break;
@@ -1548,14 +1548,14 @@ namespace SSPHH {
 				imguiUfWorkerCoronaControls();
 				break;
 			default:
-				Interface.uf.uf_type = UfType::None;
+				Interface->uf.uf_type = UfType::None;
 			}
 		}
 		ImGui::End();
 	}
 
 	void SSPHH_Application::imguiShowSSPHHWindow() {
-		if (!Interface.tools.showSSPHHWindow)
+		if (!Interface->tools.showSSPHHWindow)
 			return;
 		static bool init = false;
 		if (!init) {

@@ -53,32 +53,32 @@ void SsphhWindow::OnRenderDearImGui() {
 		app.Corona_GenerateREF();
 	}
 	ImGuiAlignAt(buttonWidth);
-	ImGui::Text("Create reference for comparison (%.3lf sec)", app.Interface.ssphh.lastREFTime);
+	ImGui::Text("Create reference for comparison (%.3lf sec)", app.Interface->ssphh.lastREFTime);
 
 	if (ImGui::Button("SCREENSHOT")) {
 		app.PathAnim_Stop();
-		app.Interface.saveScreenshot = true;
+		app.Interface->saveScreenshot = true;
 	}
 	ImGuiAlignAt(buttonWidth);
-	ImGui::Text("Save screenshot comparison (%.3lf sec)", app.Interface.ssphh.lastAPPTime);
+	ImGui::Text("Save screenshot comparison (%.3lf sec)", app.Interface->ssphh.lastAPPTime);
 
 	if (ImGui::Button("DELETE CACHE")) {
 		app.Corona_EraseCache();
 	}
 	ImGuiAlignAt(buttonWidth);
-	ImGui::Text("Delete cached light solution (%d files removed)", app.Interface.ssphh.cacheFilesRemoved);
+	ImGui::Text("Delete cached light solution (%d files removed)", app.Interface->ssphh.cacheFilesRemoved);
 
 	if (ImGui::Button("HIERGEN INIT")) {
 		app.Corona_GenerateSphlINIT();
 	}
 	ImGuiAlignAt(buttonWidth);
-	ImGui::Text("Reset Hierarchies (%.3lf sec)", app.Interface.ssphh.lastINITTime);
+	ImGui::Text("Reset Hierarchies (%.3lf sec)", app.Interface->ssphh.lastINITTime);
 
 	if (ImGui::Button("SPHLVIZ")) {
 		app.Corona_GenerateSphlVIZ();
 	}
 	ImGuiAlignAt(buttonWidth);
-	ImGui::Text("Generate visibility network (%.3lf sec)", app.Interface.ssphh.lastVIZTime);
+	ImGui::Text("Generate visibility network (%.3lf sec)", app.Interface->ssphh.lastVIZTime);
 
 	if (ImGui::Button("SPHLGEN")) {
 		app.Corona_GenerateSphlGEN();
@@ -86,7 +86,7 @@ void SsphhWindow::OnRenderDearImGui() {
 		//ssg.MakeSphlsUnclean();
 	}
 	ImGuiAlignAt(buttonWidth);
-	ImGui::Text("Generate GI solution (%.3lf sec)", app.Interface.ssphh.lastGENTime);
+	ImGui::Text("Generate GI solution (%.3lf sec)", app.Interface->ssphh.lastGENTime);
 
 	if (ImGui::Button("HIERGEN")) {
 		app.Corona_GenerateSphlHIER();
@@ -94,7 +94,7 @@ void SsphhWindow::OnRenderDearImGui() {
 		//ssg.MakeSphlsUnclean();
 	}
 	ImGuiAlignAt(buttonWidth);
-	ImGui::Text("Generate Hierarchies (%.3lf sec)", app.Interface.ssphh.lastHIERTime);
+	ImGui::Text("Generate Hierarchies (%.3lf sec)", app.Interface->ssphh.lastHIERTime);
 
 	if (ImGui::Button("SAVEOBJ")) {
 		app.imguiSphlSaveToOBJ();
@@ -104,7 +104,7 @@ void SsphhWindow::OnRenderDearImGui() {
 
 	ImGui::Separator();
 
-	ImGui::Checkbox("Sphl Editor", &app.Interface.tools.showSphlEditor);
+	ImGui::Checkbox("Sphl Editor", &app.Interface->tools.showSphlEditor);
 	ImGui::PushID(1234);
 	ImGui::SameLine();
 	if (ImGui::SmallButton("+")) {
@@ -153,15 +153,15 @@ void SsphhWindow::OnRenderDearImGui() {
 
 	ImGui::Separator();
 
-	ImGui::Checkbox("Enable shadow map VIZ", &app.Interface.ssphh.enableShadowColorMap);
+	ImGui::Checkbox("Enable shadow map VIZ", &app.Interface->ssphh.enableShadowColorMap);
 	//ImGui::SameLine();
 	//ImGui::Checkbox("Enable sRGB", &app.rendererContext->rendererConfigs["default"]->enableSRGB);
 	
 	ImGui::Text("REF:");
 	ImGuiAlignAt(vgrWidth, "ABCD");
-	ImGui::Checkbox("2D", &app.Interface.ssphh.enableREF);
+	ImGui::Checkbox("2D", &app.Interface->ssphh.enableREF);
 	ImGui::SameLine();
-	ImGui::Checkbox("Cube", &app.Interface.ssphh.enableREFCubeMap);
+	ImGui::Checkbox("Cube", &app.Interface->ssphh.enableREFCubeMap);
 	ImGui::SameLine();
 	ImGui::Checkbox("HQ", &app.coronaScene.currentConfig.enableHQ);
 	ImGui::SameLine();
@@ -201,31 +201,31 @@ void SsphhWindow::OnRenderDearImGui() {
 	ImGui::SameLine();
 	ImGui::Checkbox("Use Previous", &app.coronaScene.REF.usePreviousRun);
 	ImGui::PopID();
-	ImGui2NSlider("SPHL Size", &app.Interface.ssphh.LightProbeSizeChoice, &app.Interface.ssphh.LightProbeSize, 4, 10);
+	ImGui2NSlider("SPHL Size", &app.Interface->ssphh.LightProbeSizeChoice, &app.Interface->ssphh.LightProbeSize, 4, 10);
 	ImGui::SameLine();
-	ImGui2NSlider("Shadow Size", &app.Interface.ssphh.ShadowSizeChoice, &app.Interface.ssphh.ShadowSize, 4, 10);
+	ImGui2NSlider("Shadow Size", &app.Interface->ssphh.ShadowSizeChoice, &app.Interface->ssphh.ShadowSize, 4, 10);
 	ImGui::PopItemWidth();
 
 	ImGui::Separator();
 
 	ImGui::PushItemWidth(100);
-	ImGui::SliderInt("Max Hierarchies", &app.Interface.ssphh.HierarchiesMaxSphls, 0, MaxSphlLights);
+	ImGui::SliderInt("Max Hierarchies", &app.Interface->ssphh.HierarchiesMaxSphls, 0, MaxSphlLights);
 	ImGui::SameLine();
-	ImGui::SliderInt("Max Degrees", &app.Interface.ssphh.MaxDegrees, 0, MaxSphlDegree);
+	ImGui::SliderInt("Max Degrees", &app.Interface->ssphh.MaxDegrees, 0, MaxSphlDegree);
 	ImGui::Text("Accum");
 	ImGui::SameLine();
-	ImGui::Checkbox("Self ", &app.Interface.ssphh.HierarchiesIncludeSelf);
+	ImGui::Checkbox("Self ", &app.Interface->ssphh.HierarchiesIncludeSelf);
 	ImGui::SameLine();
-	ImGui::Checkbox("Neighbors", &app.Interface.ssphh.HierarchiesIncludeNeighbors);
+	ImGui::Checkbox("Neighbors", &app.Interface->ssphh.HierarchiesIncludeNeighbors);
 	ImGui::SameLine();
-	ImGui::SliderFloat("Mix", &app.Interface.ssphh.HierarchiesMix, 0.0, 1.0);
+	ImGui::SliderFloat("Mix", &app.Interface->ssphh.HierarchiesMix, 0.0, 1.0);
 	ImGui::Text("Show ");
 	ImGui::SameLine();
-	ImGui::Checkbox("SPHLs", &app.Interface.ssphh.enableShowSPHLs);
+	ImGui::Checkbox("SPHLs", &app.Interface->ssphh.enableShowSPHLs);
 	ImGui::SameLine();
-	ImGui::Checkbox("Basic", &app.Interface.ssphh.enableBasicShowSPHLs);
+	ImGui::Checkbox("Basic", &app.Interface->ssphh.enableBasicShowSPHLs);
 	ImGui::SameLine();
-	ImGui::Checkbox("Hierarchies", &app.Interface.ssphh.enableShowHierarchies);
+	ImGui::Checkbox("Hierarchies", &app.Interface->ssphh.enableShowHierarchies);
 	ImGui::SameLine();
 	if (ImGui::Button("GO!")) {
 		app.DirtySPHLs();
@@ -242,11 +242,11 @@ void SsphhWindow::OnRenderDearImGui() {
 		app.Corona_EraseTestProducts();
 	}
 	ImGui::SameLine();
-	ImGui::Checkbox("REGEN Test Products", &app.Interface.ssphh.genProductsIgnoreCache);
+	ImGui::Checkbox("REGEN Test Products", &app.Interface->ssphh.genProductsIgnoreCache);
 
-	ImGui::Checkbox("PPMCOMP Diffs", &app.Interface.ssphh.ppmcompareGenPPMs);
+	ImGui::Checkbox("PPMCOMP Diffs", &app.Interface->ssphh.ppmcompareGenPPMs);
 	ImGui::SameLine();
-	ImGui::Checkbox("PPMCOMP Regen", &app.Interface.ssphh.ppmcompareIgnoreCache);
+	ImGui::Checkbox("PPMCOMP Regen", &app.Interface->ssphh.ppmcompareIgnoreCache);
 
 	ImGui::Separator();
 

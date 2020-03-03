@@ -10,7 +10,7 @@ public:
 
 	void OnUpdate(double timeStamp) override;
 	void OnRenderDearImGui() override;
-
+	void OnKill() override { ssg.reset(); }
 
 private:
 	Fluxions::SimpleSceneGraphPtr ssg;

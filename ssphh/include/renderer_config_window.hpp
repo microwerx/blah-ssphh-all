@@ -11,6 +11,10 @@ public:
 
 	void OnUpdate(double timeStamp) override;
 	void OnRenderDearImGui() override;
+	void OnKill() override {
+		rendererContext.reset();
+		rc.reset();
+	}
 
 
 private:

@@ -20,12 +20,12 @@ namespace SSPHH
 	void SSPHH_Application::OnRender3D() {
 		HFLOGDEBUGFIRSTRUN();
 
-		if (Interface.uf.uf_type == UfType::Broker)
+		if (Interface->uf.uf_type == UfType::Broker)
 			return;
 
 		// FIXME: only should set these if ...
 		//RendererConfig& rectShadowRC = rendererContext.rendererConfigs["rectShadow"];
-		//bool size_equal = rectShadowRC.viewportRect.w == Interface.renderconfig.sunShadowMapSize;
+		//bool size_equal = rectShadowRC.viewportRect.w == Interface->renderconfig.sunShadowMapSize;
 		//if (!size_equal) {
 		//	InitRenderConfigs();
 		//}
@@ -73,19 +73,19 @@ namespace SSPHH
 
 		RenderDeferredHUD();
 
-		if (Interface.showMainHUD) {
+		if (Interface->showMainHUD) {
 			RenderMainHUD();
 		}
 
-		if (Interface.showHelp) {
+		if (Interface->showHelp) {
 			RenderHelp();
 		}
 
-		if (Interface.showHUD) {
+		if (Interface->showHUD) {
 			RenderHUD();
 		}
 
-		if (Interface.showDeferredHUD) {
+		if (Interface->showDeferredHUD) {
 			// FIXME: Are we using rendererContext?
 
 			// Vector2i split = rendererContext.GetDeferredSplitPoint();
@@ -110,7 +110,7 @@ namespace SSPHH
 	void SSPHH_Application::OnRenderDearImGui() {
 		HFLOGDEBUGFIRSTRUN();
 
-		if (Interface.showImGui) {
+		if (Interface->showImGui) {
 			RenderImGuiHUD();
 		}
 	}
@@ -125,7 +125,7 @@ namespace SSPHH
 		GLfloat xpos = 0.0f;
 		GLfloat ypos = screenHeight - maxLines * 15.0f;
 
-		Matrix4f cameraMatrix_ = Interface.preCameraMatrix * ssg.camera.viewMatrix_;
+		Matrix4f cameraMatrix_ = Interface->preCameraMatrix * ssg.camera.viewMatrix_;
 
 		const char* renderModes[] = {
 			"FIXED FUNCTION",
@@ -239,17 +239,17 @@ namespace SSPHH
 		PrintString9x15(0, y, 0, "Zoom: %3f", g_distance);
 
 		y += 15.0f;
-		PrintString9x15(0, y, 0, "mX: %3.3f", Interface.moveX);
+		PrintString9x15(0, y, 0, "mX: %3.3f", Interface->moveX);
 		y += 15.0f;
-		PrintString9x15(0, y, 0, "mY: %3.3f", Interface.moveY);
+		PrintString9x15(0, y, 0, "mY: %3.3f", Interface->moveY);
 		y += 15.0f;
-		PrintString9x15(0, y, 0, "mZ: %3.3f", Interface.moveZ);
+		PrintString9x15(0, y, 0, "mZ: %3.3f", Interface->moveZ);
 		y += 15.0f;
-		PrintString9x15(0, y, 0, "tX: %3.3f", Interface.turnX);
+		PrintString9x15(0, y, 0, "tX: %3.3f", Interface->turnX);
 		y += 15.0f;
-		PrintString9x15(0, y, 0, "tY: %3.3f", Interface.turnY);
+		PrintString9x15(0, y, 0, "tY: %3.3f", Interface->turnY);
 		y += 15.0f;
-		PrintString9x15(0, y, 0, "tZ: %3.3f", Interface.turnZ);
+		PrintString9x15(0, y, 0, "tZ: %3.3f", Interface->turnZ);
 		y += 15.0f;
 		PrintString9x15(0, y, 0, "kgp: %s", kbgamepad.GetHexRepresentation().c_str());
 		y += 15.0f;
@@ -364,7 +364,7 @@ namespace SSPHH
 	}
 
 	void SSPHH_Application::RenderDeferredHUD() {
-		if (!Interface.showDeferredHUD)
+		if (!Interface->showDeferredHUD)
 			return;
 #ifdef SSPHH_RENDER_QUAD
 		Vector2i splitPoint = rendererContext.GetDeferredSplitPoint();

@@ -8,15 +8,15 @@ namespace SSPHH
 {
 	void SSPHH_Application::Test()
 	{
-		if (Interface.tests.bTestSPHLs) {
+		if (Interface->tests.bTestSPHLs) {
 			TestSPHLs();
-			Interface.tests.bTestSPHLs = false;
+			Interface->tests.bTestSPHLs = false;
 		}
 	}
 
 	void SSPHH_Application::TestSPHLs()
 	{
-		int &test = Interface.tests.saveSphlOBJ;
+		int &test = Interface->tests.saveSphlOBJ;
 		FilePathInfo fpi("output");
 		if (fpi.notFound()) {
 			std::error_code ec;

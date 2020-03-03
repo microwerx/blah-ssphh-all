@@ -34,7 +34,7 @@ void SceneEditorWindow::OnRenderDearImGui() {
 
 	Fluxions::BaseEnvironment* e = (Fluxions::BaseEnvironment*) & ssg->environment;
 	SSPHH::SSPHH_Application* app = ssphh_widget_ptr.get();
-	ImGui::Checkbox("Sun Cycle", &app->Interface.enableSunCycle);
+	ImGui::Checkbox("Sun Cycle", &app->Interface->enableSunCycle);
 	if (ImGui::TreeNode("Environment")) {
 		ImGui::Checkbox("Has Sun", &ssg->environment->hasSun);
 		ImGui::Checkbox("Has Moon", &ssg->environment->hasMoon);

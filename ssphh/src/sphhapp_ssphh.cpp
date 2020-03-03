@@ -52,7 +52,7 @@ namespace SSPHH {
 			}
 			if (sphl->dirty) {
 				// Copy coefficients from the scene graph SPHL list
-				sphls[i].copyCoefficients(sphl, Interface.ssphh.MaxDegrees, Interface.ssphh.enableBasicShowSPHLs);
+				sphls[i].copyCoefficients(sphl, Interface->ssphh.MaxDegrees, Interface->ssphh.enableBasicShowSPHLs);
 				sphls[i].createMesh(geosphere);
 				// sphls[i].createLightProbe();
 				sphl->dirty = false;
@@ -73,7 +73,7 @@ namespace SSPHH {
 				sphl->uploadLightProbe(sphl->hierLightProbeImage, sphl->hierLightProbeTexture);
 			}
 
-			if (Interface.ssphh.enableShadowColorMap) {
+			if (Interface->ssphh.enableShadowColorMap) {
 				sphls[i].lightProbeTexIds[0] = sphl->colorSphlMap->getTexture();
 			} else {
 				sphls[i].lightProbeTexIds[0] = sphl->hierLightProbeTexture->getTexture();
@@ -85,7 +85,7 @@ namespace SSPHH {
 	}
 
 	void SSPHH_Application::RenderGLES30SPHLs() {
-		if (!Interface.ssphh.enableShowSPHLs)
+		if (!Interface->ssphh.enableShowSPHLs)
 			return;
 		////RendererContext gl;
 		// RendererConfig& rc = rendererContext.rendererConfigs["default"];
@@ -130,7 +130,7 @@ namespace SSPHH {
 		//		worldMatrix.Translate(sphl->position.x, sphl->position.y, sphl->position.z);
 		//		rendererContext.renderers["sph_renderer"].renderMesh(sphl->sph_model, worldMatrix);
 
-		//		if (!Interface.ssphh.enableBasicShowSPHLs) {
+		//		if (!Interface->ssphh.enableBasicShowSPHLs) {
 		//			Matrix4f identityMatrix;
 		//			rc.shaderProgram->applyUniform("SPHL_LightProbeMode", (RendererUniform)1);
 		//			rc.shaderProgram->applyUniform("WorldMatrix", (RendererUniform)identityMatrix);
@@ -167,7 +167,7 @@ namespace SSPHH {
 		//	glActiveTexture(GL_TEXTURE0);
 		//}
 
-		// if (0) //(!Interface.ssphh.enableBasicShowSPHLs)
+		// if (0) //(!Interface->ssphh.enableBasicShowSPHLs)
 		//{
 		//	for (auto& sphl : ssgUserData->ssphhLights) {
 		//		double S = 0.25;
@@ -237,7 +237,7 @@ namespace SSPHH {
 	}
 
 	void SSPHH_Application::RenderGL11Hierarchies() {
-		if (Interface.ssphh.enableShowHierarchies) {
+		if (Interface->ssphh.enableShowHierarchies) {
 			glMatrixMode(GL_PROJECTION);
 			glPushMatrix();
 			glLoadIdentity();
@@ -266,7 +266,7 @@ namespace SSPHH {
 					float h = 0.0f; // clamp(sphl->hierarchies[j].percentVisible, 0.0f, 1.0f) * 0.5f + 0.5f;
 					float s = sphl->enabled ? 1.0f : 0.5f;
 					float l;
-					if (i >= Interface.ssphh.HierarchiesMaxSphls)
+					if (i >= Interface->ssphh.HierarchiesMaxSphls)
 						l = 0.25f;
 					else
 						l = 0.5f;

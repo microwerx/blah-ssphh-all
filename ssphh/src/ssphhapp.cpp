@@ -86,25 +86,25 @@ namespace SSPHH {
 			}
 
 			if (cmdargs[j] == "-broker") {
-				Interface.uf.uf_type = UfType::Broker;
+				Interface->uf.uf_type = UfType::Broker;
 				HFLOGINFO("Unicornfish: starting in broker mode");
 			}
 			if (cmdargs[j] == "-worker") {
-				Interface.uf.uf_type = UfType::Worker;
+				Interface->uf.uf_type = UfType::Worker;
 				HFLOGINFO("Unicornfish: starting in client mode");
 			}
 			if (cmdargs[j] == "-client") {
-				Interface.uf.uf_type = UfType::Client;
+				Interface->uf.uf_type = UfType::Client;
 				HFLOGINFO("Unicornfish: starting in worker mode");
 			}
 			if ((cmdargs[j] == "-endpoint") && nextArgExists) {
-				Interface.uf.endpoint = cmdargs[j + 1];
+				Interface->uf.endpoint = cmdargs[j + 1];
 				j++;
-				HFLOGINFO("Unicornfish: using endpoint %s", Interface.uf.endpoint.c_str());
+				HFLOGINFO("Unicornfish: using endpoint %s", Interface->uf.endpoint.c_str());
 			}
 			if ((cmdargs[j] == "-service") && nextArgExists) {
-				Interface.uf.service = cmdargs[j + 1];
-				HFLOGINFO("Unicornfish: using service %s", Interface.uf.service.c_str());
+				Interface->uf.service = cmdargs[j + 1];
+				HFLOGINFO("Unicornfish: using service %s", Interface->uf.service.c_str());
 				j++;
 			}
 		}
@@ -171,7 +171,7 @@ namespace SSPHH {
 
 		FxSetErrorMessage(__FILE__, __LINE__, "inside OnInit()");
 
-		Interface.preCameraMatrix.LoadIdentity();
+		Interface->preCameraMatrix.LoadIdentity();
 
 		const char* glrenderer = (const char*)glGetString(GL_RENDERER);
 		const char* glvendor = (const char*)glGetString(GL_VENDOR);
@@ -212,7 +212,6 @@ namespace SSPHH {
 		if (!root)
 			root = MakeBaseObject("root");
 		ssg = MakeSimpleSceneGraph("ssg", root);
-		rendererContext = MakeRendererContext("maincontext", root);
 		ssgUserData = std::make_shared<SSG_SSPHHRendererPlugin>();
 		ssgUserData->plugin(ssg);
 		SSG_LoadScene();
@@ -220,7 +219,7 @@ namespace SSPHH {
 
 		// Initialize Rendering System
 		FxSetErrorMessage(__FILE__, __LINE__, "initializing rendering system");
-		rendererContext->init("SSHH RendererContext", rendererContext);
+		rendererContext = MakeRendererContext("maincontext", root);
 		InitRenderConfigs();
 		LoadRenderConfigs();
 
@@ -247,19 +246,20 @@ namespace SSPHH {
 		// r.Init();
 
 		ssgUserData.reset();
-		rendererContext.reset();
-		ssg.reset();
-		////renderer.reset();
-		// for (auto& [k, renderer] : rendererContext->renderers) {
-		//	renderer.buildBuffers();
-		//	renderer.reset();
-		//}
+		KillSimpleGeometryGroup(moonGG);
+		KillRendererContext(rendererContext);
+		KillSimpleSceneGraph(ssg);
+		KillIBaseObject(root);
+		coronaJobs.clear();
+		sphls.clear();
+		hotkeyWindows.clear();
+		Interface.reset();
 
-		// for (auto& [k, rc] : rendererContext->rendererConfigs) {
-		//	rc.reset();
-		//}
+			// for (auto& [k, rc] : rendererContext->rendererConfigs) {
+			//	rc.reset();
+			//}
 
-		KillUnicornfish();
+			KillUnicornfish();
 
 		// python.kill();
 		// python.join();
@@ -267,7 +267,7 @@ namespace SSPHH {
 		Widget::OnKill();
 	}
 
-	const Matrix4f& SSPHH_Application::GetCameraMatrix() const { return Interface.preCameraMatrix; }
+	const Matrix4f& SSPHH_Application::GetCameraMatrix() const { return Interface->preCameraMatrix; }
 
 
 	void SSPHH_Application::OnReshape(int width, int height) {
@@ -313,7 +313,7 @@ namespace SSPHH {
 	void SSPHH_Application::RenderTest2SphereCubeMap() {
 		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
 
-		// Matrix4f cameraMatrix_ = Interface.inversePreCameraMatrix * ssg.camera.viewMatrix_;
+		// Matrix4f cameraMatrix_ = Interface->inversePreCameraMatrix * ssg.camera.viewMatrix_;
 		// Vector3f cameraPosition(cameraMatrix_.m14, cameraMatrix_.m24, cameraMatrix_.m34);
 		// int s = 128;
 		// RendererConfig* cubeRC = rendererContext->renderers["gles30CubeMap"].getRenderConfig();
@@ -323,7 +323,7 @@ namespace SSPHH {
 		// cubeRC->clearColorBuffer = false;
 		// cubeRC->viewportRect.x = 0;
 		// cubeRC->viewportRect.y = 0;
-		// cubeRC->preCameraMatrix = Interface.inversePreCameraMatrix;
+		// cubeRC->preCameraMatrix = Interface->inversePreCameraMatrix;
 		// cubeRC->postCameraMatrix.LoadIdentity();
 		// cubeRC->useZOnly = false;
 		// cubeRC->useMaterials = true;
@@ -367,22 +367,22 @@ namespace SSPHH {
 	}
 
 	void SSPHH_Application::SaveScreenshot() {
-		if (Interface.saveScreenshot) {
+		if (Interface->saveScreenshot) {
 			Hf::StopWatch stopwatch;
-			Interface.saveScreenshot = false;
+			Interface->saveScreenshot = false;
 			Image3f exrimage(getWidthi(), getHeighti());
 			Image3ub pngimage(getWidthi(), getHeighti());
 
 			std::string filename = GetPathTracerSphlRenderName(
-				Interface.sceneName,
+				Interface->sceneName,
 				frameName(),
 				coronaScene.currentConfig.enableSpecular,
 				coronaScene.REF.maxRayDepth,
 				coronaScene.REF.passLimit,
-				Interface.ssphh.MaxDegrees);
+				Interface->ssphh.MaxDegrees);
 			std::string exrfilename = filename + ".exr";
 			std::string pngfilename = filename + ".png";
-			Interface.ssphh.lastAPPImagePath = exrfilename;
+			Interface->ssphh.lastAPPImagePath = exrfilename;
 
 			Hf::StopWatch readPixelsClock;
 			glFinish();
@@ -415,7 +415,7 @@ namespace SSPHH {
 			exrimage.saveEXR(exrfilename);
 			HFLOGINFO("saveEXR took %3.2f milliseconds", writeEXRClock.Stop_ms());
 
-			Interface.ssphh.lastAPPTime = stopwatch.Stop_s();
+			Interface->ssphh.lastAPPTime = stopwatch.Stop_s();
 		}
 	}
 

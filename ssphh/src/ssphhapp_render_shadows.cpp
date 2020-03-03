@@ -12,8 +12,8 @@ namespace SSPHH
 
 		//double sunShadowT0 = HFLOG_SECS_ELAPSED();
 		//rectShadow.renderSkyBox = false;
-		//rectShadow.viewportRect.w = Interface.renderconfig.sunShadowMapSize;
-		//rectShadow.viewportRect.h = Interface.renderconfig.sunShadowMapSize;
+		//rectShadow.viewportRect.w = Interface->renderconfig.sunShadowMapSize;
+		//rectShadow.viewportRect.h = Interface->renderconfig.sunShadowMapSize;
 		//rectShadow.preCameraMatrix.LoadIdentity();
 		//rectShadow.postCameraMatrix.LoadIdentity();
 		//rectShadow.projectionMatrix = ssg.environment.sunShadowProjectionMatrix;
@@ -78,7 +78,7 @@ namespace SSPHH
 		////}
 		//ssg.environment.sunShadowMapTime = (float)(1000.0f * (HFLOG_SECS_ELAPSED() - sunShadowT0));
 
-		//if (Interface.captureShadows) {
+		//if (Interface->captureShadows) {
 		//	SaveTextureMap(GL_TEXTURE_2D, ssg.environment.sunColorMapId, "sun_color.ppm");
 		//	SaveTextureMap(GL_TEXTURE_2D, ssg.environment.sunDepthMapId, "sun_depth.ppm");
 		//}
@@ -106,7 +106,7 @@ namespace SSPHH
 		//	auto& scs = sphl.depthSphlMap;
 
 		//	scs.zfar = cubeShadow.viewportZFar;
-		//	if (Interface.ssphh.enableShadowColorMap) {
+		//	if (Interface->ssphh.enableShadowColorMap) {
 		//		sphl.colorSphlMap.createTextureCube();
 		//		cubeShadow.clearColor.reset(0.2f, 0.4f, 0.6f, 1.0f);
 		//		cubeShadow.fbo_gen_color = true;
@@ -125,7 +125,7 @@ namespace SSPHH
 		//	RenderCube(rendererContext, ssg, "gles30Shadow", "cubeShadow");
 		//	FxSetErrorMessage("ssphh.cpp", __LINE__, __FUNCTION__);
 
-		//	if (Interface.captureShadows) {
+		//	if (Interface->captureShadows) {
 		//		std::ostringstream ostr;
 		//		ostr << "sphl" << std::setw(2) << std::setfill('0') << i;
 		//		SaveTextureMap(GL_TEXTURE_CUBE_MAP, sphl.colorSphlMap.getTexture(), ostr.str() + "_color.ppm");
@@ -133,6 +133,6 @@ namespace SSPHH
 		//	}
 		//}
 
-		Interface.captureShadows = false;
+		Interface->captureShadows = false;
 	}
 } // namespace SSPHH

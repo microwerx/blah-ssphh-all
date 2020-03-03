@@ -23,7 +23,7 @@ namespace SSPHH
 		Matrix4f perspective;
 		perspective.PerspectiveY(ssg.camera.fov, aspect, 0.01f, 200.0f);
 		glMultMatrixf(perspective.const_ptr());
-		glMultMatrixf((Interface.preCameraMatrix).AsInverse().const_ptr());
+		glMultMatrixf((Interface->preCameraMatrix).AsInverse().const_ptr());
 		//glMultMatrixf((ssg.camera.viewMatrix_).const_ptr());
 
 		glMatrixMode(GL_MODELVIEW);
