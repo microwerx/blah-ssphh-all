@@ -18,7 +18,7 @@ transform 0.15 0.0 0.0 0.0 0.0 0.15 0.0 5.0 0.0 0.0 0.15 5.0
 sphere whiteLight
 
 transform 1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0 0.0
-geometryGroup teapot.obj
+# geometryGroup teapot.obj
 
 transform 2.0 0.0 0.0 4.0 0.0 2.0 0.0 0.0 0.0 0.0 2.0 0.0
 geometryGroup bunny.obj
