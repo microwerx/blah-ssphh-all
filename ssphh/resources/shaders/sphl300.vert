@@ -43,7 +43,7 @@ void main()
 {
     vColor = aColor;
     vTexCoord = aTexCoord;
-    vNormal = (WorldMatrix * vec4(aNormal, 0.0)).xyz;
+    vNormal = mat3(WorldMatrix) * aNormal;
     vec4 worldPosition = WorldMatrix * aPosition;
     vPosition = worldPosition;
     vViewVector = CameraPosition.xyz - worldPosition.xyz;
