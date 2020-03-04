@@ -11,10 +11,11 @@ public:
 
 	void OnUpdate(double timeStamp) override;
 	void OnRenderDearImGui() override;
-	void OnKill() override { ssg.reset(); }
+	void OnKill() override { }
 
 private:
-	Fluxions::SimpleSceneGraphPtr ssg;
+	Fluxions::SimpleSceneGraphWeakPtr ssg_wptr;
+	Fluxions::RendererContextWeakPtr context_wptr;
 };
 
 using ToolWindowPtr = std::shared_ptr<ToolWindow>;

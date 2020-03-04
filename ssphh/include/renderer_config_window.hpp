@@ -13,7 +13,6 @@ public:
 	void OnRenderDearImGui() override;
 	void OnKill() override {
 		rendererContext.reset();
-		rc.reset();
 	}
 
 
@@ -21,7 +20,7 @@ private:
 	Fluxions::RendererContextPtr rendererContext;
 	int curRendererConfigIndex{ 0 };
 	std::vector<const char*> renderConfigList;
-	Fluxions::RendererConfigPtr rc;
+	Fluxions::RendererConfigWeakPtr rc_wptr;
 	float defaultParameterWidth{ 100.0f };
 };
 
