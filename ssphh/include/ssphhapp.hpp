@@ -520,6 +520,7 @@ namespace SSPHH {
 
 		// SPHL METHODS
 		SimpleGeometryMesh ssphh_hierarchy_mesh;
+		Matrix4f I;
 		FxModel geosphere;
 		// Sphl sphl;
 		static constexpr int MaxShLights = 16;

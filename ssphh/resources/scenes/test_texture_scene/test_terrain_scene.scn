@@ -56,3 +56,4 @@ anisoLight SHL00 -4.0 2.0 -4.0 100.0 1 1 1
 anisoLight SHL01  4.0 2.0 -4.0 100.0 1 1 1
 anisoLight SHL02  4.0 2.0  4.0 100.0 1 1 1
 anisoLight SHL03 -4.0 2.0  4.0 100.0 1 1 1
+anisoLight SHL05  0.0 3.0  0.0 100.0 1 1 1

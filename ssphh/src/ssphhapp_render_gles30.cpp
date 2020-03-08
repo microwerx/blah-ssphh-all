@@ -86,8 +86,23 @@ namespace SSPHH {
 			updateViz = true;
 		}
 
+		if (updateViz) {
+			auto& mesh = ssphh_hierarchy_mesh;
+			mesh.resize(0, 0, 1);
+			mesh.beginLines();
+			mesh.color3f({ 1, 0, 0 });
+			for (auto [_, sphl1] : ssg->anisoLights) {
+				for (auto [_, sphl2] : ssg->anisoLights) {
+					mesh.position3f(sphl1->position.xyz(), true);
+					mesh.position3f(sphl2->position.xyz(), true);
+				}
+			}
+		}
+
 		RendererUtility viz_renderer(ssg, rendererContext, "viz");
 		viz_renderer.render();
+		auto renderer = viz_renderer.renderer();
+		renderer->setVizMesh(&ssphh_hierarchy_mesh, I);
 	}
 
 
@@ -124,8 +139,8 @@ namespace SSPHH {
 		FxCheckErrors();
 	const std::string renderername{ "skybox" };
 	if (rendererContext.renderers.count(renderername)) {
-		const std::string& renderconfigname = rendererContext.renderers[renderername].renderconfigname;
-		Fluxions::RenderImage(rendererContext, ssg, renderername, renderconfigname);
+		const std::string& rendererConfigName = rendererContext.renderers[renderername].rendererConfigName;
+		Fluxions::RenderImage(rendererContext, ssg, renderername, rendererConfigName);
 	}
 	// ssg.AdvancedRender(defaultRenderConfig);
 	// ssg.camera.actualViewMatrix = defaultRenderConfig.cameraMatrix_;
