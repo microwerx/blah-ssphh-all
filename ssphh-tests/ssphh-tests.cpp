@@ -370,9 +370,9 @@ int oldmain(int argc, char** argv) {
 
 TEST_CASE("Fluxions SSPHH Algorithm", "[ssphh]") {
 	SimpleAnisoLight al1;
-	al1.SH.setDegrees(10);
+	al1.SH.resize(10);
 	REQUIRE(al1.SH.degrees() == 10);
-	for (auto& a_lm : al1.sphl) {
+	for (auto& a_lm : al1.SH) {
 		REQUIRE(a_lm == 0);
 	}
 
@@ -382,7 +382,7 @@ TEST_CASE("Fluxions SSPHH Algorithm", "[ssphh]") {
 			REQUIRE(al1.SH.a(l, m) != 0);
 		}
 	}
-	using fs = std::filesystem;
+	using fs = ::std::filesystem;
 	const std::string filename { "sh.json" };
 	if (fs::exists(filename))
 		fs::remove(filename);

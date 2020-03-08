@@ -1043,10 +1043,10 @@ namespace SSPHH {
 					ImGui::Separator();
 					ImGui::Text("Shadow build time: %.1fms", sspl->depthSphlMap->buildTime);
 
-					int lastNumDegrees = sspl->maxDegree;
-					ImGui::DragInt("Max Degree", &sspl->maxDegree, 0.1f, 0, 9);
-					if (lastNumDegrees != sspl->maxDegree) {
-						sspl->changeDegrees(sspl->maxDegree);
+					int lastNumDegrees = sspl->maxDegree_;
+					ImGui::DragInt("Max Degree", &sspl->maxDegree_, 0.1f, 0, 9);
+					if (lastNumDegrees != sspl->maxDegree_) {
+						sspl->changeDegrees(sspl->maxDegree_);
 					}
 					Vector3f position0 = sspl->position;
 					ImGui::DragFloat3("Position", sspl->position.ptr(), stepSize, -100.0f, 100.0f);
@@ -1102,7 +1102,7 @@ namespace SSPHH {
 							}
 							ImGui::PopID();
 
-							for (int l = 0; l <= sspl->maxDegree; l++) {
+							for (int l = 0; l <= sspl->maxDegree_; l++) {
 								ImGui::PushID(l);
 								for (int m = -l; m <= l; m++) {
 									int lm = (int)sspl->msph[j].getCoefficientIndex(l, m);

@@ -41,11 +41,11 @@ namespace SSPHH {
 
 	PPMCompare::~PPMCompare() {}
 
-	void PPMCompare::Init(bool hasSpecular, int maxRayDepth, int passCount, int maxDegree) {
+	void PPMCompare::Init(bool hasSpecular, int maxRayDepth, int passCount, int maxDegree_) {
 		ks = hasSpecular;
 		mrd = maxRayDepth;
 		pl = passCount;
-		md = maxDegree;
+		md = maxDegree_;
 	}
 
 	void PPMCompare::SetConversion(ColorSpaceType im1type, ColorSpaceType im2type) {
