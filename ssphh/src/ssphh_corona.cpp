@@ -578,23 +578,23 @@ namespace SSPHH {
 		Image3f image2;
 		HFLOGDEBUG("NEED TO REDO THIS CODE!!!");
 		return;
-		//image1.loadPPM(Interface->ssphh.lastREFImagePath);
-		//image2.loadPPM(Interface->ssphh.lastSphlRenderImagePath);
+		////image1.loadPPM(Interface->ssphh.lastREFImagePath);
+		////image2.loadPPM(Interface->ssphh.lastSphlRenderImagePath);
 
-		PPMCompare ppmcompare;
+		//PPMCompare ppmcompare;
 
-		ppmcompare.Init(ks, mrd, pl, md);
-		ppmcompare.Compare(image1, image2);
-		ppmcompare.SaveResults(Interface->sceneName, pathtracer_name,
-							   Interface->ssphh.ppmcompareGenPPMs,
-							   Interface->ssphh.ppmcompareIgnoreCache);
+		//ppmcompare.Init(ks, mrd, pl, md);
+		//ppmcompare.Compare(image1, image2);
+		//ppmcompare.SaveResults(Interface->sceneName, pathtracer_name,
+		//					   Interface->ssphh.ppmcompareGenPPMs,
+		//					   Interface->ssphh.ppmcompareIgnoreCache);
 
-		Interface->ssphh.lastPathTracerTotalEnergy = ppmcompare.image1stat.sumI;
-		Interface->ssphh.lastSphlRenderTotalEnergy = ppmcompare.image2stat.sumI;
-		Interface->ssphh.lastDiff1TotalEnergy = ppmcompare.diffstat.sumI;
-		Interface->ssphh.lastDiff2TotalEnergy = ppmcompare.absdiffstat.sumI;
+		//Interface->ssphh.lastPathTracerTotalEnergy = ppmcompare.image1stat.sumI;
+		//Interface->ssphh.lastSphlRenderTotalEnergy = ppmcompare.image2stat.sumI;
+		//Interface->ssphh.lastDiff1TotalEnergy = ppmcompare.diffstat.sumI;
+		//Interface->ssphh.lastDiff2TotalEnergy = ppmcompare.absdiffstat.sumI;
 
-		Interface->ssphh.ppmcompareIgnoreCache = false;
+		//Interface->ssphh.ppmcompareIgnoreCache = false;
 	}
 
 	void SSPHH_Application::Corona_EraseTestProducts() {}

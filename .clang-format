@@ -8,8 +8,12 @@ IndentWidth: 4
 MaxEmptyLinesToKeep: 2
 NamespaceIndentation: All
 FixNamespaceComments: true
+AlignConsecutiveAssignments : true
 BreakBeforeBraces: Attach
 PointerBindsToType: true
+AllowShortBlocksOnASingleLine: true
+AllowShortIfStatementsOnASingleLine : true
+AllowShortLoopsOnASingleLine : true
 AllowShortFunctionsOnASingleLine: Inline
 AllowShortCaseLabelsOnASingleLine: false
 AlignTrailingComments: true

@@ -134,7 +134,7 @@ void SsphhWindow::OnRenderDearImGui() {
 	ImGui::SameLine();
 	if (ImGui::SmallButton("Dump Hier")) {
 		for (size_t i = 0; i < app.ssgUserData->anisoLights.size(); i++) {
-			auto& sphl = app.ssgUserData->anisoLights[i];
+			//auto& sphl = app.ssgUserData->anisoLights[i];
 			//sphl->setHierarchyDescription();
 			//HFLOGINFO("hierarchy %02d %s", sphl->index, sphl->hier_description.c_str());
 		}

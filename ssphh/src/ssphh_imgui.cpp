@@ -999,7 +999,7 @@ namespace SSPHH {
 //					}
 //					ImGui::SameLine();
 //					if (ImGui::SmallButton("Recalc")) {
-//						sspl->dirty = true;
+//						sspl->dirty_ = true;
 //					}
 //					ImGui::SameLine();
 //					if (ImGui::SmallButton("min")) {
@@ -1032,7 +1032,7 @@ namespace SSPHH {
 //					ImGui::SameLine();
 //					if (ImGui::SmallButton("? Coefs")) {
 //						sspl->randomize = true;
-//						sspl->dirty = true;
+//						sspl->dirty_ = true;
 //					}
 //					ImGui::SameLine();
 //					if (ImGui::SmallButton("? Position")) {
@@ -1051,16 +1051,16 @@ namespace SSPHH {
 //					Vector3f position0 = sspl->position;
 //					ImGui::DragFloat3("Position", sspl->position.ptr(), stepSize, -100.0f, 100.0f);
 //					if (position0 != sspl->position) {
-//						sspl->depthSphlMap->dirty = true;
+//						sspl->depthSphlMap->dirty_ = true;
 //					}
 //					// sspl->position.w = Fluxions::clamp(sspl->position.w, 0.0f, 1.0f);
 //					ImGui::DragFloat("E0", &sspl->E0, stepSize, 0.0f, 10000.0f);
 //					ImGui::DragFloat("Falloff Radius", &sspl->falloffRadius, stepSize, 0.0f, 1000.0f);
 //
 //					ImGui::Text(
-//						"status: dirty? %d / shadow map? %d",
-//						sspl->dirty ? 1 : 0,
-//						sspl->depthSphlMap->dirty ? 1 : 0);
+//						"status: dirty_? %d / shadow map? %d",
+//						sspl->dirty_ ? 1 : 0,
+//						sspl->depthSphlMap->dirty_ ? 1 : 0);
 //
 //					for (int j = 0; j < 4; j++) {
 //						std::ostringstream label;
@@ -1185,7 +1185,7 @@ namespace SSPHH {
 //									ImGui::PopID();
 //									float newValue = sspl->SH[j].getCoefficient(l, m);
 //									if (newValue != oldValue) {
-//										sspl->dirty = true;
+//										sspl->dirty_ = true;
 //									}
 //								}
 //								ImGui::PopID();
@@ -1233,7 +1233,7 @@ namespace SSPHH {
 //					}
 //					ImGui::SameLine();
 //					if (ImGui::SmallButton("Recalc")) {
-//						sspl->dirty = true;
+//						sspl->dirty_ = true;
 //					}
 //					ImGui::SameLine();
 //					if (ImGui::SmallButton("min")) {
@@ -1262,15 +1262,15 @@ namespace SSPHH {
 //					ImGui::SameLine();
 //					if (ImGui::SmallButton("? Coefs")) {
 //						sspl->randomize = true;
-//						sspl->dirty = true;
+//						sspl->dirty_ = true;
 //					}
 //					ImGui::SameLine();
 //					if (ImGui::SmallButton("? Position")) {
 //						sspl->randomizePosition = true;
 //					}
 //				}
-//				if (sspl->dirty || sspl->randomizePosition) {
-//					sspl->depthSphlMap->dirty = true;
+//				if (sspl->dirty_ || sspl->randomizePosition) {
+//					sspl->depthSphlMap->dirty_ = true;
 //				}
 //				ImGui::PopID();
 //				i++;
@@ -1399,7 +1399,7 @@ namespace SSPHH {
 		//sphl->changeDegrees(DefaultSphlDegree);
 
 		//for (auto& sphl : ssgUserData->anisoLights) {
-		//	sphl->dirty = true;
+		//	sphl->dirty_ = true;
 		//}
 
 		//Corona_GenerateSphlINIT();
@@ -1447,7 +1447,7 @@ namespace SSPHH {
 		//// TODO: Need to write a CubeMapToSphl routine
 		//// sphlSampler.sampleCubeMap(enviroSkyBoxTexture.getImage(), ssgUserData->anisoLights[which].msh_);
 
-		//ssgUserData->anisoLights[which]->dirty = true;
+		//ssgUserData->anisoLights[which]->dirty_ = true;
 	}
 
 	void SSPHH_Application::imguiSphlSPHtoCubeMap(size_t which) {

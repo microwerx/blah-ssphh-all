@@ -7,20 +7,24 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include "test-resample.hpp"
+// STL
 #include <filesystem>
-#include <fluxions_gte.hpp>
-#include <fluxions_gte_catmull_rom.hpp>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <iterator>
+#include <numeric>
 #include <string>
 #include <type_traits>
 #include <vector>
+// Non STL
+#include <fluxions_gte.hpp>
+#include <fluxions_gte_catmull_rom.hpp>
+#include <fluxions_ssg_aniso_light.hpp>
 
 #define CATCH_CONFIG_MAIN
 #include <catch.hpp>
-#include <fluxions_ssg_aniso_light.hpp>
+
 using namespace Fluxions;
 namespace fs = std::filesystem;
 using namespace std;
@@ -366,6 +370,19 @@ int oldmain(int argc, char** argv) {
 	Fluxions::TestFluxionsGTE();
 	TestCatmullRom();
 	return 0;
+}
+
+
+TEST_CASE("Fluxions GTE", "[gte]") {
+	Vector3f v{ 0.0f, 0.0f, 0.0f };
+	v.make_finite();
+	REQUIRE(v == Vector3f{ 0.0f, 0.0f, 0.0f });
+	v.reset(
+		std::numeric_limits<float>::quiet_NaN(),
+		std::numeric_limits<float>::quiet_NaN(),
+		std::numeric_limits<float>::quiet_NaN());
+	v.make_finite();
+	REQUIRE(v == Vector3f{ 0.0f, 0.0f, 0.0f });
 }
 
 

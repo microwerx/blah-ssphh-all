@@ -92,7 +92,7 @@ namespace SSPHH {
 			mesh.beginLines();
 			mesh.color3f({ 1, 0, 0 });
 			for (auto [_, sphl1] : ssg->anisoLights) {
-				for (auto [_, sphl2] : ssg->anisoLights) {
+				for (auto [__, sphl2] : ssg->anisoLights) {
 					mesh.position3f(sphl1->base.position.xyz(), true);
 					mesh.position3f(sphl2->base.position.xyz(), true);
 				}

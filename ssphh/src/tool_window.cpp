@@ -52,7 +52,8 @@ void ToolWindow::OnRenderDearImGui() {
 	ImGui::SliderInt("Tex", &texId, 0, 100);
 	ImGui::SliderInt("Arr", &arrayId, 0, 5);
 	size.y = size.x;
-	ImGui::Image((ImTextureID)texId, size);
+	uint64_t utexId = texId; // remove warning about casting 32-bit value to 64-bit pointer
+	ImGui::Image((ImTextureID)utexId, size);
 	ImGui::ImageButton((ImTextureID)2, { 64, 64 });
 
 	auto program = context->getProgram("webgl_unwrapped_cubemap_program").lock();
@@ -82,8 +83,8 @@ void ToolWindow::OnRenderDearImGui() {
 
 		glLoadIdentity();
 		glMultMatrixf(P.const_ptr());
-		float z = arrayId > 0 ? 1 : -1;
-		constexpr float xsize = 0.1;
+		float z = arrayId > 0 ? 1.0f : -1.0f;
+		constexpr float xsize = 0.1f;
 		glUseProgram(0);
 		glBegin(GL_QUADS);
 		glColor3f(1, 1, 1);

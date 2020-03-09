@@ -43,20 +43,20 @@ namespace SSPHH {
 		//		sphl->randomizeCoefficients();
 		//		sphl->calcMonoChannels();
 		//		sphl->randomize = false;
-		//		sphl->dirty = true;
+		//		sphl->dirty_ = true;
 		//	}
 		//	if (sphl->randomizePosition) {
 		//		sphl->position.reset(randomSampler(-5.0f, 5.0f), randomSampler(2.0f, 3.0f), randomSampler(-6.0f, 6.0f));
 		//		sphl->randomizePosition = false;
-		//		sphl->depthSphlMap->dirty = true;
+		//		sphl->depthSphlMap->dirty_ = true;
 		//	}
-		//	if (sphl->dirty) {
+		//	if (sphl->dirty_) {
 		//		// Copy coefficients from the scene graph SPHL list
 		//		sphls[i].copyCoefficients(sphl, Interface->ssphh.MaxDegrees, Interface->ssphh.enableBasicShowSPHLs);
 		//		sphls[i].createMesh(geosphere);
 		//		// sphls[i].createLightProbe();
-		//		sphl->dirty = false;
-		//		sphl->depthSphlMap->dirty = true;
+		//		sphl->dirty_ = false;
+		//		sphl->depthSphlMap->dirty_ = true;
 		//	}
 		//	sphls[i].position = sphl->position;
 		//	sphls[i].enabled = sphl->enabled;
