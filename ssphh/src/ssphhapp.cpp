@@ -256,7 +256,7 @@ namespace SSPHH {
 		Interface.reset();
 
 			// for (auto& [k, rc] : rendererContext->rendererConfigs) {
-			//	rc.reset();
+			//	rc.clearCoefs();
 			//}
 
 			KillUnicornfish();

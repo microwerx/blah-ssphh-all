@@ -29,17 +29,17 @@ namespace SSPHH
 		}
 		test = 0;
 		size_t count = 0;
-		for (auto &sphl : ssgUserData->ssphhLights) {
+		for (auto &sphl : ssgUserData->anisoLights) {
 			std::ostringstream ostr;
 			ostr << ssg->name() << "_sphl" << count;
-			if (!sphl->saveOBJ("output", ostr.str())) {
-				HFLOGWARN("sphl.saveOBJ() failed to save %s", ostr.str().c_str());
-				break;
-			}
+			//if (!sphl->saveOBJ("output", ostr.str())) {
+			//	HFLOGWARN("sphl.saveOBJ() failed to save %s", ostr.str().c_str());
+			//	break;
+			//}
 			count++;
 		}
 
-		if (count != ssgUserData->ssphhLights.size()) {
+		if (count != ssgUserData->anisoLights.size()) {
 			HFLOGERROR("Did not save all the SPHLs as OBJ/MTL files");
 			test = -1;
 		}

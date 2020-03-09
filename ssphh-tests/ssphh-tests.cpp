@@ -4,8 +4,10 @@
 #if __cplusplus < 201703
 #error "C++17 required"
 #endif
+#define WIN32_LEAN_AND_MEAN
 
 #include "test-resample.hpp"
+#include <filesystem>
 #include <fluxions_gte.hpp>
 #include <fluxions_gte_catmull_rom.hpp>
 #include <fstream>
@@ -15,13 +17,12 @@
 #include <string>
 #include <type_traits>
 #include <vector>
-#include <filesystem>
 
 #define CATCH_CONFIG_MAIN
 #include <catch.hpp>
 #include <fluxions_ssg_aniso_light.hpp>
 using namespace Fluxions;
-
+namespace fs = std::filesystem;
 using namespace std;
 
 #pragma comment(lib, "fluxions.lib")
@@ -370,25 +371,28 @@ int oldmain(int argc, char** argv) {
 
 TEST_CASE("Fluxions SSPHH Algorithm", "[ssphh]") {
 	SimpleAnisoLight al1;
-	al1.SH.resize(10);
+	al1.SH.resize(10, 0.0f);
 	REQUIRE(al1.SH.degrees() == 10);
-	for (auto& a_lm : al1.SH) {
-		REQUIRE(a_lm == 0);
-	}
-
-	al1.SH.randomize();
-	for (int l = 0; l <= 10; l++) {
-		for (int m = -l; m <= l; m++) {
-			REQUIRE(al1.SH.a(l, m) != 0);
+	for (unsigned i = 0; i < al1.SH.channels(); i++) {
+		for (auto& a_lm : al1.SH[i]) {
+			REQUIRE(a_lm == 0);
 		}
 	}
-	using fs = ::std::filesystem;
-	const std::string filename { "sh.json" };
+
+
+	al1.SH.randomize(-1.0f, 1.0f);
+	for (int l = 0; l <= 10; l++) {
+		for (int m = -l; m <= l; m++) {
+			REQUIRE(al1.SH.Y(l, m) != 0);
+		}
+	}
+
+	const std::string filename{ "sh.json" };
 	if (fs::exists(filename))
 		fs::remove(filename);
-	REQUIRE(al1.SH.saveJson(filename) == true)
+	REQUIRE(al1.SH.saveJSON(filename) == true);
 	REQUIRE(fs::exists(filename) == true);
 
 	SimpleAnisoLight al2;
-	al2.SH.loadJson(filename);
+	REQUIRE(al2.SH.loadJSON(filename) == true);
 }

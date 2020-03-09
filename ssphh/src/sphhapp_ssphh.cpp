@@ -4,84 +4,84 @@
 namespace SSPHH {
 	void SSPHH_Application::DirtySPHLs() {
 		int i = 0;
-		for (auto& sphl : ssgUserData->ssphhLights) {
+		for (auto& sphl : ssgUserData->anisoLights) {
 			sphls[i++];
-			sphl->dirty = true;
+			sphl->setdirty(true);
 		}
 	}
 
 	void SSPHH_Application::UpdateSPHLs() {
-		if (!coefs_init) {
-			geosphere.load("resources/models/icos4.txt");
-			// sphl->randomize();
-			// sphl->createMesh(geosphere);
-			// sphl->createLightProbe();
-			rendererContext->renderers["sph_renderer"]->setSceneGraph(ssg);
-			coefs_init = true;
-		}
+		//if (!coefs_init) {
+		//	geosphere.load("resources/models/icos4.txt");
+		//	// sphl->randomize();
+		//	// sphl->createMesh(geosphere);
+		//	// sphl->createLightProbe();
+		//	rendererContext->renderers["sph_renderer"]->setSceneGraph(ssg);
+		//	coefs_init = true;
+		//}
 
-		if (ssgUserData->ssphhLights.size() != sphls.size()) {
-			sphls.clear();
-			DirtySPHLs();
-		}
+		//if (ssgUserData->anisoLights.size() != sphls.size()) {
+		//	sphls.clear();
+		//	DirtySPHLs();
+		//}
 
-		// Determine which sphls we need to recalculate and actually draw
-		for (auto& sphl : sphls) {
-			sphl.second.enabled = false;
-		}
+		//// Determine which sphls we need to recalculate and actually draw
+		//for (auto& sphl : sphls) {
+		//	sphl.second.enabled = false;
+		//}
 
-		int i = 0;
-		for (auto& sphl : ssgUserData->ssphhLights) {
-			if (sphl->randomize) {
-				// sphls[i].randomize();
-				// for (int lm = 0; lm < sphl->GetMaxCoefficients(); lm++)
-				//{
-				//	sphl->msph[0][lm] = sphls[i].v_coefs[Sphl::RedComponent][lm];
-				//	sphl->msph[1][lm] = sphls[i].v_coefs[Sphl::GreenComponent][lm];
-				//	sphl->msph[2][lm] = sphls[i].v_coefs[Sphl::BlueComponent][lm];
-				//}
-				sphl->randomizeCoefficients();
-				sphl->standardize();
-				sphl->randomize = false;
-				sphl->dirty = true;
-			}
-			if (sphl->randomizePosition) {
-				sphl->position.reset(randomSampler(-5.0f, 5.0f), randomSampler(2.0f, 3.0f), randomSampler(-6.0f, 6.0f));
-				sphl->randomizePosition = false;
-				sphl->depthSphlMap->dirty = true;
-			}
-			if (sphl->dirty) {
-				// Copy coefficients from the scene graph SPHL list
-				sphls[i].copyCoefficients(sphl, Interface->ssphh.MaxDegrees, Interface->ssphh.enableBasicShowSPHLs);
-				sphls[i].createMesh(geosphere);
-				// sphls[i].createLightProbe();
-				sphl->dirty = false;
-				sphl->depthSphlMap->dirty = true;
-			}
-			sphls[i].position = sphl->position;
-			sphls[i].enabled = sphl->enabled;
-			i++;
-		}
+		//int i = 0;
+		//for (auto& sphl : ssgUserData->anisoLights) {
+		//	if (sphl->randomize) {
+		//		// sphls[i].randomize();
+		//		// for (int lm = 0; lm < sphl->GetMaxCoefficients(); lm++)
+		//		//{
+		//		//	sphl->msh_[0][lm] = sphls[i].v_coefs[SphlViz::RedComponent][lm];
+		//		//	sphl->msh_[1][lm] = sphls[i].v_coefs[SphlViz::GreenComponent][lm];
+		//		//	sphl->msh_[2][lm] = sphls[i].v_coefs[SphlViz::BlueComponent][lm];
+		//		//}
+		//		sphl->randomizeCoefficients();
+		//		sphl->calcMonoChannels();
+		//		sphl->randomize = false;
+		//		sphl->dirty = true;
+		//	}
+		//	if (sphl->randomizePosition) {
+		//		sphl->position.reset(randomSampler(-5.0f, 5.0f), randomSampler(2.0f, 3.0f), randomSampler(-6.0f, 6.0f));
+		//		sphl->randomizePosition = false;
+		//		sphl->depthSphlMap->dirty = true;
+		//	}
+		//	if (sphl->dirty) {
+		//		// Copy coefficients from the scene graph SPHL list
+		//		sphls[i].copyCoefficients(sphl, Interface->ssphh.MaxDegrees, Interface->ssphh.enableBasicShowSPHLs);
+		//		sphls[i].createMesh(geosphere);
+		//		// sphls[i].createLightProbe();
+		//		sphl->dirty = false;
+		//		sphl->depthSphlMap->dirty = true;
+		//	}
+		//	sphls[i].position = sphl->position;
+		//	sphls[i].enabled = sphl->enabled;
+		//	i++;
+		//}
 	}
 
 	void SSPHH_Application::UploadSPHLs() {
-		unsigned i = 0;
-		for (auto& sphl : ssgUserData->ssphhLights) {
-			if (sphl->ptrcLightProbeImage.empty()) {
-				sphl->uploadLightProbe(sphl->ptrcLightProbeImage, sphl->ptrcLightProbeTexture);
-				sphl->uploadLightProbe(sphl->msphLightProbeImage, sphl->msphLightProbeTexture);
-				sphl->uploadLightProbe(sphl->hierLightProbeImage, sphl->hierLightProbeTexture);
-			}
+		//unsigned i = 0;
+		//for (auto& sphl : ssgUserData->anisoLights) {
+		//	if (sphl->ptrcLightProbeImage.empty()) {
+		//		sphl->uploadLightProbe(sphl->ptrcLightProbeImage, sphl->ptrcLightProbeTexture);
+		//		sphl->uploadLightProbe(sphl->msphLightProbeImage, sphl->msphLightProbeTexture);
+		//		sphl->uploadLightProbe(sphl->hierLightProbeImage, sphl->hierLightProbeTexture);
+		//	}
 
-			if (Interface->ssphh.enableShadowColorMap) {
-				sphls[i].lightProbeTexIds[0] = sphl->colorSphlMap->getTexture();
-			} else {
-				sphls[i].lightProbeTexIds[0] = sphl->hierLightProbeTexture->getTexture();
-			}
-			sphls[i].lightProbeTexIds[1] = sphl->ptrcLightProbeTexture->getTexture();
-			sphls[i].lightProbeTexIds[2] = sphl->msphLightProbeTexture->getTexture();
-			i++;
-		}
+		//	if (Interface->ssphh.enableShadowColorMap) {
+		//		sphls[i].lightProbeTexIds[0] = sphl->colorSphlMap->getTexture();
+		//	} else {
+		//		sphls[i].lightProbeTexIds[0] = sphl->hierLightProbeTexture->getTexture();
+		//	}
+		//	sphls[i].lightProbeTexIds[1] = sphl->ptrcLightProbeTexture->getTexture();
+		//	sphls[i].lightProbeTexIds[2] = sphl->msphLightProbeTexture->getTexture();
+		//	i++;
+		//}
 	}
 
 	void SSPHH_Application::RenderGLES30SPHLs() {
@@ -90,7 +90,7 @@ namespace SSPHH {
 		////RendererContext gl;
 		// RendererConfig& rc = rendererContext.rendererConfigs["default"];
 		//// FIXME: Are we using rendererContext?
-		// rc.rc_program_ptr->reset();// = rendererContext.FindProgram("sphl", "sphl");
+		// rc.rc_program_ptr->clearCoefs();// = rendererContext.FindProgram("sphl", "sphl");
 		// rc.clearDepthBuffer = false;
 		// rc.clearColorBuffer = false;
 		// rc.enableBlend = false;
@@ -169,7 +169,7 @@ namespace SSPHH {
 
 		// if (0) //(!Interface->ssphh.enableBasicShowSPHLs)
 		//{
-		//	for (auto& sphl : ssgUserData->ssphhLights) {
+		//	for (auto& sphl : ssgUserData->anisoLights) {
 		//		double S = 0.25;
 		//		double R = 1.0;
 		//		FxDebugBindTexture(GL_TEXTURE_CUBE_MAP, sphl->ptrcLightProbeTexture.getTexture());
@@ -212,7 +212,7 @@ namespace SSPHH {
 		//		//		sphl->position.z,
 		//		//		S, vloc, tloc);
 
-		//		//	texture = ssgUserData->ssphhLights[hier.index].ptrcLightProbeTexture.GetTexture();
+		//		//	texture = ssgUserData->anisoLights[hier.index].ptrcLightProbeTexture.GetTexture();
 		//		//	glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, texture);
 		//		//	FxDrawGL2CubeMap(
 		//		//		sphl->position.x + R * 0.707 + S * (i * 2 + 1),
@@ -220,7 +220,7 @@ namespace SSPHH {
 		//		//		sphl->position.z,
 		//		//		S, vloc, tloc);
 
-		//		//	texture = ssgUserData->ssphhLights[hier.index].msphLightProbeTexture.GetTexture();
+		//		//	texture = ssgUserData->anisoLights[hier.index].msphLightProbeTexture.GetTexture();
 		//		//	glutDebugBindTexture(GL_TEXTURE_CUBE_MAP, texture);
 		//		//	FxDrawGL2CubeMap(
 		//		//		sphl->position.x + R * 0.707 + S * (i * 2 + 1),
@@ -237,101 +237,101 @@ namespace SSPHH {
 	}
 
 	void SSPHH_Application::RenderGL11Hierarchies() {
-		if (Interface->ssphh.enableShowHierarchies) {
-			glMatrixMode(GL_PROJECTION);
-			glPushMatrix();
-			glLoadIdentity();
-			auto& rc = rendererContext->rendererConfigs["default"];
-			if (rc) {
-				glMultMatrixf(rc->projectionMatrix.const_ptr());
-				glMultMatrixf(rc->cameraMatrix.const_ptr());
-			}
-			glMatrixMode(GL_MODELVIEW);
-			glPushMatrix();
-			glLoadIdentity();
-
-			std::vector<SimpleVertex> vertices;
-			for (int i = 0; i < ssgUserData->ssphhLights.size(); i++) {
-				auto& sphl = ssgUserData->ssphhLights[i];
-				if (!sphl->enabled)
-					continue;
-
-				Color3f color1;
-				Color3f color2;
-
-				for (int j = 0; j < ssgUserData->ssphhLights.size(); j++) {
-					if (i == j || j < 0)
-						continue;
-
-					float h = 0.0f; // clamp(sphl->hierarchies[j].percentVisible, 0.0f, 1.0f) * 0.5f + 0.5f;
-					float s = sphl->enabled ? 1.0f : 0.5f;
-					float l;
-					if (i >= Interface->ssphh.HierarchiesMaxSphls)
-						l = 0.25f;
-					else
-						l = 0.5f;
-
-					SimpleVertex v1, v2;
-					v1.aColor = HLSToRGBf(h, l, s).ToColor4();
-					v1.aPosition = ssgUserData->ssphhLights[i]->position;
-					v2.aColor = v1.aColor;
-					v2.aPosition = ssgUserData->ssphhLights[j]->position;
-
-					v1.aPosition += Vector3f(0.0f, -0.5f, 0.0f);
-					v2.aPosition += Vector3f(0.0f, 0.5f, 0.0f);
-
-					vertices.push_back(v1);
-					vertices.push_back(v2);
-				}
-				SimpleVertex v1, v2;
-				v1.aColor = sphl->E0 * sphl->getCoefficientColor(0, 0);
-				v2.aColor = v1.aColor;
-				v1.aPosition = sphl->position - Vector3f(0.0f, 0.5f, 0.0f);
-				v2.aPosition = sphl->position + Vector3f(0.0f, 0.5f, 0.0f);
-				vertices.push_back(v1);
-				vertices.push_back(v2);
-			}
-
-			// glLineWidth(4.0f);
-			glEnable(GL_LINE_SMOOTH);
-			glBegin(GL_LINES);
-			for (auto& v : vertices) {
-				glColor4fv(v.aColor.const_ptr());
-				glVertex3fv(v.aPosition.const_ptr());
-			}
-			glEnd();
-			// glLineWidth(1.0f);
-			glDisable(GL_LINE_SMOOTH);
-
-			glPopMatrix();
-			glMatrixMode(GL_PROJECTION);
-			glPopMatrix();
-			glMatrixMode(GL_MODELVIEW);
-		}
-
-		// glMatrixMode(GL_PROJECTION);
-		// glPushMatrix();
-		// glLoadIdentity();
-		// glMultMatrixf(rc.projectionMatrix.const_ptr());
-		// glMultMatrixf(rc.cameraMatrix_.const_ptr());
-
-		// glMatrixMode(GL_MODELVIEW);
-		// glPushMatrix();
-		// glLoadIdentity();
-		// for (auto & it : sphls)
-		//{
-		//	auto & sphl = it.second;
-		//	if (!sphl->enabled) continue;
-
+		//if (Interface->ssphh.enableShowHierarchies) {
+		//	glMatrixMode(GL_PROJECTION);
 		//	glPushMatrix();
-		//	glTranslatef(sphl->position.X, sphl->position.y, sphl->position.z);
-		//	FxDrawGL1SolidSphere(1.0, 16, 16);
+		//	glLoadIdentity();
+		//	auto& rc = rendererContext->rendererConfigs["default"];
+		//	if (rc) {
+		//		glMultMatrixf(rc->projectionMatrix.const_ptr());
+		//		glMultMatrixf(rc->cameraMatrix.const_ptr());
+		//	}
+		//	glMatrixMode(GL_MODELVIEW);
+		//	glPushMatrix();
+		//	glLoadIdentity();
+
+		//	std::vector<SimpleVertex> vertices;
+		//	for (int i = 0; i < ssgUserData->anisoLights.size(); i++) {
+		//		auto& sphl = ssgUserData->anisoLights[i];
+		//		if (!sphl->enabled)
+		//			continue;
+
+		//		Color3f color1;
+		//		Color3f color2;
+
+		//		for (int j = 0; j < ssgUserData->anisoLights.size(); j++) {
+		//			if (i == j || j < 0)
+		//				continue;
+
+		//			float h = 0.0f; // clamp(sphl->hierarchies[j].percentVisible, 0.0f, 1.0f) * 0.5f + 0.5f;
+		//			float s = sphl->enabled ? 1.0f : 0.5f;
+		//			float l;
+		//			if (i >= Interface->ssphh.HierarchiesMaxSphls)
+		//				l = 0.25f;
+		//			else
+		//				l = 0.5f;
+
+		//			SimpleVertex v1, v2;
+		//			v1.aColor = HLSToRGBf(h, l, s).ToColor4();
+		//			v1.aPosition = ssgUserData->anisoLights[i]->position;
+		//			v2.aColor = v1.aColor;
+		//			v2.aPosition = ssgUserData->anisoLights[j]->position;
+
+		//			v1.aPosition += Vector3f(0.0f, -0.5f, 0.0f);
+		//			v2.aPosition += Vector3f(0.0f, 0.5f, 0.0f);
+
+		//			vertices.push_back(v1);
+		//			vertices.push_back(v2);
+		//		}
+		//		SimpleVertex v1, v2;
+		//		v1.aColor = sphl->E0 * sphl->getCoefficientColor(0, 0);
+		//		v2.aColor = v1.aColor;
+		//		v1.aPosition = sphl->position - Vector3f(0.0f, 0.5f, 0.0f);
+		//		v2.aPosition = sphl->position + Vector3f(0.0f, 0.5f, 0.0f);
+		//		vertices.push_back(v1);
+		//		vertices.push_back(v2);
+		//	}
+
+		//	// glLineWidth(4.0f);
+		//	glEnable(GL_LINE_SMOOTH);
+		//	glBegin(GL_LINES);
+		//	for (auto& v : vertices) {
+		//		glColor4fv(v.aColor.const_ptr());
+		//		glVertex3fv(v.aPosition.const_ptr());
+		//	}
+		//	glEnd();
+		//	// glLineWidth(1.0f);
+		//	glDisable(GL_LINE_SMOOTH);
+
 		//	glPopMatrix();
+		//	glMatrixMode(GL_PROJECTION);
+		//	glPopMatrix();
+		//	glMatrixMode(GL_MODELVIEW);
 		//}
-		// glPopMatrix();
-		// glMatrixMode(GL_PROJECTION);
-		// glPopMatrix();
-		// glMatrixMode(GL_MODELVIEW);
+
+		//// glMatrixMode(GL_PROJECTION);
+		//// glPushMatrix();
+		//// glLoadIdentity();
+		//// glMultMatrixf(rc.projectionMatrix.const_ptr());
+		//// glMultMatrixf(rc.cameraMatrix_.const_ptr());
+
+		//// glMatrixMode(GL_MODELVIEW);
+		//// glPushMatrix();
+		//// glLoadIdentity();
+		//// for (auto & it : sphls)
+		////{
+		////	auto & sphl = it.second;
+		////	if (!sphl->enabled) continue;
+
+		////	glPushMatrix();
+		////	glTranslatef(sphl->position.X, sphl->position.y, sphl->position.z);
+		////	FxDrawGL1SolidSphere(1.0, 16, 16);
+		////	glPopMatrix();
+		////}
+		//// glPopMatrix();
+		//// glMatrixMode(GL_PROJECTION);
+		//// glPopMatrix();
+		//// glMatrixMode(GL_MODELVIEW);
 	}
 
 } // namespace SSPHH

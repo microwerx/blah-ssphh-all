@@ -244,14 +244,14 @@ namespace SSPHH {
 			imguiSphlRandomize();
 		}
 		if (ImGui::SmallButton("Corona->SPH")) {
-			if (!ssgUserData->ssphhLights.empty()) {
-				imguiSphlCoronaToSPH(ssgUserData->ssphhLights.size() - 1);
+			if (!ssgUserData->anisoLights.empty()) {
+				imguiSphlCoronaToSPH(ssgUserData->anisoLights.size() - 1);
 			}
 		}
 		ImGui::SameLine();
 		if (ImGui::SmallButton("SPH->CubeMap")) {
-			if (!ssgUserData->ssphhLights.empty()) {
-				imguiSphlSPHtoCubeMap(ssgUserData->ssphhLights.size() - 1);
+			if (!ssgUserData->anisoLights.empty()) {
+				imguiSphlSPHtoCubeMap(ssgUserData->anisoLights.size() - 1);
 			}
 		}
 		ImGui::PopID();
@@ -513,7 +513,7 @@ namespace SSPHH {
 		// ImGui::SameLine();
 		// if (ImGui::Button("0")) {
 		//	ssg.environment->sunShadowMapZoom = 1.0;
-		//	ssg.environment->sunShadowMapOffset.reset();
+		//	ssg.environment->sunShadowMapOffset.clearCoefs();
 		//}
 		// ImGui::SameLine();
 		// if (ImGui::Button("!")) {
@@ -951,335 +951,335 @@ namespace SSPHH {
 		// S P H L   E D I T O R //////////////////////////////////
 		///////////////////////////////////////////////////////////
 
-		static bool init = false;
-		static float w = 512.0f;
-		static float h = 256.0f;
-
-		if (Interface->tools.showSphlEditor) {
-			if (!init) {
-				init = true;
-
-				ImGui::SetNextWindowSize(ImVec2(w, h));
-				ImGui::SetNextWindowPos(ImVec2(getWidth() - w, getHeight() - h));
-			}
-			ImGui::SetNextWindowContentSize({ w, -1 });
-			ImGui::Begin("SSPL Editor");
-			ImGui::Text("%d SSPLs", (int)ssgUserData->ssphhLights.size());
-			if (ImGui::Button("Add SSPL")) {
-				imguiSphlAdd();
-			}
-			int i = 0;
-			const float stepSize = 0.1f;
-			int whichToDelete = -1;
-			
-			for (auto& sspl : ssgUserData->ssphhLights) {
-				std::ostringstream id;
-				id << "MS" << std::setfill('0') << std::setw(2) << i << " '" << sspl->name() << "'";
-				const void* ptr = &sspl;
-#ifdef _WIN32
-				// va_list args = nullptr;
-#elif __unix__
-				// va_list args = va_list();
-#endif
-				const char* colors[4] = { "R", "G", "B", "Mono" };
-				const ImVec4 mscolors[4] = { { 1.0f, 0.0f, 0.0f, 1.0f },
-											 { 0.0f, 1.0f, 0.0f, 1.0f },
-											 { 0.0f, 0.0f, 1.0f, 1.0f },
-											 { 1.0f, 1.0f, 1.0f, 1.0f } };
-				float minValue = -5.0f;
-				float maxValue = 5.0f;
-				ImGui::PushID(i);
-				// if (ImGui::TreeNodeV(ptr, id.str().c_str(), args))
-				if (ImGui::TreeNode(ptr, "%s", id.str().c_str())) {
-					ImGui::SameLine();
-					ImGui::Checkbox("", &sspl->enabled);
-					ImGui::SameLine();
-					if (ImGui::SmallButton("Delete")) {
-						whichToDelete = i;
-					}
-					ImGui::SameLine();
-					if (ImGui::SmallButton("Recalc")) {
-						sspl->dirty = true;
-					}
-					ImGui::SameLine();
-					if (ImGui::SmallButton("min")) {
-						sspl->setCoefficient(-1, AllDegrees, AllBands, minValue);
-					}
-					ImGui::SameLine();
-					if (ImGui::SmallButton("-1")) {
-						sspl->setCoefficient(-1, AllDegrees, AllBands, -1.0f);
-					}
-					ImGui::SameLine();
-					if (ImGui::SmallButton("0")) {
-						sspl->setCoefficient(-1, AllDegrees, AllBands, 0.0f);
-					}
-					ImGui::SameLine();
-					if (ImGui::SmallButton("?1")) {
-						sspl->randomizeCoefficient(-1, AllDegrees, AllBands, -1.0f, 1.0f);
-					}
-					ImGui::SameLine();
-					if (ImGui::SmallButton("?MAX")) {
-						sspl->randomizeCoefficient(-1, AllDegrees, AllBands, minValue, maxValue);
-					}
-					ImGui::SameLine();
-					if (ImGui::SmallButton("1")) {
-						sspl->setCoefficient(-1, AllDegrees, AllBands, 1.0f);
-					}
-					ImGui::SameLine();
-					if (ImGui::SmallButton("max")) {
-						sspl->setCoefficient(-1, AllDegrees, AllBands, maxValue);
-					}
-					ImGui::SameLine();
-					if (ImGui::SmallButton("? Coefs")) {
-						sspl->randomize = true;
-						sspl->dirty = true;
-					}
-					ImGui::SameLine();
-					if (ImGui::SmallButton("? Position")) {
-						sspl->randomizePosition = true;
-					}
-
-					ImGui::Text("Name %s %d", sspl->name(), 32);
-					ImGui::Separator();
-					ImGui::Text("Shadow build time: %.1fms", sspl->depthSphlMap->buildTime);
-
-					int lastNumDegrees = sspl->maxDegree_;
-					ImGui::DragInt("Max Degree", &sspl->maxDegree_, 0.1f, 0, 9);
-					if (lastNumDegrees != sspl->maxDegree_) {
-						sspl->changeDegrees(sspl->maxDegree_);
-					}
-					Vector3f position0 = sspl->position;
-					ImGui::DragFloat3("Position", sspl->position.ptr(), stepSize, -100.0f, 100.0f);
-					if (position0 != sspl->position) {
-						sspl->depthSphlMap->dirty = true;
-					}
-					// sspl->position.w = Fluxions::clamp(sspl->position.w, 0.0f, 1.0f);
-					ImGui::DragFloat("E0", &sspl->E0, stepSize, 0.0f, 10000.0f);
-					ImGui::DragFloat("Falloff Radius", &sspl->falloffRadius, stepSize, 0.0f, 1000.0f);
-
-					ImGui::Text(
-						"status: dirty? %d / shadow map? %d",
-						sspl->dirty ? 1 : 0,
-						sspl->depthSphlMap->dirty ? 1 : 0);
-
-					for (int j = 0; j < 4; j++) {
-						std::ostringstream label;
-						label << "Multispectral " << colors[j];
-						ptr = &sspl->msph[j];
-						if (ImGui::TreeNode(ptr, "%s", label.str().c_str()))
-						// if (ImGui::TreeNodeV(ptr, label.str().c_str(), args))
-						{
-							ImGui::SameLine();
-							ImGui::TextColored(mscolors[j], "%s", label.str().c_str());
-							ImGui::PushID(j);
-							ImGui::SameLine();
-							if (ImGui::SmallButton("min")) {
-								sspl->setCoefficient(j, AllDegrees, AllBands, minValue);
-							}
-							ImGui::SameLine();
-							if (ImGui::SmallButton("-1")) {
-								sspl->setCoefficient(j, AllDegrees, AllBands, -1.0f);
-							}
-							ImGui::SameLine();
-							if (ImGui::SmallButton("0")) {
-								sspl->setCoefficient(j, AllDegrees, AllBands, 0.0f);
-							}
-							ImGui::SameLine();
-							if (ImGui::SmallButton("?")) {
-								sspl->randomizeCoefficient(j, AllDegrees, AllBands, -1.0f, 1.0f);
-							}
-							ImGui::SameLine();
-							if (ImGui::SmallButton("?MAX")) {
-								sspl->randomizeCoefficient(j, AllDegrees, AllBands, minValue, maxValue);
-							}
-							ImGui::SameLine();
-							if (ImGui::SmallButton("1")) {
-								sspl->setCoefficient(j, AllDegrees, AllBands, 1.0f);
-							}
-							ImGui::SameLine();
-							if (ImGui::SmallButton("max")) {
-								sspl->setCoefficient(j, AllDegrees, AllBands, maxValue);
-							}
-							ImGui::PopID();
-
-							for (int l = 0; l <= sspl->maxDegree_; l++) {
-								ImGui::PushID(l);
-								for (int m = -l; m <= l; m++) {
-									int lm = (int)sspl->msph[j].getCoefficientIndex(l, m);
-									float oldValue = sspl->msph[j].getCoefficient(l, m);
-									ImGui::PushID(i * 100000 + j * 10000 + lm * 100);
-									unsigned offset = sspl->msph[j].getCoefficientIndex(l, m);
-									std::ostringstream label;
-									label << "l = " << l << ", m = " << m << " (" << offset << ")"
-										  << "##" << std::setw(2) << std::setfill('0') << i << j;
-
-									if (ImGui::SmallButton("iso")) {
-										sspl->isolateCoefficient(j, l, m);
-									}
-									ImGui::PushItemWidth(64.0f);
-									ImGui::SameLine();
-									ImGui::DragFloat(label.str().c_str(), &sspl->msph[j][offset], stepSize, -5.0f, 5.0f);
-									ImGui::PopItemWidth();
-									ImGui::SameLine();
-									if (ImGui::SmallButton("min")) {
-										sspl->setCoefficient(j, l, m, minValue);
-									}
-									ImGui::SameLine();
-									if (ImGui::SmallButton("-1")) {
-										sspl->setCoefficient(j, l, m, -1.0f);
-									}
-									ImGui::SameLine();
-									if (ImGui::SmallButton("0")) {
-										sspl->setCoefficient(j, l, m, 0.0f);
-									}
-									ImGui::SameLine();
-									if (ImGui::SmallButton("?")) {
-										sspl->randomizeCoefficient(j, l, m, -1.0f, 1.0f);
-									}
-									ImGui::SameLine();
-									if (ImGui::SmallButton("?MAX")) {
-										sspl->randomizeCoefficient(j, l, m, minValue, maxValue);
-									}
-									ImGui::SameLine();
-									if (ImGui::SmallButton("1")) {
-										sspl->setCoefficient(j, l, m, 1.0f);
-									}
-									ImGui::SameLine();
-									if (ImGui::SmallButton("max")) {
-										sspl->setCoefficient(j, l, m, maxValue);
-									}
-
-									if (0) // m == 0)
-									{
-										ImGui::PushID(-l);
-										ImGui::SameLine();
-										if (ImGui::SmallButton("min")) {
-											sspl->setCoefficient(j, l, AllBands, minValue);
-										}
-										ImGui::SameLine();
-										if (ImGui::SmallButton("-1")) {
-											sspl->setCoefficient(j, l, AllBands, -1.0f);
-										}
-										ImGui::SameLine();
-										if (ImGui::SmallButton("0")) {
-											sspl->setCoefficient(j, l, AllBands, 0.0f);
-										}
-										ImGui::SameLine();
-										if (ImGui::SmallButton("?")) {
-											sspl->randomizeCoefficient(j, l, AllBands, -1.0f, 1.0f);
-										}
-										ImGui::SameLine();
-										if (ImGui::SmallButton("?MAX")) {
-											sspl->randomizeCoefficient(j, l, AllBands, minValue, maxValue);
-										}
-										ImGui::SameLine();
-										if (ImGui::SmallButton("1")) {
-											sspl->setCoefficient(j, l, AllBands, 1.0f);
-										}
-										ImGui::SameLine();
-										if (ImGui::SmallButton("max")) {
-											sspl->setCoefficient(j, l, AllBands, maxValue);
-										}
-										ImGui::PopID();
-									}
-									ImGui::PopID();
-									float newValue = sspl->msph[j].getCoefficient(l, m);
-									if (newValue != oldValue) {
-										sspl->dirty = true;
-									}
-								}
-								ImGui::PopID();
-							}
-							ImGui::TreePop();
-						} else {
-							ImGui::SameLine();
-							ImGui::TextColored(mscolors[j], "%s", label.str().c_str());
-							ImGui::PushID(j);
-							ImGui::SameLine();
-							if (ImGui::SmallButton("min")) {
-								sspl->setCoefficient(j, AllDegrees, AllBands, minValue);
-							}
-							ImGui::SameLine();
-							if (ImGui::SmallButton("-1")) {
-								sspl->setCoefficient(j, AllDegrees, AllBands, -1.0f);
-							}
-							ImGui::SameLine();
-							if (ImGui::SmallButton("0")) {
-								sspl->setCoefficient(j, AllDegrees, AllBands, 0.0f);
-							}
-							ImGui::SameLine();
-							if (ImGui::SmallButton("?")) {
-								sspl->randomizeCoefficient(j, AllDegrees, AllBands, minValue, maxValue);
-							}
-							ImGui::SameLine();
-							if (ImGui::SmallButton("1")) {
-								sspl->setCoefficient(j, AllDegrees, AllBands, 1.0f);
-							}
-							ImGui::SameLine();
-							if (ImGui::SmallButton("max")) {
-								sspl->setCoefficient(j, AllDegrees, AllBands, maxValue);
-							}
-							ImGui::PopID();
-						}
-					}
-
-					ImGui::TreePop();
-				} else {
-					ImGui::SameLine();
-					ImGui::Checkbox("", &sspl->enabled);
-					ImGui::SameLine();
-					if (ImGui::SmallButton("Delete")) {
-						whichToDelete = i;
-					}
-					ImGui::SameLine();
-					if (ImGui::SmallButton("Recalc")) {
-						sspl->dirty = true;
-					}
-					ImGui::SameLine();
-					if (ImGui::SmallButton("min")) {
-						sspl->setCoefficient(-1, AllDegrees, AllBands, minValue);
-					}
-					ImGui::SameLine();
-					if (ImGui::SmallButton("-1")) {
-						sspl->setCoefficient(-1, AllDegrees, AllBands, -1.0f);
-					}
-					ImGui::SameLine();
-					if (ImGui::SmallButton("0")) {
-						sspl->setCoefficient(-1, AllDegrees, AllBands, 0.0f);
-					}
-					ImGui::SameLine();
-					if (ImGui::SmallButton("?")) {
-						sspl->randomizeCoefficient(-1, AllDegrees, AllBands, minValue, maxValue);
-					}
-					ImGui::SameLine();
-					if (ImGui::SmallButton("1")) {
-						sspl->setCoefficient(-1, AllDegrees, AllBands, 1.0f);
-					}
-					ImGui::SameLine();
-					if (ImGui::SmallButton("max")) {
-						sspl->setCoefficient(-1, AllDegrees, AllBands, maxValue);
-					}
-					ImGui::SameLine();
-					if (ImGui::SmallButton("? Coefs")) {
-						sspl->randomize = true;
-						sspl->dirty = true;
-					}
-					ImGui::SameLine();
-					if (ImGui::SmallButton("? Position")) {
-						sspl->randomizePosition = true;
-					}
-				}
-				if (sspl->dirty || sspl->randomizePosition) {
-					sspl->depthSphlMap->dirty = true;
-				}
-				ImGui::PopID();
-				i++;
-			}
-			if (whichToDelete >= 0) {
-				ssgUserData->ssphhLights.erase(ssgUserData->ssphhLights.begin() + whichToDelete);
-			}
-			ImGui::End();
-		}
+//		static bool init = false;
+//		static float w = 512.0f;
+//		static float h = 256.0f;
+//
+//		if (Interface->tools.showSphlEditor) {
+//			if (!init) {
+//				init = true;
+//
+//				ImGui::SetNextWindowSize(ImVec2(w, h));
+//				ImGui::SetNextWindowPos(ImVec2(getWidth() - w, getHeight() - h));
+//			}
+//			ImGui::SetNextWindowContentSize({ w, -1 });
+//			ImGui::Begin("SSPL Editor");
+//			ImGui::Text("%d SSPLs", (int)ssgUserData->anisoLights.size());
+//			if (ImGui::Button("Add SSPL")) {
+//				imguiSphlAdd();
+//			}
+//			int i = 0;
+//			const float stepSize = 0.1f;
+//			int whichToDelete = -1;
+//			
+//			for (auto& sspl : ssgUserData->anisoLights) {
+//				std::ostringstream id;
+//				id << "MS" << std::setfill('0') << std::setw(2) << i << " '" << sspl->name() << "'";
+//				const void* ptr = &sspl;
+//#ifdef _WIN32
+//				// va_list args = nullptr;
+//#elif __unix__
+//				// va_list args = va_list();
+//#endif
+//				const char* colors[4] = { "R", "G", "B", "Mono" };
+//				const ImVec4 mscolors[4] = { { 1.0f, 0.0f, 0.0f, 1.0f },
+//											 { 0.0f, 1.0f, 0.0f, 1.0f },
+//											 { 0.0f, 0.0f, 1.0f, 1.0f },
+//											 { 1.0f, 1.0f, 1.0f, 1.0f } };
+//				float minValue = -5.0f;
+//				float maxValue = 5.0f;
+//				ImGui::PushID(i);
+//				// if (ImGui::TreeNodeV(ptr, id.str().c_str(), args))
+//				if (ImGui::TreeNode(ptr, "%s", id.str().c_str())) {
+//					ImGui::SameLine();
+//					ImGui::Checkbox("", &sspl->enabled);
+//					ImGui::SameLine();
+//					if (ImGui::SmallButton("Delete")) {
+//						whichToDelete = i;
+//					}
+//					ImGui::SameLine();
+//					if (ImGui::SmallButton("Recalc")) {
+//						sspl->dirty = true;
+//					}
+//					ImGui::SameLine();
+//					if (ImGui::SmallButton("min")) {
+//						sspl->setCoefficient(-1, AllDegrees, AllBands, minValue);
+//					}
+//					ImGui::SameLine();
+//					if (ImGui::SmallButton("-1")) {
+//						sspl->setCoefficient(-1, AllDegrees, AllBands, -1.0f);
+//					}
+//					ImGui::SameLine();
+//					if (ImGui::SmallButton("0")) {
+//						sspl->setCoefficient(-1, AllDegrees, AllBands, 0.0f);
+//					}
+//					ImGui::SameLine();
+//					if (ImGui::SmallButton("?1")) {
+//						sspl->randomizeCoefficient(-1, AllDegrees, AllBands, -1.0f, 1.0f);
+//					}
+//					ImGui::SameLine();
+//					if (ImGui::SmallButton("?MAX")) {
+//						sspl->randomizeCoefficient(-1, AllDegrees, AllBands, minValue, maxValue);
+//					}
+//					ImGui::SameLine();
+//					if (ImGui::SmallButton("1")) {
+//						sspl->setCoefficient(-1, AllDegrees, AllBands, 1.0f);
+//					}
+//					ImGui::SameLine();
+//					if (ImGui::SmallButton("max")) {
+//						sspl->setCoefficient(-1, AllDegrees, AllBands, maxValue);
+//					}
+//					ImGui::SameLine();
+//					if (ImGui::SmallButton("? Coefs")) {
+//						sspl->randomize = true;
+//						sspl->dirty = true;
+//					}
+//					ImGui::SameLine();
+//					if (ImGui::SmallButton("? Position")) {
+//						sspl->randomizePosition = true;
+//					}
+//
+//					ImGui::Text("Name %s %d", sspl->name(), 32);
+//					ImGui::Separator();
+//					ImGui::Text("Shadow build time: %.1fms", sspl->depthSphlMap->buildTime);
+//
+//					int lastNumDegrees = sspl->maxDegree_;
+//					ImGui::DragInt("Max Degree", &sspl->maxDegree_, 0.1f, 0, 9);
+//					if (lastNumDegrees != sspl->maxDegree_) {
+//						sspl->changeDegrees(sspl->maxDegree_);
+//					}
+//					Vector3f position0 = sspl->position;
+//					ImGui::DragFloat3("Position", sspl->position.ptr(), stepSize, -100.0f, 100.0f);
+//					if (position0 != sspl->position) {
+//						sspl->depthSphlMap->dirty = true;
+//					}
+//					// sspl->position.w = Fluxions::clamp(sspl->position.w, 0.0f, 1.0f);
+//					ImGui::DragFloat("E0", &sspl->E0, stepSize, 0.0f, 10000.0f);
+//					ImGui::DragFloat("Falloff Radius", &sspl->falloffRadius, stepSize, 0.0f, 1000.0f);
+//
+//					ImGui::Text(
+//						"status: dirty? %d / shadow map? %d",
+//						sspl->dirty ? 1 : 0,
+//						sspl->depthSphlMap->dirty ? 1 : 0);
+//
+//					for (int j = 0; j < 4; j++) {
+//						std::ostringstream label;
+//						label << "Multispectral " << colors[j];
+//						ptr = &sspl->SH[j];
+//						if (ImGui::TreeNode(ptr, "%s", label.str().c_str()))
+//						// if (ImGui::TreeNodeV(ptr, label.str().c_str(), args))
+//						{
+//							ImGui::SameLine();
+//							ImGui::TextColored(mscolors[j], "%s", label.str().c_str());
+//							ImGui::PushID(j);
+//							ImGui::SameLine();
+//							if (ImGui::SmallButton("min")) {
+//								sspl->setCoefficient(j, AllDegrees, AllBands, minValue);
+//							}
+//							ImGui::SameLine();
+//							if (ImGui::SmallButton("-1")) {
+//								sspl->setCoefficient(j, AllDegrees, AllBands, -1.0f);
+//							}
+//							ImGui::SameLine();
+//							if (ImGui::SmallButton("0")) {
+//								sspl->setCoefficient(j, AllDegrees, AllBands, 0.0f);
+//							}
+//							ImGui::SameLine();
+//							if (ImGui::SmallButton("?")) {
+//								sspl->randomizeCoefficient(j, AllDegrees, AllBands, -1.0f, 1.0f);
+//							}
+//							ImGui::SameLine();
+//							if (ImGui::SmallButton("?MAX")) {
+//								sspl->randomizeCoefficient(j, AllDegrees, AllBands, minValue, maxValue);
+//							}
+//							ImGui::SameLine();
+//							if (ImGui::SmallButton("1")) {
+//								sspl->setCoefficient(j, AllDegrees, AllBands, 1.0f);
+//							}
+//							ImGui::SameLine();
+//							if (ImGui::SmallButton("max")) {
+//								sspl->setCoefficient(j, AllDegrees, AllBands, maxValue);
+//							}
+//							ImGui::PopID();
+//
+//							for (int l = 0; l <= sspl->maxDegree_; l++) {
+//								ImGui::PushID(l);
+//								for (int m = -l; m <= l; m++) {
+//									int lm = (int)sspl->SH[j].getCoefficientIndex(l, m);
+//									float oldValue = sspl->SH[j].getCoefficient(l, m);
+//									ImGui::PushID(i * 100000 + j * 10000 + lm * 100);
+//									unsigned offset = sspl->SH[j].getCoefficientIndex(l, m);
+//									std::ostringstream label;
+//									label << "l = " << l << ", m = " << m << " (" << offset << ")"
+//										  << "##" << std::setw(2) << std::setfill('0') << i << j;
+//
+//									if (ImGui::SmallButton("iso")) {
+//										sspl->isolateCoefficient(j, l, m);
+//									}
+//									ImGui::PushItemWidth(64.0f);
+//									ImGui::SameLine();
+//									ImGui::DragFloat(label.str().c_str(), &sspl->SH[j][offset], stepSize, -5.0f, 5.0f);
+//									ImGui::PopItemWidth();
+//									ImGui::SameLine();
+//									if (ImGui::SmallButton("min")) {
+//										sspl->setCoefficient(j, l, m, minValue);
+//									}
+//									ImGui::SameLine();
+//									if (ImGui::SmallButton("-1")) {
+//										sspl->setCoefficient(j, l, m, -1.0f);
+//									}
+//									ImGui::SameLine();
+//									if (ImGui::SmallButton("0")) {
+//										sspl->setCoefficient(j, l, m, 0.0f);
+//									}
+//									ImGui::SameLine();
+//									if (ImGui::SmallButton("?")) {
+//										sspl->randomizeCoefficient(j, l, m, -1.0f, 1.0f);
+//									}
+//									ImGui::SameLine();
+//									if (ImGui::SmallButton("?MAX")) {
+//										sspl->randomizeCoefficient(j, l, m, minValue, maxValue);
+//									}
+//									ImGui::SameLine();
+//									if (ImGui::SmallButton("1")) {
+//										sspl->setCoefficient(j, l, m, 1.0f);
+//									}
+//									ImGui::SameLine();
+//									if (ImGui::SmallButton("max")) {
+//										sspl->setCoefficient(j, l, m, maxValue);
+//									}
+//
+//									if (0) // m == 0)
+//									{
+//										ImGui::PushID(-l);
+//										ImGui::SameLine();
+//										if (ImGui::SmallButton("min")) {
+//											sspl->setCoefficient(j, l, AllBands, minValue);
+//										}
+//										ImGui::SameLine();
+//										if (ImGui::SmallButton("-1")) {
+//											sspl->setCoefficient(j, l, AllBands, -1.0f);
+//										}
+//										ImGui::SameLine();
+//										if (ImGui::SmallButton("0")) {
+//											sspl->setCoefficient(j, l, AllBands, 0.0f);
+//										}
+//										ImGui::SameLine();
+//										if (ImGui::SmallButton("?")) {
+//											sspl->randomizeCoefficient(j, l, AllBands, -1.0f, 1.0f);
+//										}
+//										ImGui::SameLine();
+//										if (ImGui::SmallButton("?MAX")) {
+//											sspl->randomizeCoefficient(j, l, AllBands, minValue, maxValue);
+//										}
+//										ImGui::SameLine();
+//										if (ImGui::SmallButton("1")) {
+//											sspl->setCoefficient(j, l, AllBands, 1.0f);
+//										}
+//										ImGui::SameLine();
+//										if (ImGui::SmallButton("max")) {
+//											sspl->setCoefficient(j, l, AllBands, maxValue);
+//										}
+//										ImGui::PopID();
+//									}
+//									ImGui::PopID();
+//									float newValue = sspl->SH[j].getCoefficient(l, m);
+//									if (newValue != oldValue) {
+//										sspl->dirty = true;
+//									}
+//								}
+//								ImGui::PopID();
+//							}
+//							ImGui::TreePop();
+//						} else {
+//							ImGui::SameLine();
+//							ImGui::TextColored(mscolors[j], "%s", label.str().c_str());
+//							ImGui::PushID(j);
+//							ImGui::SameLine();
+//							if (ImGui::SmallButton("min")) {
+//								sspl->setCoefficient(j, AllDegrees, AllBands, minValue);
+//							}
+//							ImGui::SameLine();
+//							if (ImGui::SmallButton("-1")) {
+//								sspl->setCoefficient(j, AllDegrees, AllBands, -1.0f);
+//							}
+//							ImGui::SameLine();
+//							if (ImGui::SmallButton("0")) {
+//								sspl->setCoefficient(j, AllDegrees, AllBands, 0.0f);
+//							}
+//							ImGui::SameLine();
+//							if (ImGui::SmallButton("?")) {
+//								sspl->randomizeCoefficient(j, AllDegrees, AllBands, minValue, maxValue);
+//							}
+//							ImGui::SameLine();
+//							if (ImGui::SmallButton("1")) {
+//								sspl->setCoefficient(j, AllDegrees, AllBands, 1.0f);
+//							}
+//							ImGui::SameLine();
+//							if (ImGui::SmallButton("max")) {
+//								sspl->setCoefficient(j, AllDegrees, AllBands, maxValue);
+//							}
+//							ImGui::PopID();
+//						}
+//					}
+//
+//					ImGui::TreePop();
+//				} else {
+//					ImGui::SameLine();
+//					ImGui::Checkbox("", &sspl->enabled);
+//					ImGui::SameLine();
+//					if (ImGui::SmallButton("Delete")) {
+//						whichToDelete = i;
+//					}
+//					ImGui::SameLine();
+//					if (ImGui::SmallButton("Recalc")) {
+//						sspl->dirty = true;
+//					}
+//					ImGui::SameLine();
+//					if (ImGui::SmallButton("min")) {
+//						sspl->setCoefficient(-1, AllDegrees, AllBands, minValue);
+//					}
+//					ImGui::SameLine();
+//					if (ImGui::SmallButton("-1")) {
+//						sspl->setCoefficient(-1, AllDegrees, AllBands, -1.0f);
+//					}
+//					ImGui::SameLine();
+//					if (ImGui::SmallButton("0")) {
+//						sspl->setCoefficient(-1, AllDegrees, AllBands, 0.0f);
+//					}
+//					ImGui::SameLine();
+//					if (ImGui::SmallButton("?")) {
+//						sspl->randomizeCoefficient(-1, AllDegrees, AllBands, minValue, maxValue);
+//					}
+//					ImGui::SameLine();
+//					if (ImGui::SmallButton("1")) {
+//						sspl->setCoefficient(-1, AllDegrees, AllBands, 1.0f);
+//					}
+//					ImGui::SameLine();
+//					if (ImGui::SmallButton("max")) {
+//						sspl->setCoefficient(-1, AllDegrees, AllBands, maxValue);
+//					}
+//					ImGui::SameLine();
+//					if (ImGui::SmallButton("? Coefs")) {
+//						sspl->randomize = true;
+//						sspl->dirty = true;
+//					}
+//					ImGui::SameLine();
+//					if (ImGui::SmallButton("? Position")) {
+//						sspl->randomizePosition = true;
+//					}
+//				}
+//				if (sspl->dirty || sspl->randomizePosition) {
+//					sspl->depthSphlMap->dirty = true;
+//				}
+//				ImGui::PopID();
+//				i++;
+//			}
+//			if (whichToDelete >= 0) {
+//				ssgUserData->anisoLights.erase(ssgUserData->anisoLights.begin() + whichToDelete);
+//			}
+//			ImGui::End();
+//		}
 	}
 
 	void SSPHH_Application::imguiShowMaterialEditor() {
@@ -1390,71 +1390,71 @@ namespace SSPHH {
 	}
 
 	void SSPHH_Application::imguiSphlAdd() {
-		ssgUserData->ssphhLights.resize(ssgUserData->ssphhLights.size() + 1);
-		SimpleSSPHHLightPtr sphl = ssgUserData->ssphhLights.back();
-		std::ostringstream name;
-		name << "New SSPL " << ssgUserData->ssphhLights.size();
-		sphl->setName(name.str());
-		// sphl.name.reserve(32);
-		sphl->changeDegrees(DefaultSphlDegree);
+		//ssgUserData->anisoLights.resize(ssgUserData->anisoLights.size() + 1);
+		//SimpleSSPHHLightPtr sphl = ssgUserData->anisoLights.back();
+		//std::ostringstream name;
+		//name << "New SSPL " << ssgUserData->anisoLights.size();
+		//sphl->setName(name.str());
+		//// sphl.name.reserve(32);
+		//sphl->changeDegrees(DefaultSphlDegree);
 
-		for (auto& sphl : ssgUserData->ssphhLights) {
-			sphl->dirty = true;
-		}
+		//for (auto& sphl : ssgUserData->anisoLights) {
+		//	sphl->dirty = true;
+		//}
 
-		Corona_GenerateSphlINIT();
+		//Corona_GenerateSphlINIT();
 	}
 
 	void SSPHH_Application::imguiSphlDelete() {
-		if (!ssgUserData->ssphhLights.empty())
-			ssgUserData->ssphhLights.pop_back();
+		//if (!ssgUserData->anisoLights.empty())
+		//	ssgUserData->anisoLights.pop_back();
 
-		Corona_GenerateSphlINIT();
+		//Corona_GenerateSphlINIT();
 	}
 
 	void SSPHH_Application::imguiSphlRandomize() {
-		if (ssgUserData->ssphhLights.empty())
-			return;
-		auto i = ssgUserData->ssphhLights.size() - 1;
-		ssgUserData->ssphhLights[i]->randomizeCoefficients();
+		//if (ssgUserData->anisoLights.empty())
+		//	return;
+		//auto i = ssgUserData->anisoLights.size() - 1;
+		//ssgUserData->anisoLights[i]->randomizeCoefficients();
 	}
 
 	void SSPHH_Application::imguiSphlDecreaseDegrees() {
-		if (ssgUserData->ssphhLights.empty())
-			return;
-		auto i = ssgUserData->ssphhLights.size() - 1;
-		ssgUserData->ssphhLights[i]->decDegrees();
+		//if (ssgUserData->anisoLights.empty())
+		//	return;
+		//auto i = ssgUserData->anisoLights.size() - 1;
+		//ssgUserData->anisoLights[i]->decDegrees();
 	}
 
 	void SSPHH_Application::imguiSphlIncreaseDegrees() {
-		if (ssgUserData->ssphhLights.empty())
-			return;
-		auto i = ssgUserData->ssphhLights.size() - 1;
-		ssgUserData->ssphhLights[i]->incDegrees();
+		//if (ssgUserData->anisoLights.empty())
+		//	return;
+		//auto i = ssgUserData->anisoLights.size() - 1;
+		//ssgUserData->anisoLights[i]->incDegrees();
 	}
 
 	void SSPHH_Application::imguiSphlCoronaToSPH(size_t which) {
-		if (ssgUserData->ssphhLights.empty() && ssgUserData->ssphhLights.size() <= which)
-			return;
+		//if (ssgUserData->anisoLights.empty() && ssgUserData->anisoLights.size() <= which)
+		//	return;
 
-		RendererTextureCubePtr enviroSkyBoxTexture = rendererContext->textureCubes["enviroSkyBox"];
-		if (enviroSkyBoxTexture) {
-			enviroSkyBoxTexture->loadMap("export_cubemap.png", true);
-		}
-		SphlSampler sphlSampler;
-		sphlSampler.resize(64, 32);
-		sphlSampler.saveSampleMap("sample_stratification.ppm", 4);
-		// TODO: Need to write a CubeMapToSphl routine
-		// sphlSampler.sampleCubeMap(enviroSkyBoxTexture.getImage(), ssgUserData->ssphhLights[which].msph);
+		//RendererTextureCubePtr enviroSkyBoxTexture = rendererContext->textureCubes["enviroSkyBox"];
+		//if (enviroSkyBoxTexture) {
+		//	enviroSkyBoxTexture->loadMap("export_cubemap.png", true);
+		//}
+		//SphlSampler sphlSampler;
+		//sphlSampler.resize(64, 32);
+		//sphlSampler.saveSampleMap("sample_stratification.ppm", 4);
+		//// TODO: Need to write a CubeMapToSphl routine
+		//// sphlSampler.sampleCubeMap(enviroSkyBoxTexture.getImage(), ssgUserData->anisoLights[which].msh_);
 
-		ssgUserData->ssphhLights[which]->dirty = true;
+		//ssgUserData->anisoLights[which]->dirty = true;
 	}
 
 	void SSPHH_Application::imguiSphlSPHtoCubeMap(size_t which) {
-		if (ssgUserData->ssphhLights.empty() && ssgUserData->ssphhLights.size() <= which)
+		if (ssgUserData->anisoLights.empty() && ssgUserData->anisoLights.size() <= which)
 			return;
 
-		ssgUserData->ssphhLights[which]->dirty = true;
+		ssgUserData->anisoLights[which]->setdirty(true);
 	}
 
 	void SSPHH_Application::imguiSphlSaveToOBJ() {
@@ -1469,16 +1469,16 @@ namespace SSPHH {
 		//	i++;
 		//}
 
-		size_t i = 0;
-		for (auto& sphl : ssgUserData->ssphhLights) {
-			std::ostringstream ostr;
-			ostr << ssg->name() << "_sphl_" << std::setw(2) << std::setfill('0') << i;
-			sphl->saveOBJ("output", ostr.str());
-			std::string path = "output/" + ostr.str();
-			sphl->savePtrcLightProbe(path + ".ppm");
-			sphl->savePtrcLightProbe(path + ".exr");
-			i++;
-		}
+		//size_t i = 0;
+		//for (auto& sphl : ssgUserData->anisoLights) {
+		//	std::ostringstream ostr;
+		//	ostr << ssg->name() << "_sphl_" << std::setw(2) << std::setfill('0') << i;
+		//	sphl->saveOBJ("output", ostr.str());
+		//	std::string path = "output/" + ostr.str();
+		//	sphl->savePtrcLightProbe(path + ".ppm");
+		//	sphl->savePtrcLightProbe(path + ".exr");
+		//	i++;
+		//}
 	}
 
 	void SSPHH_Application::imguiToolsTakeScreenshot() { Interface->saveScreenshot = true; }

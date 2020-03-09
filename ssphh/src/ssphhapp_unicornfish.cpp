@@ -1,8 +1,7 @@
 #include "pch.hpp"
 #include <ssphhapp.hpp>
 
-namespace SSPHH
-{
+namespace SSPHH {
 	void SSPHH_Application::InitUnicornfish() {
 		if (Interface->uf.uf_type != UfType::None) {
 			Interface->tools.showMaterialEditor = false;
@@ -51,11 +50,11 @@ namespace SSPHH
 				GI_ProcessGatherJob(job.second);
 			}
 
-			//if (numGEN)
+			// if (numGEN)
 			//	ssgUserData->ssphh.GEN();
-			//if (numVIZ)
+			// if (numVIZ)
 			//	ssgUserData->ssphh.VIZ();
-			//ssgUserData->ssphh.HIER();
+			// ssgUserData->ssphh.HIER();
 			if (numGEN) {
 				ssphh.GEN();
 			}
@@ -79,48 +78,45 @@ namespace SSPHH
 		int recvLight = -1;
 		if (job.IsGEN()) {
 			sendLight = job.GetGENLightIndex();
-		}
-		else if (job.IsVIZ()) {
+		} else if (job.IsVIZ()) {
 			sendLight = job.GetVIZSendLightIndex();
 			recvLight = job.GetVIZRecvLightIndex();
 		}
 
-		SimpleSSPHHLightPtr sphl = ssgUserData->ssphhLights[sendLight];
-		Sph4f sph;
-		if (job.IsVIZ()) {
-			if (useEXR) {
-				sphl->vizgenLightProbes[recvLight].loadEXR(fpi.shortestPath());
-			}
-			else {
-				sphl->vizgenLightProbes[recvLight].loadPPM(fpi.shortestPath());
-			}
-			sphl->vizgenLightProbes[recvLight].convertRectToCubeMap();
-			sphl->lightProbeToSph(sphl->vizgenLightProbes[recvLight], sph.msph);
-			job.CopySPH(sph);
-			return true;
-		}
-		else if (job.IsGEN()) {
-			sphl->readPtrcLightProbe(job.GetOutputPath(useEXR));
-			sphl->savePtrcLightProbe(job.GetName() + "_" + std::to_string(sendLight) + "_sph.exr");
+		SimpleAnisoLightPtr sphl = ssgUserData->anisoLights[sendLight];
+		SHLightProbe sph;
+		//if (job.IsVIZ()) {
+		//	if (useEXR) {
+		//		sphl->vizgenLightProbes[recvLight].loadEXR(fpi.shortestPath());
+		//	} else {
+		//		sphl->vizgenLightProbes[recvLight].loadPPM(fpi.shortestPath());
+		//	}
+		//	sphl->vizgenLightProbes[recvLight].convertRectToCubeMap();
+		//	// TODO: LightProbeToSH(sphl->vizgenLightProbes[recvLight], sph.SH);
+		//	// sphl->lightProbeToSph(sphl->vizgenLightProbes[recvLight], sph.msh_);
+		//	job.CopySPH(sph);
+		//	return true;
+		//} else if (job.IsGEN()) {
+		//	sphl->readPtrcLightProbe(job.GetOutputPath(useEXR));
+		//	sphl->savePtrcLightProbe(job.GetName() + "_" + std::to_string(sendLight) + "_sph.exr");
 
-			//if (ssgUserData->ssphh.saveJSONs)
-			//	sphl->SaveJsonSph(job.GetName() + "_sph.json");
-			if (ssphh.saveJSONs)
-				sphl->saveJsonSph(job.GetName() + "_sph.json");
+		//	// if (ssgUserData->ssphh.saveJSONs)
+		//	//	sphl->SaveJsonSph(job.GetName() + "_sph.json");
+		//	if (ssphh.saveJSONs)
+		//		sphl->saveJsonSph(job.GetName() + "_sph.json");
 
-			if (useEXR) {
-				sphl->vizgenLightProbes[sendLight].loadEXR(fpi.shortestPath());
-			}
-			else {
-				sphl->vizgenLightProbes[sendLight].loadPPM(fpi.shortestPath());
-
-			}
-			sphl->vizgenLightProbes[sendLight].convertRectToCubeMap();
-			sphl->lightProbeToSph(sphl->vizgenLightProbes[sendLight], sph.msph);
-			job.CopySPH(sph);
-			sphl->uploadLightProbe(sphl->vizgenLightProbes[sendLight], sphl->hierLightProbeTexture);
-			return true;
-		}
+		//	if (useEXR) {
+		//		sphl->vizgenLightProbes[sendLight].loadEXR(fpi.shortestPath());
+		//	} else {
+		//		sphl->vizgenLightProbes[sendLight].loadPPM(fpi.shortestPath());
+		//	}
+		//	sphl->vizgenLightProbes[sendLight].convertRectToCubeMap();
+		//	// TODO: LightProbeToSH(sphl->vizgenLightProbes[sendLight], sph.SH);
+		//	// sphl->lightProbeToSph(sphl->vizgenLightProbes[sendLight], sph.msh_);
+		//	job.CopySPH(sph);
+		//	sphl->uploadLightProbe(sphl->vizgenLightProbes[sendLight], sphl->hierLightProbeTexture);
+		//	return true;
+		//}
 		return false;
 	}
 
@@ -129,22 +125,22 @@ namespace SSPHH
 		int recvLight = -1;
 		if (job.IsGEN()) {
 			sendLight = job.GetGENLightIndex();
-		}
-		else if (job.IsVIZ()) {
+		} else if (job.IsVIZ()) {
 			sendLight = job.GetVIZSendLightIndex();
 			recvLight = job.GetVIZRecvLightIndex();
 		}
 
-		SimpleSSPHHLightPtr sphl = ssgUserData->ssphhLights[sendLight];
-		Sph4f sph;
+		SimpleAnisoLightPtr sphl = ssgUserData->anisoLights[sendLight];
+		SHLightProbe sph;
 		job.CopySPHToSph4f(sph);
 		if (job.IsVIZ()) {
-			sphl->sphToLightProbe(sph.msph, sphl->vizgenLightProbes[recvLight]);
+			// TODO: SHToLightProbe(sph, sphl->vizgenLightProbes[recvLight]);
+			// sphl->sphToLightProbe(sph.msh_, sphl->vizgenLightProbes[recvLight]);
 			return true;
-		}
-		else if (job.IsGEN()) {
-			sphl->sphToLightProbe(sph.msph, sphl->vizgenLightProbes[sendLight]);
-			sphl->uploadLightProbe(sphl->vizgenLightProbes[sendLight], sphl->hierLightProbeTexture);
+		} else if (job.IsGEN()) {
+			// TODO: SHToLightProbe(sph, sphl->vizgenLightProbes[sendLight]);
+			// sphl->sphToLightProbe(sph.msh_, sphl->vizgenLightProbes[sendLight]);
+			// sphl->uploadLightProbe(sphl->vizgenLightProbes[sendLight], sphl->hierLightProbeTexture);
 			return true;
 		}
 		return false;
@@ -154,4 +150,4 @@ namespace SSPHH
 		job.Start(coronaScene, ssg);
 		GI_ProcessJob(job);
 	}
-}
+} // namespace SSPHH

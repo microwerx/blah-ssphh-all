@@ -522,9 +522,9 @@ namespace SSPHH {
 		SimpleGeometryMesh ssphh_hierarchy_mesh;
 		Matrix4f I;
 		FxModel geosphere;
-		// Sphl sphl;
+		// SphlViz sphl;
 		static constexpr int MaxShLights = 16;
-		std::map<size_t, Sphl> sphls;
+		std::map<size_t, SphlViz> sphls;
 		bool coefs_init = false;
 		// End SPHL code
 

@@ -133,18 +133,18 @@ void SsphhWindow::OnRenderDearImGui() {
 	}
 	ImGui::SameLine();
 	if (ImGui::SmallButton("Dump Hier")) {
-		for (size_t i = 0; i < app.ssgUserData->ssphhLights.size(); i++) {
-			auto& sphl = app.ssgUserData->ssphhLights[i];
-			sphl->setHierarchyDescription();
-			HFLOGINFO("hierarchy %02d %s", sphl->index, sphl->hier_description.c_str());
+		for (size_t i = 0; i < app.ssgUserData->anisoLights.size(); i++) {
+			auto& sphl = app.ssgUserData->anisoLights[i];
+			//sphl->setHierarchyDescription();
+			//HFLOGINFO("hierarchy %02d %s", sphl->index, sphl->hier_description.c_str());
 		}
 	}
 
 	// do a little visualization on the current enabled status
-	int size = (int)app.ssgUserData->ssphhLights.size();
-	std::string bits(app.ssgUserData->ssphhLights.size(), 'n');
+	int size = (int)app.ssgUserData->anisoLights.size();
+	std::string bits(app.ssgUserData->anisoLights.size(), 'n');
 	for (int i = 0; i < size; i++)
-		if (app.ssgUserData->ssphhLights[i]->enabled)
+		if (app.ssgUserData->anisoLights[i]->enabled())
 			bits[i] = 'y';
 	ImGui::SameLine();
 	ImGui::Text("%d %s", size, bits.c_str());
@@ -251,8 +251,8 @@ void SsphhWindow::OnRenderDearImGui() {
 	ImGui::Separator();
 
 	// show sorted list of hierarchies
-	for (size_t i = 0; i < app.ssgUserData->ssphhLights.size(); i++) {
-		ImGui::Text("%s", app.ssgUserData->ssphhLights[i]->hier_description.c_str());
+	for (size_t i = 0; i < app.ssgUserData->anisoLights.size(); i++) {
+		//ImGui::Text("%s", app.ssgUserData->anisoLights[i]->hier_description.c_str());
 	}
 
 	endWindow();

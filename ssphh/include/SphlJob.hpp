@@ -20,7 +20,7 @@ public:
 
 	int numChannels;
 	int maxDegree_;
-	Fluxions::Sph4f sphl;
+	Fluxions::SHLightProbe sphl;
 	std::vector<std::vector<float>> coefs;
 	Fluxions::Vector3f meta_position;
 	std::string meta_scene;

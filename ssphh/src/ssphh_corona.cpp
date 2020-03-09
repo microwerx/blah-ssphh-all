@@ -157,7 +157,7 @@ namespace SSPHH {
 		Hf::StopWatch stopwatch;
 
 		int count = 0;
-		int numLights = (int)ssgUserData->ssphhLights.size();
+		int numLights = (int)ssgUserData->anisoLights.size();
 		Interface->ssphh.viz_times.resize(numLights, 0.0);
 
 		for (int sendLight = 0; sendLight < numLights; sendLight++) {
@@ -165,8 +165,8 @@ namespace SSPHH {
 				sendLight != rendererContext->rendererConfigs["default"]->shaderDebugSphl)
 				continue;
 
-			auto& sphl = ssgUserData->ssphhLights[sendLight];
-			sphl->vizgenLightProbes.resize(numLights);
+			auto& sphl = ssgUserData->anisoLights[sendLight];
+			//sphl->vizgenLightProbes.resize(numLights);
 
 			for (int recvLight = 0; recvLight < numLights; recvLight++) {
 				if (recvLight == sendLight)
@@ -237,15 +237,15 @@ namespace SSPHH {
 		//
 
 		int count = 0;
-		int numLights = (int)ssgUserData->ssphhLights.size();
+		int numLights = (int)ssgUserData->anisoLights.size();
 		Hf::StopWatch stopwatch;
 		Interface->ssphh.gen_times.resize(numLights, 0.0);
 		for (int sendLight = 0; sendLight < numLights; sendLight++) {
 			if (rendererContext->rendererConfigs["default"]->shaderDebugSphl >= 0 &&
 				sendLight != rendererContext->rendererConfigs["default"]->shaderDebugSphl)
 				continue;
-			auto& sphl = ssgUserData->ssphhLights[sendLight];
-			sphl->vizgenLightProbes.resize(numLights);
+			auto& sphl = ssgUserData->anisoLights[sendLight];
+			//sphl->vizgenLightProbes.resize(numLights);
 
 			//sphl->index = sendLight;
 			int mrd = coronaScene.GEN.maxRayDepth;

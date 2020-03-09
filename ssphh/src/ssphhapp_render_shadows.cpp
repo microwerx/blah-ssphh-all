@@ -21,7 +21,7 @@ namespace SSPHH
 		//rectShadow.cameraPosition = ssg.environment.sunShadowMapOrigin;
 		//rectShadow.viewportZNear = ssg.environment.sunShadowMapNearZ;
 		//rectShadow.viewportZFar = ssg.environment.sunShadowMapFarZ;
-		//rectShadow.clearColor.reset(1.0f, 0.0f, 1.0f, 1.0f);
+		//rectShadow.clearColor.clearCoefs(1.0f, 0.0f, 1.0f, 1.0f);
 		//rectShadow.clearColorBuffer = true;
 		//rectShadow.renderToFBO = true;
 
@@ -108,7 +108,7 @@ namespace SSPHH
 		//	scs.zfar = cubeShadow.viewportZFar;
 		//	if (Interface->ssphh.enableShadowColorMap) {
 		//		sphl.colorSphlMap.createTextureCube();
-		//		cubeShadow.clearColor.reset(0.2f, 0.4f, 0.6f, 1.0f);
+		//		cubeShadow.clearColor.clearCoefs(0.2f, 0.4f, 0.6f, 1.0f);
 		//		cubeShadow.fbo_gen_color = true;
 		//		cubeShadow.fbo_color_map = sphl.colorSphlMap.getTexture();
 		//	}
