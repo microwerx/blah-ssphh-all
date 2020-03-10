@@ -471,7 +471,7 @@ TEST_CASE("Fluxions SSPHH Algorithm", "[ssphh]") {
 		}
 	}
 
-	const std::string filename{ "sh.json" };
+	const std::string filename{ "test-sh.json" };
 	if (fs::exists(filename)) fs::remove(filename);
 	REQUIRE(al1.SH.saveJSON(filename) == true);
 	REQUIRE(fs::exists(filename) == true);
