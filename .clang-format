@@ -8,8 +8,15 @@ IndentWidth: 4
 MaxEmptyLinesToKeep: 2
 NamespaceIndentation: All
 FixNamespaceComments: true
-AlignConsecutiveAssignments : true
-BreakBeforeBraces: Attach
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterEnum: true
+  AfterStruct: false
+  SplitEmptyFunction: false
+  AfterNamespace: false
+  AfterFunction: false
+  AfterControlStatement: false
+  AfterClass: false
 PointerBindsToType: true
 AllowShortBlocksOnASingleLine: true
 AllowShortIfStatementsOnASingleLine : true
