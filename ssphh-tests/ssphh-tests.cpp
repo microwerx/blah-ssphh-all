@@ -24,6 +24,7 @@
 
 #define CATCH_CONFIG_MAIN
 #include <catch.hpp>
+#include <fluxions_sphl_sampler.hpp>
 
 using namespace Fluxions;
 namespace fs = std::filesystem;
@@ -60,9 +61,7 @@ void printControlPoints(
 
 void printPolyline(ostream& fout, const std::vector<Fluxions::Vector3f>& curve, const std::string& style) {
 	fout << "<polyline points=\"";
-	for (auto& p : curve) {
-		fout << (p.x * 100) << "," << (p.y * 100) << "\n";
-	}
+	for (auto& p : curve) { fout << (p.x * 100) << "," << (p.y * 100) << "\n"; }
 	fout << "\" style=\"" << style << "\" />\n";
 }
 
@@ -94,8 +93,7 @@ void printQuaternions(
 	const std::vector<Fluxions::Quaternionf>& controlQuaternions,
 	const std::string& style) {
 	// const std::string style{ "stroke: black; stroke-width: 1; marker-end: url(#arrow);" };
-	if (controlPoints.size() != controlQuaternions.size())
-		return;
+	if (controlPoints.size() != controlQuaternions.size()) return;
 	for (unsigned i = 0; i < controlPoints.size(); i++) {
 		printQuaternion(fout, controlPoints[i], controlQuaternions[i], style);
 	}
@@ -181,9 +179,7 @@ void TestCatmullRom() {
 	}
 	int first = 0;
 	int last = numControlPoints * numPoints;
-	for (int j = first; j < last + 1; j++) {
-		curveTime.push_back((float)j / (float)numPoints);
-	}
+	for (int j = first; j < last + 1; j++) { curveTime.push_back((float)j / (float)numPoints); }
 
 	curveQuaternions.resize(curveTime.size());
 	const unsigned ccount = (unsigned)controlQuaternions.size();
@@ -386,27 +382,97 @@ TEST_CASE("Fluxions GTE", "[gte]") {
 }
 
 
+TEST_CASE("SphlSampler", "[sphlsampler]") {
+	SHLightProbe SH1;
+	SH1.resize(10, 0.0f);
+	REQUIRE(SH1.saveJSON("test_sh1_zeros.json") == true);
+
+	SHLightProbe SH1check;
+	REQUIRE(SH1check.loadJSON("test_sh1_zeros.json") == true);
+	REQUIRE(SH1 == SH1check);
+	SH1check.resize(10, 1.0f);
+	REQUIRE(SH1 != SH1check);
+	SH1check.resize(10, 0.0f);
+	REQUIRE(SH1 == SH1check);
+	SH1check.resize(5, 0.0f);
+	REQUIRE(SH1 != SH1check);
+
+	SimpleGeometryMesh zeroMesh;
+	SHToMesh(SH1, zeroMesh);
+	SH1.calcMonoChannels();
+	zeroMesh.saveOBJ("test_sh1_zeros.obj");
+
+	SH1.randomize(0.5f, 1.0f);
+	REQUIRE(SH1.saveJSON("test_sh1_randomize.json") == true);
+	SH1.calcMonoChannels();
+	SimpleGeometryMesh SH1mesh;
+	SHToMesh(SH1, SH1mesh);
+	SH1mesh.saveOBJ("test_sh1_randomize.obj");
+
+	SHLightProbe SH2;
+	SH2.resize(5, 0.0f);
+	SH2.randomize(-1.0f, 1.0f);
+	SH2.calcMonoChannels();
+	SimpleGeometryMesh SH2mesh;
+	SHToMesh(SH2, SH2mesh);
+	SH2mesh.saveOBJ("test_sh2_randomize.obj");
+
+	Image3f cubeMap3f(64, 64, 6);
+	SHToLightProbe3f(SH1, cubeMap3f);
+	REQUIRE(cubeMap3f.saveCubeEXR("test_sh1_randomize3.exr"));
+
+	Image4f cubeMap4f(64, 64, 6);
+	SHToLightProbe4f(SH1, cubeMap4f);
+	REQUIRE(cubeMap4f.saveCubeEXR("test_sh1_randomize4.exr"));
+
+	SHLightProbe SH3 = SH1;
+	SH3.calcMonoChannels();
+
+	cubeMap3f.clear({ 0, 0, 0 });
+	LightProbeToSH3f(cubeMap3f, SH3);
+	REQUIRE(SH3.saveJSON("test_sh1_resampled3.json") == true);
+	SimpleGeometryMesh SH3mesh;
+	SHToMesh(SH3, SH3mesh);
+	SH3mesh.saveOBJ("test_sh1_resampled3.obj");
+
+	SHLightProbe SH4 = SH2;
+	SH4.calcMonoChannels();
+	cubeMap4f.clear({ 0, 0, 0 });
+	LightProbeToSH4f(cubeMap4f, SH4);
+	REQUIRE(SH4.saveJSON("test_sh2_resampled4.json") == true);
+	SimpleGeometryMesh SH4mesh;
+	SHToMesh(SH4, SH4mesh);
+	SH4mesh.saveOBJ("test_sh2_resampled4.obj");
+
+	SHToLightProbe3f(SH2, cubeMap3f);
+	REQUIRE(cubeMap3f.saveCubeEXR("test_sh2_randomize3.exr"));
+	SHToLightProbe4f(SH2, cubeMap4f);
+	REQUIRE(cubeMap4f.saveCubeEXR("test_sh2_randomize4.exr"));
+
+	SH4.resize(0, 0);
+	REQUIRE(SH4.degrees() == 0);
+}
+
+
 TEST_CASE("Fluxions SSPHH Algorithm", "[ssphh]") {
 	SimpleAnisoLight al1;
 	al1.SH.resize(10, 0.0f);
 	REQUIRE(al1.SH.degrees() == 10);
 	for (unsigned i = 0; i < al1.SH.channels(); i++) {
-		for (auto& a_lm : al1.SH[i]) {
-			REQUIRE(a_lm == 0);
-		}
+		for (auto& a_lm : al1.SH[i]) { REQUIRE(a_lm == 0); }
 	}
 
 
 	al1.SH.randomize(-1.0f, 1.0f);
 	for (int l = 0; l <= 10; l++) {
 		for (int m = -l; m <= l; m++) {
-			REQUIRE(al1.SH.Y(l, m) != 0);
+			// ensure that we do not get 0 values when randomizing
+			REQUIRE(al1.SH.Y(l, m) != 0.0f);
 		}
 	}
 
 	const std::string filename{ "sh.json" };
-	if (fs::exists(filename))
-		fs::remove(filename);
+	if (fs::exists(filename)) fs::remove(filename);
 	REQUIRE(al1.SH.saveJSON(filename) == true);
 	REQUIRE(fs::exists(filename) == true);
 

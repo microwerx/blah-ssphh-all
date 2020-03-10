@@ -1,0 +1,14 @@
+
+newmtl icosahedron
+	Kd	0.4 0.6 0.8
+	Ks  1.0 1.0 1.0
+	Ns  10
+
+newmtl icosr
+	Kd 1 0 0
+
+newmtl icosg
+	Kd 0 1 0
+
+newmtl icosb
+	Kd 0 0 1
