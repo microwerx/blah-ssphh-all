@@ -382,7 +382,9 @@ TEST_CASE("Fluxions GTE", "[gte]") {
 }
 
 
-TEST_CASE("SphlSampler", "[sphlsampler]") {
+TEST_CASE("SHLightProbe", "[SHLightProbe]") {
+	// The test for the SHLightProbe
+	// Create Zeros --> test_sh1_zeros -> SH1check
 	SHLightProbe SH1;
 	SH1.resize(10, 0.0f);
 	REQUIRE(SH1.saveJSON("test_sh1_zeros.json") == true);
@@ -409,6 +411,43 @@ TEST_CASE("SphlSampler", "[sphlsampler]") {
 	SHToMesh(SH1, SH1mesh);
 	SH1mesh.saveOBJ("test_sh1_randomize.obj");
 
+	Image3f cubeMap3f(64, 64, 6);
+	SHToLightProbe3f(SH1, cubeMap3f);
+	REQUIRE(cubeMap3f.saveCubeEXR("test_sh1_randomize3.exr"));
+
+	SHLightProbe SH3 = SH1;
+	SH3.calcMonoChannels();
+
+	cubeMap3f.clear({ 0, 0, 0 });
+	LightProbeToSH3f(cubeMap3f, SH3);
+	REQUIRE(SH3.saveJSON("test_sh1_resampled3.json") == true);
+
+	// Test summing channels of a SH
+	for (int i = 0; i < 3; i++) {
+		double total = SH1.sumChannel(i);
+		HFLOGINFO("(%d) |SH1| = %f", i, total);
+	}
+
+	// Test absolute difference between the same SH which should be zeros
+	std::vector<double> absDiff = AbsoluteDifference(SH1, SH1).sumChannels();
+	for (int i = 0; i < 5; i++) {
+		// print each channel absolute difference
+		HFLOGINFO("(%d) |SH1 - SH1| = %f", i, absDiff[i]);
+	}
+
+	// Test absolute difference between the same SH which should be close to zero
+	absDiff = AbsoluteDifference(SH1, SH3).sumChannels();
+	for (int i = 0; i < 5; i++) {
+		// print each channel absolute difference
+		HFLOGINFO("(%d) |SH1 - SH3| = %f", i, absDiff[i]);
+	}
+
+	SimpleGeometryMesh SH3mesh;
+	SHToMesh(SH3, SH3mesh);
+	SH3mesh.saveOBJ("test_sh1_resampled3.obj");
+
+	// SH2 are random spherical harmonics from -1 to 1
+
 	SHLightProbe SH2;
 	SH2.resize(5, 0.0f);
 	SH2.randomize(-1.0f, 1.0f);
@@ -417,23 +456,9 @@ TEST_CASE("SphlSampler", "[sphlsampler]") {
 	SHToMesh(SH2, SH2mesh);
 	SH2mesh.saveOBJ("test_sh2_randomize.obj");
 
-	Image3f cubeMap3f(64, 64, 6);
-	SHToLightProbe3f(SH1, cubeMap3f);
-	REQUIRE(cubeMap3f.saveCubeEXR("test_sh1_randomize3.exr"));
-
 	Image4f cubeMap4f(64, 64, 6);
 	SHToLightProbe4f(SH1, cubeMap4f);
 	REQUIRE(cubeMap4f.saveCubeEXR("test_sh1_randomize4.exr"));
-
-	SHLightProbe SH3 = SH1;
-	SH3.calcMonoChannels();
-
-	cubeMap3f.clear({ 0, 0, 0 });
-	LightProbeToSH3f(cubeMap3f, SH3);
-	REQUIRE(SH3.saveJSON("test_sh1_resampled3.json") == true);
-	SimpleGeometryMesh SH3mesh;
-	SHToMesh(SH3, SH3mesh);
-	SH3mesh.saveOBJ("test_sh1_resampled3.obj");
 
 	SHLightProbe SH4 = SH2;
 	SH4.calcMonoChannels();
@@ -454,28 +479,28 @@ TEST_CASE("SphlSampler", "[sphlsampler]") {
 }
 
 
-TEST_CASE("Fluxions SSPHH Algorithm", "[ssphh]") {
-	SimpleAnisoLight al1;
-	al1.SH.resize(10, 0.0f);
-	REQUIRE(al1.SH.degrees() == 10);
-	for (unsigned i = 0; i < al1.SH.channels(); i++) {
-		for (auto& a_lm : al1.SH[i]) { REQUIRE(a_lm == 0); }
-	}
-
-
-	al1.SH.randomize(-1.0f, 1.0f);
-	for (int l = 0; l <= 10; l++) {
-		for (int m = -l; m <= l; m++) {
-			// ensure that we do not get 0 values when randomizing
-			REQUIRE(al1.SH.Y(l, m) != 0.0f);
-		}
-	}
-
-	const std::string filename{ "test-sh.json" };
-	if (fs::exists(filename)) fs::remove(filename);
-	REQUIRE(al1.SH.saveJSON(filename) == true);
-	REQUIRE(fs::exists(filename) == true);
-
-	SimpleAnisoLight al2;
-	REQUIRE(al2.SH.loadJSON(filename) == true);
-}
+// TEST_CASE("Fluxions SSPHH Algorithm", "[ssphh]") {
+//	SimpleAnisoLight al1;
+//	al1.SH.resize(10, 0.0f);
+//	REQUIRE(al1.SH.degrees() == 10);
+//	for (unsigned i = 0; i < al1.SH.channels(); i++) {
+//		for (auto& a_lm : al1.SH[i]) { REQUIRE(a_lm == 0); }
+//	}
+//
+//
+//	al1.SH.randomize(-1.0f, 1.0f);
+//	for (int l = 0; l <= 10; l++) {
+//		for (int m = -l; m <= l; m++) {
+//			// ensure that we do not get 0 values when randomizing
+//			REQUIRE(al1.SH.Y(l, m) != 0.0f);
+//		}
+//	}
+//
+//	const std::string filename{ "test-sh.json" };
+//	if (fs::exists(filename)) fs::remove(filename);
+//	REQUIRE(al1.SH.saveJSON(filename) == true);
+//	REQUIRE(fs::exists(filename) == true);
+//
+//	SimpleAnisoLight al2;
+//	REQUIRE(al2.SH.loadJSON(filename) == true);
+//}
