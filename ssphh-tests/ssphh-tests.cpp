@@ -419,7 +419,9 @@ Image3f SHToImage3(const SHLightProbe& SH, unsigned w, unsigned h, unsigned d, c
 void TestSHBands(const std::string& imagename) {
 	SHLightProbe SH;
 	Image3f cubeMap3f;
-	cubeMap3f.loadCubePFM(imagename + ".pfm");
+	cubeMap3f.loadCubePFM(imagename + ".pfm", true);
+	Image3f rescaled = cubeMap3f.ScaleImage(64, 64);
+	SaveImage3f("test_" + imagename + "_11.png", rescaled);
 	for (int i = 0; i <= 10; i++) {
 		std::ostringstream os;
 		os << "test_" << imagename << "_" << std::setfill('0') << std::setw(2) << i;
@@ -429,6 +431,7 @@ void TestSHBands(const std::string& imagename) {
 		SHToImage3(SH, 64, 64, 6, os.str() + ".exr");
 		SHToImage3(SH, 64, 64, 6, os.str() + ".png");
 	}
+	SHToMesh(SH, "test_" + imagename + ".obj");
 }
 
 TEST_CASE("SHLightProbe", "[SHLightProbe]") {
@@ -504,8 +507,8 @@ TEST_CASE("SHLightProbe", "[SHLightProbe]") {
 	PrintSummary("RMSE(SH1,SH4)", rmse);
 
 	// Load some test images and generate SH based on those images
-	TestSHBands("galileo_cross");
-	TestSHBands("grace_cross");
+	// TestSHBands("galileo_cross");
+	// TestSHBands("grace_cross");
 	TestSHBands("stpeters_cross");
 	TestSHBands("uffizi_cross");
 
