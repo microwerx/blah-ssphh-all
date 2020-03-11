@@ -24,6 +24,7 @@
 
 #define CATCH_CONFIG_MAIN
 #include <catch.hpp>
+#include <fluxions_image_loader.hpp>
 #include <fluxions_sphl_sampler.hpp>
 
 using namespace Fluxions;
@@ -381,6 +382,54 @@ TEST_CASE("Fluxions GTE", "[gte]") {
 	REQUIRE(v == Vector3f{ 0.0f, 0.0f, 0.0f });
 }
 
+void PrintSummary(const std::string& metric, const std::vector<double>& v) {
+	for (int i = 0; i < v.size(); i++) {
+		// print each channel absolute difference
+		HFLOGINFO("(%d) %s = %f", i, metric.c_str(), v[i]);
+	}
+}
+
+SHLightProbe CreateTestSH(unsigned degrees, float a, float b, const std::string& path) {
+	SHLightProbe SH;
+	SH.resize(5, 0.0f);
+	SH.randomize(a, b);
+	SH.calcMonoChannels();
+	SH.saveJSON(path);
+	return SH;
+}
+
+bool SHToMesh(const SHLightProbe& SH, const std::string& path) {
+	SimpleGeometryMesh SHmesh;
+	SHToMesh(SH, SHmesh);
+	return SHmesh.saveOBJ(path);
+}
+
+Image3f SHToImage3(const SHLightProbe& SH, unsigned w, unsigned h, unsigned d, const std::string& path) {
+	Image3f image(w, h, d);
+	SHToLightProbe3f(SH, image);
+	// image.saveCubeEXR(path);
+	SaveImage3f(path, image);
+	// Reload to make sure we don't lose information
+	image.clear({ 0, 0, 0 });
+	LoadImage3f(path, image);
+	if (image.isLikely61CubeMap()) image.convertRectToCubeMap();
+	return image;
+}
+
+void TestSHBands(const std::string& imagename) {
+	SHLightProbe SH;
+	Image3f cubeMap3f;
+	cubeMap3f.loadCubePFM(imagename + ".pfm");
+	for (int i = 0; i <= 10; i++) {
+		std::ostringstream os;
+		os << "test_" << imagename << "_" << std::setfill('0') << std::setw(2) << i;
+		SH.resize(i, 0.0f);
+		LightProbeToSH3f(cubeMap3f, SH);
+		REQUIRE(SH.saveJSON(os.str() + ".json"));
+		SHToImage3(SH, 64, 64, 6, os.str() + ".exr");
+		SHToImage3(SH, 64, 64, 6, os.str() + ".png");
+	}
+}
 
 TEST_CASE("SHLightProbe", "[SHLightProbe]") {
 	// The test for the SHLightProbe
@@ -404,75 +453,61 @@ TEST_CASE("SHLightProbe", "[SHLightProbe]") {
 	SH1.calcMonoChannels();
 	zeroMesh.saveOBJ("test_sh1_zeros.obj");
 
-	SH1.randomize(0.5f, 1.0f);
+	SH1 = CreateTestSH(10, 0.0f, 1.0f, "test_sh1_randomize.json");
 	REQUIRE(SH1.saveJSON("test_sh1_randomize.json") == true);
-	SH1.calcMonoChannels();
-	SimpleGeometryMesh SH1mesh;
-	SHToMesh(SH1, SH1mesh);
-	SH1mesh.saveOBJ("test_sh1_randomize.obj");
-
-	Image3f cubeMap3f(64, 64, 6);
-	SHToLightProbe3f(SH1, cubeMap3f);
-	REQUIRE(cubeMap3f.saveCubeEXR("test_sh1_randomize3.exr"));
+	Image3f cubeMap3f = SHToImage3(SH1, 64, 64, 6, "test_sh1_randomize.exr");
+	SHToMesh(SH1, "test_sh1_randomize.obj");
 
 	SHLightProbe SH3 = SH1;
-	SH3.calcMonoChannels();
-
-	cubeMap3f.clear({ 0, 0, 0 });
-	LightProbeToSH3f(cubeMap3f, SH3);
-	REQUIRE(SH3.saveJSON("test_sh1_resampled3.json") == true);
+	REQUIRE(LightProbeToSH3f(cubeMap3f, SH3));
+	REQUIRE(SH3.saveJSON("test_sh1_resampled.json") == true);
+	Image3f cubeMap3f_resampled = SHToImage3(SH3, 64, 64, 6, "test_sh1_resampled.exr");
+	SHToMesh(SH3, "test_sh1_resampled.obj");
 
 	// Test summing channels of a SH
-	for (int i = 0; i < 3; i++) {
-		double total = SH1.sumChannel(i);
-		HFLOGINFO("(%d) |SH1| = %f", i, total);
-	}
+	std::vector<double> totals = SH1.sumChannels();
+	PrintSummary("SH1", totals);
 
 	// Test absolute difference between the same SH which should be zeros
-	std::vector<double> absDiff = AbsoluteDifference(SH1, SH1).sumChannels();
-	for (int i = 0; i < 5; i++) {
-		// print each channel absolute difference
-		HFLOGINFO("(%d) |SH1 - SH1| = %f", i, absDiff[i]);
-	}
+	std::vector<double> mae = MeanAbsError(SH1, SH1);
+	std::vector<double> mse = MeanSqrError(SH1, SH1);
+	std::vector<double> rmse = RootMeanSqrError(SH1, SH1);
+	PrintSummary("|SH1 - SH1|  ", mae);
+	PrintSummary("|SH1 - SH1|^2", mse);
+	PrintSummary("RMSE(SH1,SH1)", rmse);
 
 	// Test absolute difference between the same SH which should be close to zero
-	absDiff = AbsoluteDifference(SH1, SH3).sumChannels();
-	for (int i = 0; i < 5; i++) {
-		// print each channel absolute difference
-		HFLOGINFO("(%d) |SH1 - SH3| = %f", i, absDiff[i]);
-	}
-
-	SimpleGeometryMesh SH3mesh;
-	SHToMesh(SH3, SH3mesh);
-	SH3mesh.saveOBJ("test_sh1_resampled3.obj");
+	mae = MeanAbsError(SH1, SH3);
+	mse = MeanSqrError(SH1, SH3);
+	rmse = RootMeanSqrError(SH1, SH3);
+	PrintSummary("|SH1 - SH3|   = ", mae);
+	PrintSummary("|SH1 - SH3|^2 = ", mse);
+	PrintSummary("RMSE(SH1,SH3)", rmse);
 
 	// SH2 are random spherical harmonics from -1 to 1
 
-	SHLightProbe SH2;
-	SH2.resize(5, 0.0f);
-	SH2.randomize(-1.0f, 1.0f);
-	SH2.calcMonoChannels();
-	SimpleGeometryMesh SH2mesh;
-	SHToMesh(SH2, SH2mesh);
-	SH2mesh.saveOBJ("test_sh2_randomize.obj");
-
-	Image4f cubeMap4f(64, 64, 6);
-	SHToLightProbe4f(SH1, cubeMap4f);
-	REQUIRE(cubeMap4f.saveCubeEXR("test_sh1_randomize4.exr"));
+	SHLightProbe SH2 = CreateTestSH(5, -1.0f, 1.0f, "test_sh2_randomized.json");
+	SHToMesh(SH2, "test_sh2_randomize.obj");
+	cubeMap3f = SHToImage3(SH2, 64, 64, 6, "test_sh2_randomize.exr");
 
 	SHLightProbe SH4 = SH2;
-	SH4.calcMonoChannels();
-	cubeMap4f.clear({ 0, 0, 0 });
-	LightProbeToSH4f(cubeMap4f, SH4);
-	REQUIRE(SH4.saveJSON("test_sh2_resampled4.json") == true);
-	SimpleGeometryMesh SH4mesh;
-	SHToMesh(SH4, SH4mesh);
-	SH4mesh.saveOBJ("test_sh2_resampled4.obj");
+	LightProbeToSH3f(cubeMap3f, SH4);
+	REQUIRE(SH4.saveJSON("test_sh2_resampled.json") == true);
+	SHToMesh(SH4, "test_sh2_resampled.obj");
 
-	SHToLightProbe3f(SH2, cubeMap3f);
-	REQUIRE(cubeMap3f.saveCubeEXR("test_sh2_randomize3.exr"));
-	SHToLightProbe4f(SH2, cubeMap4f);
-	REQUIRE(cubeMap4f.saveCubeEXR("test_sh2_randomize4.exr"));
+	// Test absolute difference between the same SH which should be close to zero
+	mae = MeanAbsError(SH2, SH4);
+	mse = MeanSqrError(SH2, SH4);
+	rmse = RootMeanSqrError(SH2, SH4);
+	PrintSummary("|SH4 - SH4|   = ", mae);
+	PrintSummary("|SH4 - SH4|^2 = ", mse);
+	PrintSummary("RMSE(SH1,SH4)", rmse);
+
+	// Load some test images and generate SH based on those images
+	TestSHBands("galileo_cross");
+	TestSHBands("grace_cross");
+	TestSHBands("stpeters_cross");
+	TestSHBands("uffizi_cross");
 
 	SH4.resize(0, 0);
 	REQUIRE(SH4.degrees() == 0);
