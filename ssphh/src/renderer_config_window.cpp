@@ -14,11 +14,9 @@ void RendererConfigWindow::OnUpdate(double timestamp) {
 
 	Vf::Window::OnUpdate(timestamp);
 
-	if (rendererContext != ssphh_widget_ptr->rendererContext)
-		rendererContext = ssphh_widget_ptr->rendererContext;
+	if (rendererContext != ssphh_widget_ptr->rendererContext) rendererContext = ssphh_widget_ptr->rendererContext;
 
-	if (!rendererContext)
-		return;
+	if (!rendererContext) return;
 
 	if (renderConfigList.size() != rendererContext->rendererConfigs.size()) {
 		rc_wptr.reset();
@@ -26,25 +24,20 @@ void RendererConfigWindow::OnUpdate(double timestamp) {
 	}
 	renderConfigList.resize(rendererContext->rendererConfigs.size());
 	int i = 0;
-	for (const auto& [k, v] : rendererContext->rendererConfigs) {
-		renderConfigList[i++] = v->name();
-	}
+	for (const auto& [k, v] : rendererContext->rendererConfigs) { renderConfigList[i++] = v->name(); }
 	if (curRendererConfigIndex >= renderConfigList.size()) {
 		rc_wptr.reset();
 		curRendererConfigIndex = 0;
-	} else {
+	}
+	else {
 		rc_wptr = rendererContext->getRendererConfig(renderConfigList[curRendererConfigIndex]);
 	}
 }
 
 void RendererConfigWindow::OnRenderDearImGui() {
-	if (!rendererContext)
-		return;
-	if (renderConfigList.size() != rendererContext->rendererConfigs.size()) {
-		return;
-	}
-	if (!beginWindow())
-		return;
+	if (!rendererContext) return;
+	if (renderConfigList.size() != rendererContext->rendererConfigs.size()) { return; }
+	if (!beginWindow()) return;
 	Vf::Window::OnRenderDearImGui();
 
 	if (defaultParameterWidth == 100.0f) {
@@ -95,7 +88,9 @@ void RendererConfigWindow::OnRenderDearImGui() {
 	ImGui::Separator();
 	ImGui::TextColored(Colors::White, "RC '%s' [%s]", rc->name(), rc->parent()->name());
 	if (ImGui::TreeNode("writefbos")) {
-		for (const auto& [k, v] : rc->writeFBOs) {
+		auto v = rc->writeFBO;
+		if (v) {
+			// for (const auto& [k, v] : rc->writeFBOs) {
 			ImGui::Text("writefbo: %s %s", (v ? v->name() : "NULL"), (v ? v->status() : "no status"));
 			if (v) {
 				for (const auto& fbo : v->renderTargets) {
@@ -136,12 +131,9 @@ void RendererConfigWindow::OnRenderDearImGui() {
 	}
 	if (ImGui::TreeNode("Attached Shaders")) {
 		for (const auto& v : rc->rc_program_ptr->attachedShaders) {
-			if (!v)
-				continue;
+			if (!v) continue;
 			ImGui::Text("%s %s %s", Fluxions::glNameTranslator.getString(v->shaderType), v->name(), v->status());
-			if (v->infoLog.size()) {
-				ImGui::TextColored(Colors::Yellow, "%s", v->infoLog.c_str());
-			}
+			if (v->infoLog.size()) { ImGui::TextColored(Colors::Yellow, "%s", v->infoLog.c_str()); }
 		}
 		ImGui::TreePop();
 	}

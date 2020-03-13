@@ -1,31 +1,69 @@
 #include "pch.hpp"
-#include <ssphhapp.hpp>
 #include <fluxions_renderer_utilities.hpp>
+#include <ssphhapp.hpp>
 
-namespace SSPHH
-{
+namespace SSPHH {
 	void SSPHH_Application::RenderGLES30Shadows() {
 		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
 
-		//RendererConfig& cubeShadow = rendererContext.rendererConfigs["cubeShadow"];
-		//RendererConfig& rectShadow = rendererContext.rendererConfigs["rectShadow"];
+		auto shadowRenderer = rendererContext->getRenderer("shadowRenderer");
+		if (!shadowRenderer) return;
 
-		//double sunShadowT0 = HFLOG_SECS_ELAPSED();
-		//rectShadow.renderSkyBox = false;
-		//rectShadow.viewportRect.w = Interface->renderconfig.sunShadowMapSize;
-		//rectShadow.viewportRect.h = Interface->renderconfig.sunShadowMapSize;
-		//rectShadow.preCameraMatrix.LoadIdentity();
-		//rectShadow.postCameraMatrix.LoadIdentity();
-		//rectShadow.projectionMatrix = ssg.environment.sunShadowProjectionMatrix;
-		//rectShadow.cameraMatrix_ = ssg.environment.sunShadowViewMatrix;
-		//rectShadow.cameraPosition = ssg.environment.sunShadowMapOrigin;
-		//rectShadow.viewportZNear = ssg.environment.sunShadowMapNearZ;
-		//rectShadow.viewportZFar = ssg.environment.sunShadowMapFarZ;
-		//rectShadow.clearColor.clearCoefs(1.0f, 0.0f, 1.0f, 1.0f);
-		//rectShadow.clearColorBuffer = true;
-		//rectShadow.renderToFBO = true;
+		auto rectShadowRC = rendererContext->getRendererConfig("rectShadow");
+		if (!rectShadowRC) return;
 
-		//RenderImage(rendererContext, ssg, "gles30Shadow", "rectShadow");
+		for (auto [_, dtl] : ssg->dirToLights) {
+			// make framebuffer if it doesn't exist
+			if (dtl->notrenderable()) {
+				auto fbo = MakeRendererFramebuffer(dtl->name_str(), rendererContext);
+				rendererContext->fbos[dtl->name_str()] = fbo;
+				fbo->setDimensions(1024, 1024);
+				fbo->addTexture2D(GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, GL_DEPTH_COMPONENT32F, false);
+				fbo->addTexture2D(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, GL_RGBA8, false);
+				fbo->makeRenderable();
+				dtl->setrenderable(true);
+			}
+
+			auto wptr = rendererContext->getFramebuffer(dtl->name_str());
+			if (wptr.expired()) continue;
+
+			rectShadowRC->writeFBO = wptr.lock();
+			// Render shadow map for dirto light
+			rectShadowRC->cameraMatrix = dtl->worldMatrix().AsInverse();
+			rectShadowRC->projectionMatrix = Matrix4f::MakeOrtho(-1, 1, -1, 1, 1, 100);
+			rectShadowRC->useSceneCamera = false;
+			rectShadowRC->useSceneProjection = false;
+
+			shadowRenderer->applyRenderConfig();
+			for (const auto& [geomid, geom] : ssg->geometryGroups) {
+				// render each mesh
+				Matrix4f worldMatrix = geom->worldMatrix();
+				shadowRenderer->renderMesh(*geom->mesh, true, worldMatrix);
+			}
+		}
+
+		auto cubeShadowRC = rendererContext->getRendererConfig("cubeShadow");
+		if (!cubeShadowRC) return;
+
+		// RendererConfig& cubeShadow = rendererContext.rendererConfigs["cubeShadow"];
+		// RendererConfig& rectShadow = rendererContext.rendererConfigs["rectShadow"];
+
+		// double sunShadowT0 = HFLOG_SECS_ELAPSED();
+		// rectShadow.renderSkyBox = false;
+		// rectShadow.viewportRect.w = Interface->renderconfig.sunShadowMapSize;
+		// rectShadow.viewportRect.h = Interface->renderconfig.sunShadowMapSize;
+		// rectShadow.preCameraMatrix.LoadIdentity();
+		// rectShadow.postCameraMatrix.LoadIdentity();
+		// rectShadow.projectionMatrix = ssg.environment.sunShadowProjectionMatrix;
+		// rectShadow.cameraMatrix_ = ssg.environment.sunShadowViewMatrix;
+		// rectShadow.cameraPosition = ssg.environment.sunShadowMapOrigin;
+		// rectShadow.viewportZNear = ssg.environment.sunShadowMapNearZ;
+		// rectShadow.viewportZFar = ssg.environment.sunShadowMapFarZ;
+		// rectShadow.clearColor.clearCoefs(1.0f, 0.0f, 1.0f, 1.0f);
+		// rectShadow.clearColorBuffer = true;
+		// rectShadow.renderToFBO = true;
+
+		// RenderImage(rendererContext, ssg, "gles30Shadow", "rectShadow");
 		////ssg.AdvancedRender(rectShadow);
 		////rectShadow.fbo.generateMipmaps();
 
@@ -76,18 +114,18 @@ namespace SSPHH
 		////	FxBindTextureAndSampler(rt.unit, rt.target, 0, 0);
 		////	rt.unit = 0;
 		////}
-		//ssg.environment.sunShadowMapTime = (float)(1000.0f * (HFLOG_SECS_ELAPSED() - sunShadowT0));
+		// ssg.environment.sunShadowMapTime = (float)(1000.0f * (HFLOG_SECS_ELAPSED() - sunShadowT0));
 
-		//if (Interface->captureShadows) {
+		// if (Interface->captureShadows) {
 		//	SaveTextureMap(GL_TEXTURE_2D, ssg.environment.sunColorMapId, "sun_color.ppm");
 		//	SaveTextureMap(GL_TEXTURE_2D, ssg.environment.sunDepthMapId, "sun_depth.ppm");
 		//}
 
 		//// Render cube shadow map for light 0
-		//for (int i = 0; i < ssg.pointLights.size(); i++) {
+		// for (int i = 0; i < ssg.pointLights.size(); i++) {
 		//	auto& spl = ssg.pointLights[i];
 		//	auto& scs = ssg.pointLights[i].scs;
-		//	
+		//
 		//	scs.zfar = cubeShadow.viewportZFar;
 		//	cubeShadow.fbo_gen_color = false;
 
@@ -101,7 +139,7 @@ namespace SSPHH
 		//	FxSetErrorMessage("ssphh.cpp", __LINE__, __FUNCTION__);
 		//}
 
-		//for (int i = 0; i < ssgUserData->ssphhLights.size(); i++) {
+		// for (int i = 0; i < ssgUserData->ssphhLights.size(); i++) {
 		//	auto& sphl = ssgUserData->ssphhLights[i];
 		//	auto& scs = sphl.depthSphlMap;
 

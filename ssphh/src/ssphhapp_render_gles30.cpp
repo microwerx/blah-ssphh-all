@@ -35,6 +35,8 @@ namespace SSPHH {
 		// if (counter == 3)
 		//	RenderTest3EnviroCubeMap();
 
+		RenderGLES30Shadows();
+
 		if (Interface->drawSkyBox) {
 			RenderGLES30_SkyBox();
 		}
