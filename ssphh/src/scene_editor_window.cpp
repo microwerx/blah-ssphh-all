@@ -18,10 +18,10 @@ void SceneEditorWindow::OnUpdate(double timestamp) {
 	if (!ssg) return;
 
 	if (!sun)
-		sun = &*ssg->dirToLights["sun"];
+		sun = &ssg->dirToLights["sun"]->base;
 
 	if (!moon)
-		moon = &*ssg->dirToLights["moon"];
+		moon = &ssg->dirToLights["moon"]->base;
 
 	Vf::Window::OnUpdate(timestamp);
 }
@@ -60,11 +60,11 @@ void SceneEditorWindow::OnRenderDearImGui() {
 	if (sun && ImGui::TreeNode("Sun")) {
 		SimpleDirToLightPtr sun = ssg->dirToLights["sun"];
 		ImGui::TextColored(Colors::Azure, "Sun");
-		ImGui::ColorEdit3("sunE0", sun->E0.ptr());
-		ImGui::DragFloat3("sunDirTo", sun->dirTo.ptr(), 0.01f, -1.0f, 1.0f);
-		if (ImGui::Button("unit")) sun->dirTo.normalize();
+		ImGui::ColorEdit3("sunE0", sun->base.E0.ptr());
+		ImGui::DragFloat3("sunDirTo", sun->base.dirTo.ptr(), 0.01f, -1.0f, 1.0f);
+		if (ImGui::Button("unit")) sun->base.dirTo.normalize();
 		if (ImGui::Button("real")) {
-			sun->dirTo = ssg->environment->curSunDirTo;
+			sun->base.dirTo = ssg->environment->curSunDirTo;
 		}
 		ImGui::TreePop();
 	}

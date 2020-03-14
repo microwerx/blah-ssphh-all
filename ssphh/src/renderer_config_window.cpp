@@ -73,6 +73,7 @@ void RendererConfigWindow::OnRenderDearImGui() {
 
 	ImGui::Separator();
 	if (ImGui::TreeNode("Options")) {
+		ImGui::Checkbox("ZOnly", &rc->useZOnly);
 		ImGui::Checkbox("SRGB", &rc->enableSRGB);
 		ImGui::Checkbox("Maps", &rc->useMaps);
 		ImGui::Checkbox("Materials", &rc->useMaterials);
@@ -81,6 +82,7 @@ void RendererConfigWindow::OnRenderDearImGui() {
 		ImGui::Checkbox("Clear Depth", &rc->clearDepthBuffer);
 		ImGui::ColorPicker4("clearcolor", rc->clearColor.ptr());
 		ImGui::Checkbox("Scene Camera", &rc->useSceneCamera);
+		ImGui::TreePop();
 	}
 
 	// FBO information ///////////////////////////////////////////////////

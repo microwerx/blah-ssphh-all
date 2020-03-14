@@ -15,13 +15,11 @@ void RendererWindow::OnUpdate(double timeStamp) {
 
 	Vf::Window::OnUpdate(timeStamp);
 
-	if (rendererContext != ssphh_widget_ptr->rendererContext)
-		rendererContext = ssphh_widget_ptr->rendererContext;
+	if (rendererContext != ssphh_widget_ptr->rendererContext) rendererContext = ssphh_widget_ptr->rendererContext;
 }
 
 void RendererWindow::OnRenderDearImGui() {
-	if (!rendererContext || !beginWindow())
-		return;
+	if (!rendererContext || !beginWindow()) return;
 	Vf::Window::OnRenderDearImGui();
 
 	if (ImGui::Button("Reset")) {
@@ -30,8 +28,7 @@ void RendererWindow::OnRenderDearImGui() {
 		return;
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("Defaults"))
-		rendererContext->set_default_parameters();
+	if (ImGui::Button("Defaults")) rendererContext->set_default_parameters();
 
 	ImGui::Value("Render Mode", ssphh_widget_ptr->renderMode);
 	ImGui::SameLine();
@@ -44,19 +41,22 @@ void RendererWindow::OnRenderDearImGui() {
 	ImGui::SameLine();
 	ImGui::Value("configs load", lastConfigsLoadTime);
 
-	if (ImGui::Button("Load Shaders"))
+	if (ImGui::Button("Load Shaders")) {
+		for (auto& [_, p] : rendererContext->programs) {
+			p->setloaded(false);
+			p->setusable(false);
+		}
 		HFCLOCKSf(lastShadersLoadTime, rendererContext->loadShaders());
+	}
 	ImGui::SameLine();
 	ImGui::Value("shaders load", lastShadersLoadTime);
 
-	if (ImGui::Button("Load Textures"))
-		HFCLOCKSf(lastTextureLoadTime, rendererContext->loadTextures());
+	if (ImGui::Button("Load Textures")) HFCLOCKSf(lastTextureLoadTime, rendererContext->loadTextures());
 	ImGui::SameLine();
 	ImGui::Value("texture load", lastTextureLoadTime);
 
 	static float lastFramebufferTime{ 0 };
-	if (ImGui::Button("Make Framebuffers"))
-		HFCLOCKSf(lastFramebufferTime, rendererContext->makeFramebuffers());
+	if (ImGui::Button("Make Framebuffers")) HFCLOCKSf(lastFramebufferTime, rendererContext->makeFramebuffers());
 	ImGui::SameLine();
 	ImGui::Value("framebuffer time", lastFramebufferTime);
 
@@ -141,20 +141,16 @@ void RendererWindow::OnRenderDearImGui() {
 
 	if (ImGui::TreeNode("vars")) {
 		for (auto& [k, v] : rendererContext->vars.variables) {
-			if (v.IsInteger())
-				ImGui::Value(k.c_str(), v.ival);
-			if (v.IsDouble())
-				ImGui::Value(k.c_str(), (float)v.dval);
-			if (v.IsStringOrIdentifier())
-				ImGui::Value(k.c_str(), v.sval.c_str());
+			if (v.IsInteger()) ImGui::Value(k.c_str(), v.ival);
+			if (v.IsDouble()) ImGui::Value(k.c_str(), (float)v.dval);
+			if (v.IsStringOrIdentifier()) ImGui::Value(k.c_str(), v.sval.c_str());
 		}
 		ImGui::TreePop();
 	}
 
 	static int hflogCurrentItem{ 0 };
 	int hflogSize = HFLOG_HISTORYSIZE();
-	if (hflogSize)
-		ImGui::ListBox("hflog", &hflogCurrentItem, Hf::Log.getHistoryItems(), hflogSize);
+	if (hflogSize) ImGui::ListBox("hflog", &hflogCurrentItem, Hf::Log.getHistoryItems(), hflogSize);
 
 	endWindow();
 }

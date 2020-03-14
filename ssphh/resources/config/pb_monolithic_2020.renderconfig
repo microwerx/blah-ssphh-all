@@ -119,6 +119,12 @@ vertattrib 1 aTexCoord
 # fragshader cube_shadow_gl330.frag
 # vertattrib 0 aPosition
 
+
+program rect_shadow_program
+vertshader rect_shadow.vert
+fragshader rect_shadow.frag
+
+
 program postprocess_program
 vertshader postprocess.vert
 fragshader postprocess.frag
@@ -231,6 +237,12 @@ renderconfig draw post
 renderconfig srgb
 
 
+renderconfig rect_shadow_rc
+renderconfig program rect_shadow_program
+renderconfig zonly
+renderconfig viewport 0 0 1024 1024
+
+
 #/////////////////////////////////////////////////////////////////////
 # ==== UniformLists ====
 #/////////////////////////////////////////////////////////////////////
@@ -251,6 +263,11 @@ uniformMatrix4f sunMatrix @SUNMATRIX
 
 # renderer gles30CubeMap
 # renderer renderconfig 
+
+
+renderer rect_shadow_renderer
+renderer renderconfig rect_shadow_rc
+
 
 renderer skybox
 renderer renderconfig skybox_rc

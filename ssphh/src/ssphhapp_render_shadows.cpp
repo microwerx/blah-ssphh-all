@@ -6,10 +6,10 @@ namespace SSPHH {
 	void SSPHH_Application::RenderGLES30Shadows() {
 		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
 
-		auto shadowRenderer = rendererContext->getRenderer("shadowRenderer");
+		auto shadowRenderer = rendererContext->getRenderer("rect_shadow_renderer");
 		if (!shadowRenderer) return;
 
-		auto rectShadowRC = rendererContext->getRendererConfig("rectShadow");
+		auto rectShadowRC = shadowRenderer->getRenderConfig(); // rendererContext->getRendererConfig("rect_shadow_rc");
 		if (!rectShadowRC) return;
 
 		for (auto [_, dtl] : ssg->dirToLights) {
@@ -27,19 +27,43 @@ namespace SSPHH {
 			auto wptr = rendererContext->getFramebuffer(dtl->name_str());
 			if (wptr.expired()) continue;
 
-			rectShadowRC->writeFBO = wptr.lock();
+			// rectShadowRC->writeFBO = wptr.lock();
 			// Render shadow map for dirto light
 			rectShadowRC->cameraMatrix = dtl->worldMatrix().AsInverse();
-			rectShadowRC->projectionMatrix = Matrix4f::MakeOrtho(-1, 1, -1, 1, 1, 100);
 			rectShadowRC->useSceneCamera = false;
 			rectShadowRC->useSceneProjection = false;
+			rectShadowRC->useZOnly = true;
+			rectShadowRC->enableDepthTest = true;
+			rectShadowRC->clearColor.reset(0.2f, 0.2f, 0.2f);
+			rectShadowRC->clearColorBuffer = true;
+			rectShadowRC->clearDepthBuffer = true;
+			rectShadowRC->viewportRect.w = 1024;
+			rectShadowRC->viewportRect.h = 1024;
+			const float radius = ssg->getBoundingBox().radiusRounded();
+			rectShadowRC->viewportProjectionMatrix = Matrix4f::MakeOrtho(
+				//-100, 100, -100, 100, -100, 100
+				-radius,
+				radius, // left and right
+				-radius,
+				radius, // top and bottom
+				0,
+				2.0f * radius // near and far
+			);
+			Vector3f dirTo = dtl->dirTo.xyz().unit();
+			Vector3f center = ssg->getBoundingBox().Center();
+			Vector3f eye = dirTo * radius + center;
+			Vector3f up = Vector3f(0.0f, 1.0f, 0.0);
+			rectShadowRC->preCameraMatrix = Matrix4f::MakeLookAt(eye, center, up);
 
+			FxCheckErrorsWarn();
 			shadowRenderer->applyRenderConfig();
+			FxCheckErrorsWarn();
 			for (const auto& [geomid, geom] : ssg->geometryGroups) {
 				// render each mesh
 				Matrix4f worldMatrix = geom->worldMatrix();
 				shadowRenderer->renderMesh(*geom->mesh, true, worldMatrix);
 			}
+			FxCheckErrorsWarn();
 		}
 
 		auto cubeShadowRC = rendererContext->getRendererConfig("cubeShadow");
