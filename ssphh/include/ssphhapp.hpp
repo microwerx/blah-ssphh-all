@@ -134,10 +134,12 @@ namespace SSPHH {
 			bool enableOrbit = false;
 			bool enableSunCycle = false;
 			bool usePBSKY = true;
-			bool drawSkyBox = true;
-			bool drawPBR = true;
-			bool drawVIZ = true;
-			bool drawPOST = true;
+			bool drawRectShadows = false;
+			bool drawCubeShadows = false;
+			bool drawSkyBox = false;
+			bool drawPBR = false;
+			bool drawVIZ = false;
+			bool drawPOST = false;
 			bool saveScreenshot = false;
 			bool captureShadows = false;
 
@@ -497,6 +499,8 @@ namespace SSPHH {
 		void RenderGLES30Shadows();
 		void RenderGLES30SPHLs();
 		void RenderGL11Hierarchies();
+		void RenderGLES30_RectShadows();
+		void RenderGLES30_CubeShadows();
 		void RenderGLES30_SkyBox();
 		void RenderGLES30_SceneGraph();
 		void RenderGLES30_VIZ();
@@ -607,6 +611,7 @@ namespace SSPHH {
 		void Sun_SetLights();
 		void InitRenderConfigs();
 		void LoadRenderConfigs();
+		void LoadShaders();
 
 		void RunJob(Uf::CoronaJob& job);
 

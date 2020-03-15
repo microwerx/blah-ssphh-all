@@ -41,13 +41,7 @@ void RendererWindow::OnRenderDearImGui() {
 	ImGui::SameLine();
 	ImGui::Value("configs load", lastConfigsLoadTime);
 
-	if (ImGui::Button("Load Shaders")) {
-		for (auto& [_, p] : rendererContext->programs) {
-			p->setloaded(false);
-			p->setusable(false);
-		}
-		HFCLOCKSf(lastShadersLoadTime, rendererContext->loadShaders());
-	}
+	if (ImGui::Button("Load Shaders")) { HFCLOCKSf(lastShadersLoadTime, ssphh_widget_ptr->LoadShaders()); }
 	ImGui::SameLine();
 	ImGui::Value("shaders load", lastShadersLoadTime);
 

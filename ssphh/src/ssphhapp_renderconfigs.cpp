@@ -70,6 +70,10 @@ namespace SSPHH
 		if (!rendererContext->loadConfig(default_renderconfig_path)) {
 			HFLOGERROR("%s file not found.", default_renderconfig_path);
 		}
+		
+		for (auto& [_, rdr] : rendererContext->renderers) {
+			rdr->setSceneGraph(ssg);
+		}
 
 		rendererContext->loadShaders();
 		rendererContext->loadTextures();
@@ -116,5 +120,14 @@ namespace SSPHH
 		stopwatch.Stop();
 		HFLOGINFO("reload took %4.2f milliseconds", stopwatch.GetMillisecondsElapsed());
 		Interface->lastRenderConfigLoadTime = stopwatch.GetMillisecondsElapsed();
+	}
+
+
+	void SSPHH_Application::LoadShaders() {
+		for (auto& [_, p] : rendererContext->programs) {
+			p->setloaded(false);
+			p->setusable(false);
+		}
+		rendererContext->loadShaders();
 	}
 } // namespace SSPHH

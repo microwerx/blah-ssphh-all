@@ -849,9 +849,9 @@ namespace SSPHH {
 				for (auto& [k, spl] : ssg->pointLights) {
 					std::ostringstream ostr;
 					ImGui::Text("Name(%d): %s", i, spl->name());
-					ImGui::ColorEdit4("E0", spl->E0.ptr());
-					ImGui::DragFloat("Falloff Radius", &spl->position.w, 1.0f, 0.0f, 1000.0f);
-					ImGui::DragFloat3("Position", spl->position.ptr(), 0.1f, -10.0f, 10.0f);
+					ImGui::ColorEdit4("E0", spl->base.E0.ptr());
+					ImGui::DragFloat("Falloff Radius", &spl->base.position.w, 1.0f, 0.0f, 1000.0f);
+					ImGui::DragFloat3("Position", spl->base.position.ptr(), 0.1f, -10.0f, 10.0f);
 					i++;
 				}
 			}

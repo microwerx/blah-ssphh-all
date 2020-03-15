@@ -3,15 +3,35 @@
 #include <ssphhapp.hpp>
 
 namespace SSPHH {
-	void SSPHH_Application::RenderGLES30Shadows() {
+
+	bool operator == (Fluxions::Matrix4f a, Fluxions::Matrix4f b) {
+		float *am = &a.m11;
+		float *bm = &b.m11;
+		for (int i = 0; i < 16; i++) {
+			if (am[i] != bm[i]) return false;
+		}
+		return true;
+	}
+
+	void SSPHH_Application::RenderGLES30_RectShadows() {
 		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
+
+		auto pbrRC = rendererContext->getRendererConfig("pbr_rc");
+		if (!pbrRC) return;
 
 		auto shadowRenderer = rendererContext->getRenderer("rect_shadow_renderer");
 		if (!shadowRenderer) return;
+		if (!shadowRenderer->validate()) {
+			shadowRenderer->setSceneGraph(ssg);
+		}
 
-		auto rectShadowRC = shadowRenderer->getRenderConfig(); // rendererContext->getRendererConfig("rect_shadow_rc");
+		auto shadowProgram = rendererContext->getProgram("rect_shadow_program");
+		if (shadowProgram.expired()) return;
+
+		auto rectShadowRC = shadowRenderer->getRenderConfig();
 		if (!rectShadowRC) return;
 
+		int dirtoLightIndex = 0;
 		for (auto [_, dtl] : ssg->dirToLights) {
 			// make framebuffer if it doesn't exist
 			if (dtl->notrenderable()) {
@@ -19,15 +39,19 @@ namespace SSPHH {
 				rendererContext->fbos[dtl->name_str()] = fbo;
 				fbo->setDimensions(1024, 1024);
 				fbo->addTexture2D(GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, GL_DEPTH_COMPONENT32F, false);
+				fbo->setMapName("DirToLightDepthMaps[" + std::to_string(dirtoLightIndex) + "]");
 				fbo->addTexture2D(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, GL_RGBA8, false);
+				fbo->setMapName("DirToLightColorMaps[" + std::to_string(dirtoLightIndex) + "]");
 				fbo->makeRenderable();
 				dtl->setrenderable(true);
+
+				pbrRC->readFBOs.push_back({ dtl->name_str(), fbo });
 			}
 
 			auto wptr = rendererContext->getFramebuffer(dtl->name_str());
 			if (wptr.expired()) continue;
 
-			// rectShadowRC->writeFBO = wptr.lock();
+			rectShadowRC->writeFBO = wptr.lock();
 			// Render shadow map for dirto light
 			rectShadowRC->cameraMatrix = dtl->worldMatrix().AsInverse();
 			rectShadowRC->useSceneCamera = false;
@@ -39,23 +63,20 @@ namespace SSPHH {
 			rectShadowRC->clearDepthBuffer = true;
 			rectShadowRC->viewportRect.w = 1024;
 			rectShadowRC->viewportRect.h = 1024;
-			const float radius = ssg->getBoundingBox().radiusRounded();
-			rectShadowRC->viewportProjectionMatrix = Matrix4f::MakeOrtho(
-				//-100, 100, -100, 100, -100, 100
-				-radius,
-				radius, // left and right
-				-radius,
-				radius, // top and bottom
-				0,
-				2.0f * radius // near and far
-			);
-			Vector3f dirTo = dtl->dirTo.xyz().unit();
-			Vector3f center = ssg->getBoundingBox().Center();
-			Vector3f eye = dirTo * radius + center;
-			Vector3f up = Vector3f(0.0f, 1.0f, 0.0);
-			rectShadowRC->preCameraMatrix = Matrix4f::MakeLookAt(eye, center, up);
+			dtl->calcOptimalMatrices(
+				ssg->getBoundingBox(),
+				rectShadowRC->viewportProjectionMatrix,
+				rectShadowRC->viewportCameraMatrix);
+
+			if (rectShadowRC->viewportProjectionMatrix == Matrix4f::MakeIdentity()) {
+				HFLOGWARN("Viewport Projection error")
+			}
+			if (rectShadowRC->viewportCameraMatrix == Matrix4f::MakeIdentity()) {
+				HFLOGWARN("Viewport Camera error")
+			}
 
 			FxCheckErrorsWarn();
+			shadowRenderer->saveGLState();
 			shadowRenderer->applyRenderConfig();
 			FxCheckErrorsWarn();
 			for (const auto& [geomid, geom] : ssg->geometryGroups) {
@@ -64,10 +85,27 @@ namespace SSPHH {
 				shadowRenderer->renderMesh(*geom->mesh, true, worldMatrix);
 			}
 			FxCheckErrorsWarn();
+			shadowRenderer->restoreGLState();
+			dirtoLightIndex++;
 		}
+	}
+
+	void SSPHH_Application::RenderGLES30_CubeShadows() {
+		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
+
+		auto pbrRC = rendererContext->getRendererConfig("pbr_rc");
+		if (!pbrRC) return;
 
 		auto cubeShadowRC = rendererContext->getRendererConfig("cubeShadow");
 		if (!cubeShadowRC) return;
+	}
+
+	void SSPHH_Application::RenderGLES30Shadows() {
+		FxSetErrorMessage(__FILE__, __LINE__, "%s", __FUNCTION__);
+
+		if (Interface->drawRectShadows) RenderGLES30_RectShadows();
+		if (Interface->drawCubeShadows) RenderGLES30_CubeShadows();
+
 
 		// RendererConfig& cubeShadow = rendererContext.rendererConfigs["cubeShadow"];
 		// RendererConfig& rectShadow = rendererContext.rendererConfigs["rectShadow"];

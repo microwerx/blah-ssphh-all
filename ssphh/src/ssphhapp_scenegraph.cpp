@@ -42,10 +42,10 @@ namespace SSPHH
 	}
 
 	void SSPHH_Application::Sun_SetLights() {
-		if (!sun) sun = &*ssg->dirToLights["sun"];
+		if (!sun) sun = &ssg->dirToLights["sun"]->base;
 		if (sun) sun->dirTo = ssg->environment->curSunDirTo;
 		if (!moon) {
-			moon = &*ssg->dirToLights["moon"];
+			moon = &ssg->dirToLights["moon"]->base;
 			moonGG = ssg->geometryGroups["moon"];
 		}
 		if (moon) {

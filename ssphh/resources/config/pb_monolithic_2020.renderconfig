@@ -36,7 +36,7 @@ sampler GL_TEXTURE_MAG_FILTER GL_LINEAR
 
 texture2D test2d
 texture2D sampler default2dSampler
-texture2D uniform MapKd
+texture2D uniform MapTestKd
 texture2D map "test_texture_2d.png"
 # texture2D map stpeters_probe.pfm
 
@@ -201,6 +201,7 @@ renderconfig depthtest GL_LEQUAL
 # renderconfig camera default
 renderconfig cleardepth
 renderconfig texture2D test2d MapKd
+renderconfig texture2D test2d MapTest2D
 renderconfig draw scene
 
 renderconfig viz_rc

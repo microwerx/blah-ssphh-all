@@ -1,11 +1,15 @@
 #version 300 es
 
+#define MAX_DIRTOLIGHT_COUNT	8
+
 // Uniforms
 
 layout(std140) uniform CameraBlock {
 	mat4 ProjectionMatrix;
 	mat4 CameraMatrix;
 };
+
+uniform mat4 DirToShadowMatrix[MAX_DIRTOLIGHT_COUNT];
 
 uniform mat4 WorldMatrix;
 
@@ -23,6 +27,7 @@ out vec3 vNormal;
 out vec2 vTexCoord;
 out vec3 vCameraPosition;
 out vec3 vColor;
+out vec4 vShadowCoords[MAX_DIRTOLIGHT_COUNT];
 
 void main(void)
 {
@@ -31,6 +36,11 @@ void main(void)
 	vTexCoord = vec2(aTexCoord.x, 1.0 - aTexCoord.y);
 	vNormal = mat3(WorldMatrix) * aNormal;
 	vColor = aColor;
+
+	vShadowCoords[0] = DirToShadowMatrix[0] * vec4(vPosition, 1.0);
+	vShadowCoords[1] = DirToShadowMatrix[1] * vec4(vPosition, 1.0);
+	vShadowCoords[2] = DirToShadowMatrix[2] * vec4(vPosition, 1.0);
+	vShadowCoords[3] = DirToShadowMatrix[3] * vec4(vPosition, 1.0);
 
 	mat4 pcw = ProjectionMatrix * CameraMatrix * WorldMatrix;
 	gl_Position = pcw * vec4(aPosition, 1.0);

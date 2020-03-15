@@ -36,21 +36,26 @@ namespace SSPHH {
 		//	RenderTest3EnviroCubeMap();
 
 		RenderGLES30Shadows();
+		FxCheckErrorsWarn();
 
 		if (Interface->drawSkyBox) {
 			RenderGLES30_SkyBox();
+			FxCheckErrorsWarn();
 		}
 
 		if (Interface->drawPBR) {
 			RenderGLES30_SceneGraph();
+			FxCheckErrorsWarn();
 		}
 
 		if (Interface->drawVIZ) {
 			RenderGLES30_VIZ();
+			FxCheckErrorsWarn();
 		}
 
 		if (Interface->drawPOST) {
 			RenderGLES30_PostProcess();
+			FxCheckErrorsWarn();
 		}
 
 		auroraViz.RenderFrame(GetElapsedTime());
