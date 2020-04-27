@@ -56,6 +56,7 @@ namespace SSPHH
 		job.Start(coronaScene, ssg);
 
 		vcPbsky->coronaPath = job.GetOutputPath(vcPbsky->coronaLoadEXR);
+		HFLOGINFO("generated %s", vcPbsky->coronaPath.c_str());
 		Sky_LoadCoronaSky(vcPbsky->coronaLoadEXR, vcPbsky->coronaPath);
 	}
 
