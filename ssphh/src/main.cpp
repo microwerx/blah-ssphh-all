@@ -91,53 +91,62 @@
 #include <scene_editor_window.hpp>
 #include <ssphh_menu.hpp>
 
-extern void do_tests();
-
 SSPHHPtr ssphh_widget_ptr;
-Vf::WidgetPtr vf_app_ptr;
-Vf::WidgetPtr imgui_widget_ptr;
-Vf::LoadingWindowPtr loading_window_ptr;
+Vf::AnimPathWindowPtr animpath_window_ptr;
 
-/* F1  */ HelpWindowPtr help_window_ptr;
-/* F2  */ Vf::StatsWindowPtr stats_window_ptr;
-/* F3  */ SceneGraphWindowPtr scene_graph_window_ptr;
-/* F4  */ SceneEditorWindowPtr scene_editor_window_ptr;
-/* F5  */ SSPHHWindowPtr ssphh_window_ptr;
-/* F6  */ Vf::AnimPathWindowPtr animpath_window_ptr;
-/* F7  */ Vf::AnimationWindowPtr animation_window_ptr;
-/* F8  */ RendererConfigWindowPtr renderer_config_window_ptr;
-/* F9  */ RendererWindowPtr renderer_window_ptr;
-/* F10 */ SsphhMenuPtr ssphh_menu_ptr;
-/* F11 */ ToolWindowPtr tool_window_ptr;
-/* F12 */ UnicornfishWindowPtr unicornfish_window_ptr;
+class MainApp {
+	SSPHHPtr ssphh_widget_ptr;
+	Vf::WidgetPtr vf_app_ptr;
+	Vf::WidgetPtr imgui_widget_ptr;
+	Vf::LoadingWindowPtr loading_window_ptr;
 
-double g_distance = -10.0;
-double xrot = 0.0;
-double yrot = 0.0;
 
-void InitApp();
-void KillApp();
-
-namespace Fluxions {
-	extern int test_fluxions_simple_property(int argc, char** argv);
-}
-
-namespace Df {
-	extern int test_PythonInterpreter(int argc, char** argv);
-}
+	/* F1  */ HelpWindowPtr help_window_ptr;
+	/* F2  */ Vf::StatsWindowPtr stats_window_ptr;
+	/* F3  */ SceneGraphWindowPtr scene_graph_window_ptr;
+	/* F4  */ SceneEditorWindowPtr scene_editor_window_ptr;
+	/* F5  */ SSPHHWindowPtr ssphh_window_ptr;
+	/* F6  */ Vf::AnimPathWindowPtr animpath_window_ptr;
+	/* F7  */ Vf::AnimationWindowPtr animation_window_ptr;
+	/* F8  */ RendererConfigWindowPtr renderer_config_window_ptr;
+	/* F9  */ RendererWindowPtr renderer_window_ptr;
+	/* F10 */ SsphhMenuPtr ssphh_menu_ptr;
+	/* F11 */ ToolWindowPtr tool_window_ptr;
+	/* F12 */ UnicornfishWindowPtr unicornfish_window_ptr;
+public:
+	int run(int argc, char** argv);
+	void init();
+	void kill();
+};
 
 int main(int argc, char** argv) {
-	do_tests();
+	int result = 0;
+	{ MainApp app;
+	result = app.run(argc, argv);
+	}
 
+	HFLOGINFO("Program finished");
+
+	return result;
+}
+
+int MainApp::run(int argc, char** argv) {
 	Uf::Init();
 
 	std::map<std::string, std::string> options = Fluxions::MakeOptionsFromArgs(argc, (const char**)argv);
 
 	if (options.count("version")) {
 		printf("SSPHH by Jonathan Metzgar\nCopyright (C) 2017-2020 Jonathan Metzgar\n\n");
-		printf("This program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\n");
-		printf("This program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\n");
-		printf("You should have received a copy of the GNU General Public License\nalong with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n");
+		printf("This program is free software: you can redistribute it and/or modify\n"
+			   "it under the terms of the GNU General Public License as published by\n"
+			   "the Free Software Foundation, either version 3 of the License, or\n"
+			   "(at your option) any later version.\n\n");
+		printf("This program is distributed in the hope that it will be useful,\n"
+			   "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+			   "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+			   "GNU General Public License for more details.\n\n");
+		printf("You should have received a copy of the GNU General Public License\n"
+			   "along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n");
 	}
 
 	Fluxions::debugging = false;
@@ -160,7 +169,9 @@ int main(int argc, char** argv) {
 #endif
 
 	dragDrop.Init();
-	InitApp();
+	init();
+	::ssphh_widget_ptr = ssphh_widget_ptr;
+	::animpath_window_ptr = animpath_window_ptr;
 
 #ifdef USE_FREEGLUT
 	GlutTemplateWidget(vf_app_ptr);
@@ -170,12 +181,13 @@ int main(int argc, char** argv) {
 	GlfwTemplateMainLoop();
 #endif
 
-	KillApp();
+	kill();
 	dragDrop.Kill();
 
-	Uf::Kill();
+	::animpath_window_ptr.reset();
+	::ssphh_widget_ptr.reset();
 
-	HFLOGINFO("Program finished");
+	Uf::Kill();
 
 	return 0;
 }
@@ -184,7 +196,7 @@ int main(int argc, char** argv) {
 // This function is called prior to the main loop of the application.
 // OpenGL is already initialized prior to this call.
 //
-void InitApp() {
+void MainApp::init() {
 	Fluxions::Init();
 	Fluxions::EnableGLDebugFunc();
 	constexpr int testwidgets = 0;
@@ -240,7 +252,7 @@ void InitApp() {
 	}
 }
 
-void KillApp() {
+void MainApp::kill() {
 	ssphh_widget_ptr->hotkeyWindows.clear();
 
 	vf_app_ptr->Kill();
