@@ -100,13 +100,15 @@ namespace SSPHH
 			return true;
 		}
 		else if (job.IsGEN()) {
+			std::string basename = job.GetName() + "_" + std::to_string(sendLight) + "_sph";
+
 			sphl.readPtrcLightProbe(job.GetOutputPath(useEXR));
-			sphl.savePtrcLightProbe(job.GetName() + "_" + std::to_string(sendLight) + "_sph.exr");
+			sphl.savePtrcLightProbe(basename + ".exr");
 
 			//if (ssgUserData->ssphh.saveJSONs)
 			//	sphl.SaveJsonSph(job.GetName() + "_sph.json");
 			if (ssphh.saveJSONs)
-				sphl.saveJsonSph(job.GetName() + "_sph.json");
+				sphl.saveJsonSph(basename + ".json");
 
 			if (useEXR) {
 				sphl.vizgenLightProbes[sendLight].loadEXR(fpi.shortestPath());
