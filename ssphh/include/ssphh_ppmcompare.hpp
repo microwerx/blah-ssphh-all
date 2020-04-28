@@ -59,7 +59,7 @@ namespace SSPHH {
 			P3
 		};
 
-		void Init(bool hasSpecular, int maxRayDepth, int passCount, int maxDegree);
+		void Init(bool hasSpecular, int maxRayDepth, int passCount, int maxDegree_);
 		void SetConversion(ColorSpaceType im1type, ColorSpaceType im2type);
 		void Compare(Image3f& image1, Image3f& image2);
 		void SaveResults(const std::string& statsName, const std::string& pathtracerName, bool genDiffs = false, bool ignoreCache = false);

@@ -12,7 +12,20 @@
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "c11",
             "cppStandard": "c++17",
-            "intelliSenseMode": "clang-x64"
+            "intelliSenseMode": "${default}"
+        }, {
+            "name": "FreeBSD",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/ssphh/include",
+                "${workspaceFolder}/../fluxions/include",
+                "${workspaceFolder}/../imgui"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/local/bin/clang",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "${default}"
         }
     ],
     "version": 4

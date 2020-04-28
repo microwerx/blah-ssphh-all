@@ -54,7 +54,7 @@ std::string SphlJob::toJSON() noexcept
 	jsonObject = Df::JSON::NewObject();
 	jsonObject->set({
 		{ "numChannels", Df::JSON::NewNumber(numChannels) },
-		{ "maxDegree",   Df::JSON::NewNumber(maxDegree) },
+		{ "maxDegree",   Df::JSON::NewNumber(maxDegree_) },
 		{ "coefs",       NewMatrix(coefs) },
 		{ "meta",        j_meta }
 		});
@@ -81,15 +81,15 @@ bool SphlJob::parseJSON(const std::string &str) noexcept
 	if (!jsonObject->HasKeyOfType("meta", Df::JSON::Type::Object)) return false;
 
 	numChannels = jsonObject->getMember("numChannels")->AsInt();
-	maxDegree = jsonObject->getMember("maxDegree")->AsInt();
-	sphl.resize(maxDegree);
-	size_t numCoefs = sphl.size();
+	maxDegree_ = jsonObject->getMember("maxDegree")->AsInt();
+	sphl.resize(maxDegree_, 0.0f);
+	size_t numCoefs = sphl.coefficientCount();
 
 	// Copy 'coefs'
 	std::vector<Df::JSONPtr> j_coefs = jsonObject->getMember("coefs")->AsArray();
-	if (j_coefs.size() != sphl.size()) {
+	if (j_coefs.size() != sphl.coefficientCount()) {
 		HFLOGERROR("JSON has incorrect number of SPH degrees %i %i",
-			(int)j_coefs.size(), (int)sphl.size());
+			(int)j_coefs.size(), (int)sphl.coefficientCount());
 	}
 	coefs.resize(numCoefs);
 	for (int i = 0; i < numCoefs; i++) {
@@ -120,7 +120,7 @@ bool SphlJob::parseJSON(const std::string &str) noexcept
 
 void SphlJob::resizeCoefs(int sphMaxDegree) noexcept
 {
-	maxDegree = sphMaxDegree;
-	sphl.resize(maxDegree);
+	maxDegree_ = sphMaxDegree;
+	sphl.resize(maxDegree_, 0.0f);
 	sphl.toVectorFormat(numChannels, coefs);
 }

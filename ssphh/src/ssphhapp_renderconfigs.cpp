@@ -15,8 +15,8 @@ namespace SSPHH
 		//rectShadowRenderConfig.clearDepthBuffer = true;
 		//rectShadowRenderConfig.viewportRect.x = 0;
 		//rectShadowRenderConfig.viewportRect.y = 0;
-		//rectShadowRenderConfig.viewportRect.w = Interface.renderconfig.sunShadowMapSize;
-		//rectShadowRenderConfig.viewportRect.h = Interface.renderconfig.sunShadowMapSize;
+		//rectShadowRenderConfig.viewportRect.w = Interface->renderconfig.sunShadowMapSize;
+		//rectShadowRenderConfig.viewportRect.h = Interface->renderconfig.sunShadowMapSize;
 		//rectShadowRenderConfig.fov = 90.0;
 		//rectShadowRenderConfig.isCubeMap = false;
 		//rectShadowRenderConfig.useSceneCamera = false;
@@ -64,17 +64,21 @@ namespace SSPHH
 
 	void SSPHH_Application::LoadRenderConfigs() {
 		HFLOGINFO("resetting and loading render configs...");
-		rendererContext.reset();
-		rendererContext.resize(getWidthi(), getHeighti());
+		rendererContext->reinit();
+		rendererContext->resize(getWidthi(), getHeighti());
 
-		if (!rendererContext.loadConfig(default_renderconfig_path)) {
+		if (!rendererContext->loadConfig(default_renderconfig_path)) {
 			HFLOGERROR("%s file not found.", default_renderconfig_path);
 		}
+		
+		for (auto& [_, rdr] : rendererContext->renderers) {
+			rdr->setSceneGraph(ssg);
+		}
 
-		rendererContext.loadShaders();
-		rendererContext.loadTextures();
-		rendererContext.loadMaps(ssg.materials.maps);
-		rendererContext.makeFramebuffers();
+		rendererContext->loadShaders();
+		rendererContext->loadTextures();
+		rendererContext->loadMaps(ssg->materials.maps);
+		rendererContext->makeFramebuffers();
 
 		//RendererConfig& defaultRenderConfig = rendererContext.rendererConfigs["default"];
 		//defaultRenderConfig.zShaderProgram = rendererContext.findProgram("pb_monolithic", "DefaultZProgram");
@@ -115,6 +119,15 @@ namespace SSPHH
 		LoadRenderConfigs();
 		stopwatch.Stop();
 		HFLOGINFO("reload took %4.2f milliseconds", stopwatch.GetMillisecondsElapsed());
-		Interface.lastRenderConfigLoadTime = stopwatch.GetMillisecondsElapsed();
+		Interface->lastRenderConfigLoadTime = stopwatch.GetMillisecondsElapsed();
+	}
+
+
+	void SSPHH_Application::LoadShaders() {
+		for (auto& [_, p] : rendererContext->programs) {
+			p->setloaded(false);
+			p->setusable(false);
+		}
+		rendererContext->loadShaders();
 	}
 } // namespace SSPHH

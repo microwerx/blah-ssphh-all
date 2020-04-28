@@ -36,7 +36,7 @@ sampler GL_TEXTURE_MAG_FILTER GL_LINEAR
 
 texture2D test2d
 texture2D sampler default2dSampler
-texture2D uniform MapKd
+texture2D uniform MapTestKd
 texture2D map "test_texture_2d.png"
 # texture2D map stpeters_probe.pfm
 
@@ -68,13 +68,15 @@ texture2D alwaysLoad
 
 textureCube enviroSkyCube
 # textureCube map test_corona_cube.exr
-# textureCube map galileo_cross.exr
-textureCube map mwpan2_cubemap.exr
+textureCube map galileo_cross.exr
+# textureCube map mwpan2_cubemap.exr
 textureCube uniform MapEnviroCube
 textureCube sampler defaultCubeSampler
 textureCube alwaysLoad
 
-# ==== Programs ====
+#/////////////////////////////////////////////////////////////////////
+# PROGRAMS ///////////////////////////////////////////////////////////
+#/////////////////////////////////////////////////////////////////////
 
 # program zonly_program
 # vertshader zonly.vert
@@ -103,11 +105,13 @@ vertattrib 0 aPosition
 vertattrib 1 aNormal
 vertattrib 2 aTexCoord
 
-# program UnwrappedCubeMap
-# vertshader glut_unwrapped_cubemap.vert
-# fragshader glut_unwrapped_cubemap.frag
-# vertattrib 0 aPosition
-# vertattrib 1 aTexCoord
+
+program webgl_unwrapped_cubemap_program
+vertshader webgl_unwrapped_cubemap.vert
+fragshader webgl_unwrapped_cubemap.frag
+vertattrib 0 aPosition
+vertattrib 1 aTexCoord
+
 
 # program cube_shadow
 # vertshader cube_shadow_gl330.vert
@@ -115,11 +119,21 @@ vertattrib 2 aTexCoord
 # fragshader cube_shadow_gl330.frag
 # vertattrib 0 aPosition
 
+
+program rect_shadow_program
+vertshader rect_shadow.vert
+fragshader rect_shadow.frag
+
+
 program postprocess_program
 vertshader postprocess.vert
 fragshader postprocess.frag
 
+
+#/////////////////////////////////////////////////////////////////////
 # ==== Framebuffers ====
+#/////////////////////////////////////////////////////////////////////
+
 
 # fbo sunShadow
 # fbo dimensions @DEFAULTWIDTH @DEFAULTHEIGHT
@@ -135,19 +149,25 @@ fragshader postprocess.frag
 # and then draw the scene on top of it followed by any visualization graphics.
 # This is used as input to the post processing shader for gamma adjustment. The
 # ImGui is drawn last on the screen.
-fbo linear_fbo
-fbo dimensions @DEFAULTWIDTH @DEFAULTHEIGHT
-fbo attach GL_TEXTURE_2D GL_DEPTH_ATTACHMENT  GL_DEPTH_COMPONENT16  MapDepthBuffer
-fbo attach GL_TEXTURE_2D GL_COLOR_ATTACHMENT0 GL_RGBA16F            MapColorBuffer
-fbo autoresize
 
+# fbo linear_fbo
+# fbo dimensions @DEFAULTWIDTH @DEFAULTHEIGHT
+# fbo attach GL_TEXTURE_2D GL_DEPTH_ATTACHMENT  GL_DEPTH_COMPONENT16  MapDepthBuffer
+# fbo attach GL_TEXTURE_2D GL_COLOR_ATTACHMENT0 GL_RGBA16F            MapColorBuffer
+# fbo autoresize
+
+
+#/////////////////////////////////////////////////////////////////////
 # ==== Render Configurations ====
+#/////////////////////////////////////////////////////////////////////
+
 
 # renderconfig sunShadow
 # renderconfig writefbo sunShadow
 # renderconfig program zonly
 # renderconfig camera sunInverseTransform
 # renderconfig projection orthoSquare
+
 
 # renderconfig moonShadow
 # renderconfig writefbo moonShadow
@@ -181,6 +201,7 @@ renderconfig depthtest GL_LEQUAL
 # renderconfig camera default
 renderconfig cleardepth
 renderconfig texture2D test2d MapKd
+renderconfig texture2D test2d MapTest2D
 renderconfig draw scene
 
 renderconfig viz_rc
@@ -197,6 +218,16 @@ renderconfig draw viz
 # renderconfig viewport @SCREENWIDTH @SCREENHEIGHT
 # renderconfig camera default
 
+
+# Note: Renders the texture enviroSkyCube
+renderconfig webgl_unwrapped_cubemap_rc
+renderconfig program webgl_unwrapped_cubemap_program
+renderconfig textureCube enviroSkyCube uCubeTexture
+renderconfig viewport 0 0 1024 768
+renderconfig clearcolor 0.1 0.1 0.1 1.0
+renderconfig draw overlay
+
+
 renderconfig postprocess_rc
 renderconfig program postprocess_program
 renderconfig readfbo linear_fbo
@@ -206,20 +237,38 @@ renderconfig texture2D coronaGroundTruth MapBlendReference
 renderconfig draw post
 renderconfig srgb
 
+
+renderconfig rect_shadow_rc
+renderconfig program rect_shadow_program
+renderconfig zonly
+renderconfig viewport 0 0 1024 1024
+
+
+#/////////////////////////////////////////////////////////////////////
 # ==== UniformLists ====
+#/////////////////////////////////////////////////////////////////////
+
 
 uniformlist defaultCamera
 uniformMatrix4f cameraMatrix @CAMERAMATRIX
 uniformMatrix4f shadowMatrix @SHADOWMATRIX
 uniformMatrix4f sunMatrix @SUNMATRIX
 
+
+#/////////////////////////////////////////////////////////////////////
 # ==== Renderers ====
+#/////////////////////////////////////////////////////////////////////
 
 # renderer gles30Shadow
 # renderer renderconfig zonly
 
 # renderer gles30CubeMap
 # renderer renderconfig 
+
+
+renderer rect_shadow_renderer
+renderer renderconfig rect_shadow_rc
+
 
 renderer skybox
 renderer renderconfig skybox_rc
@@ -234,12 +283,17 @@ renderer renderconfig pbr_rc
 renderer viz
 renderer renderconfig viz_rc
 
+renderer webgl_unwrapped_cubemap
+renderer renderconfig webgl_unwrapped_cubemap
+
 # renderer sphl
 # renderer renderconfig sphl_rc
 
-renderer postprocess
-renderer renderconfig postprocess_rc
+# renderer postprocess
+# renderer renderconfig postprocess_rc
 
+#/////////////////////////////////////////////////////////////////////
 # ==== Render Commands ====
+#/////////////////////////////////////////////////////////////////////
 
-debug clearscreen
+# debug clearscreen

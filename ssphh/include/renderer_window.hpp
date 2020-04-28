@@ -1,9 +1,8 @@
 #ifndef SSPHHAPP_RENDERER_WINDOW_HPP
 #define SSPHHAPP_RENDERER_WINDOW_HPP
 
+#include <fluxions_renderer_context.hpp>
 #include <viperfish_window.hpp>
-
-class Fluxions::RendererContext;
 
 class RendererWindow : public Vf::Window {
 public:
@@ -12,9 +11,10 @@ public:
 
 	void OnUpdate(double timeStamp) override;
 	void OnRenderDearImGui() override;
+	void OnKill() override { rendererContext.reset(); }
 
 private:
-	Fluxions::RendererContext* context{ nullptr };
+	Fluxions::RendererContextPtr rendererContext;
 	float lastShadersLoadTime{ 0.0f };
 	float lastTextureLoadTime{ 0.0f };
 	float lastConfigsLoadTime{ 0.0f };

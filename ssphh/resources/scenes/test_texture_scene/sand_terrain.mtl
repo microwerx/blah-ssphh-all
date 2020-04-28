@@ -14,4 +14,4 @@ newmtl SandMaterial
 	Ke 0.0000 0.0000 0.0000
 	map_Ka terrain_diffuse.png
 	map_Kd terrain_diffuse.png
-	map_bump terrain_normal_Normal_Bump.png
+	map_bump terrain_normal.png

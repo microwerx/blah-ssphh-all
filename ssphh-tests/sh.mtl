@@ -1,0 +1,21 @@
+
+
+newmtl shred
+    Kd 1 0 0
+    Ns 10
+
+newmtl shgreen
+    Kd 0 1 0
+    Ns 10
+
+newmtl shblue
+    Kd 0 0 1
+    Ns 10
+
+newmtl shluminance
+    Kd 1 1 0
+    Ns 10
+
+newmtl shintensity
+    Kd 0 1 1
+    Ns 10

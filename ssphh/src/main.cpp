@@ -6,12 +6,12 @@
 #ifdef _WIN32
 #define _STDCALL_SUPPORTED
 
-#pragma comment(lib, "xinput.lib")		// XInput Library
-#pragma comment(lib, "glu32.lib")		// OpenGL Utility library
-#pragma comment(lib, "opengl32.lib")	// Microsoft OpenGL library
-#pragma comment(lib, "gdi32.lib")		// Windows GDI library
-#pragma comment(lib, "winmm.lib")		// Windows MultiMedia library
-#pragma comment(lib, "user32.lib")		// Windows User library
+#pragma comment(lib, "xinput.lib")	 // XInput Library
+#pragma comment(lib, "glu32.lib")	 // OpenGL Utility library
+#pragma comment(lib, "opengl32.lib") // Microsoft OpenGL library
+#pragma comment(lib, "gdi32.lib")	 // Windows GDI library
+#pragma comment(lib, "winmm.lib")	 // Windows MultiMedia library
+#pragma comment(lib, "user32.lib")	 // Windows User library
 
 #pragma comment(lib, "fluxions.lib")
 
@@ -67,29 +67,24 @@
 #include <GLFW_template.hpp>
 #include <GLUT_template.hpp>
 
-#ifndef FLUXIONS_NO_SDL
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#endif
-
 #include <fluxions.hpp>
-#include <viperfish.hpp>
-#include <viperfish_root_window.hpp>
-#include <viperfish_loading_window.hpp>
-#include <viperfish_stats_window.hpp>
-#include <viperfish_animation_window.hpp>
-#include <viperfish_animpath_window.hpp>
-#include <unicornfish.hpp>
-#include <ssphhapp.hpp>
 #include <help_window.hpp>
-#include <scene_graph_window.hpp>
-#include <ssphh_window.hpp>
 #include <renderer_config_window.hpp>
 #include <renderer_window.hpp>
-#include <tool_window.hpp>
-#include <unicornfish_window.hpp>
 #include <scene_editor_window.hpp>
+#include <scene_graph_window.hpp>
 #include <ssphh_menu.hpp>
+#include <ssphh_window.hpp>
+#include <ssphhapp.hpp>
+#include <tool_window.hpp>
+#include <unicornfish.hpp>
+#include <unicornfish_window.hpp>
+#include <viperfish.hpp>
+#include <viperfish_animation_window.hpp>
+#include <viperfish_animpath_window.hpp>
+#include <viperfish_loading_window.hpp>
+#include <viperfish_root_window.hpp>
+#include <viperfish_stats_window.hpp>
 
 SSPHHPtr ssphh_widget_ptr;
 Vf::AnimPathWindowPtr animpath_window_ptr;
@@ -189,6 +184,8 @@ int MainApp::run(int argc, char** argv) {
 
 	Uf::Kill();
 
+	//std::this_thread::sleep_for(std::chrono::seconds(10));
+
 	return 0;
 }
 
@@ -213,12 +210,11 @@ void MainApp::init() {
 		Vf::StatsWindowPtr statsWindow = std::make_shared<Vf::StatsWindow>("Statistics");
 		vf_app_ptr->push_back(statsWindow);
 		Vf::AnimationWindowPtr animWindow = Vf::MakeSharedChild<Vf::AnimationWindow>(vf_app_ptr, "Animation");
-	}
-	else {
+	} else {
 		vf_app_ptr = Vf::MakeShared<Vf::RootWindow>("root");
 		imgui_widget_ptr = Vf::MakeSharedDecorator<Vf::DearImGuiWidget>(vf_app_ptr, "DearImGui");
 		ssphh_widget_ptr = Vf::MakeSharedChild<SSPHH::SSPHH_Application>(vf_app_ptr, "ssphh");
-		//loading_window_ptr = Vf::MakeSharedChild<Vf::LoadingWindow>(vf_app_ptr, "Loading");
+		// loading_window_ptr = Vf::MakeSharedChild<Vf::LoadingWindow>(vf_app_ptr, "Loading");
 
 		help_window_ptr = Vf::MakeSharedChild<HelpWindow>(vf_app_ptr, "Help");
 		stats_window_ptr = Vf::MakeSharedChild<Vf::StatsWindow>(vf_app_ptr, "Statistics");
@@ -256,7 +252,6 @@ void MainApp::kill() {
 	ssphh_widget_ptr->hotkeyWindows.clear();
 
 	vf_app_ptr->Kill();
-	Fluxions::Kill();
 
 	loading_window_ptr.reset();
 	help_window_ptr.reset();
@@ -275,4 +270,6 @@ void MainApp::kill() {
 	imgui_widget_ptr.reset();
 	ssphh_widget_ptr.reset();
 	vf_app_ptr.reset();
+
+	Fluxions::Kill();
 }

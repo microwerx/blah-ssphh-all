@@ -13,14 +13,14 @@ public:
 	std::string toJSON() noexcept;
 	//Fluxions::CoronaJob &toCoronaJob() noexcept;
 	bool parseJSON(const std::string &str) noexcept;
-	void resizeCoefs(int maxDegree) noexcept;
+	void resizeCoefs(int maxDegree_) noexcept;
 
 	std::string json;
 	Df::JSONPtr jsonObject;
 
 	int numChannels;
-	int maxDegree;
-	Fluxions::Sph4f sphl;
+	int maxDegree_;
+	Fluxions::SHLightProbe sphl;
 	std::vector<std::vector<float>> coefs;
 	Fluxions::Vector3f meta_position;
 	std::string meta_scene;

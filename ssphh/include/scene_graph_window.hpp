@@ -10,10 +10,10 @@ public:
 
 	void OnUpdate(double timeStamp) override;
 	void OnRenderDearImGui() override;
-
+	void OnKill() override { ssg.reset(); }
 
 private:
-	Fluxions::SimpleSceneGraph* ssg{ nullptr };
+	Fluxions::SimpleSceneGraphPtr ssg;
 };
 
 using SceneGraphWindowPtr = std::shared_ptr<SceneGraphWindow>;

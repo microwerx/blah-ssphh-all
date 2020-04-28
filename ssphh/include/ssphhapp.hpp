@@ -1,19 +1,19 @@
 #ifndef SSPHH_HPP
 #define SSPHH_HPP
 
-#include <fluxions.hpp>
-#include <damselfish_python.hpp>
-#include <viperfish_mouse.hpp>
-#include <viperfish_widget.hpp>
-#include <fluxions_sphl.hpp>
-#include <imgui.h>
-#include <ssphh_ppmcompare.hpp>
-#include <ssphh_unicornfish.hpp>
-#include <fluxions_ssg_ssphh_renderer_plugin.hpp>
-#include <fluxions_ssg_ssphh.hpp>
+#include <AuroraVisualization.hpp>
 #include <PbskyViewController.hpp>
 #include <camera_animation.hpp>
-#include <AuroraVisualization.hpp>
+#include <damselfish_python.hpp>
+#include <fluxions.hpp>
+#include <fluxions_sphl.hpp>
+#include <fluxions_ssg_ssphh.hpp>
+#include <fluxions_ssg_ssphh_renderer_plugin.hpp>
+#include <ssphh_ppmcompare.hpp>
+#include <ssphh_unicornfish.hpp>
+#include <viperfish_dear_imgui.hpp>
+#include <viperfish_mouse.hpp>
+#include <viperfish_widget.hpp>
 
 using namespace Vf;
 using namespace Fluxions;
@@ -32,10 +32,10 @@ namespace SSPHH {
 	extern const std::string default_pbsky_cylmap_exr;
 	extern const std::string default_pbsky_cubemap_ppm;
 	extern const std::string default_pbsky_cubemap_exr;
-}
+} // namespace SSPHH
 
-//extern RendererWindowPtr renderer_window_ptr;
-//extern RendererConfigWindowPtr renderer_config_window_ptr;
+// extern RendererWindowPtr renderer_window_ptr;
+// extern RendererConfigWindowPtr renderer_config_window_ptr;
 
 namespace SSPHH {
 	class SSPHH_Application : public Widget {
@@ -43,23 +43,23 @@ namespace SSPHH {
 		// PHYSICALLY BASED SKY METHODS/MEMBERS /////////////////////////////
 
 		// Physically Based Code
-		//Color4f groundRadiance;
-		//Color4f sunDiskRadiance;
+		// Color4f groundRadiance;
+		// Color4f sunDiskRadiance;
 		bool pbskyReuseCorona{ false };
 		double pbskyAge = 0.0;
 		double pbskyMaxAge = 5.0;
-		//double pbskyLatitude = 38.9;
-		//double pbskyLongitude = -104.8;
-		//bool recomputeSkyCube;
+		// double pbskyLatitude = 38.9;
+		// double pbskyLongitude = -104.8;
+		// bool recomputeSkyCube;
 		bool isSkyComputing;
 		bool isSkyComputed;
 		time_t pbsky_localtime;
 		double pbsky_timeOffsetInSeconds = 0.0;
 		BaseDirToLight* sun{ nullptr };
 		BaseDirToLight* moon{ nullptr };
-		SimpleGeometryGroup* moonGG{ nullptr };
-		//void pbskyComputeCubemap();
-		//RendererTextureObject PBSkyCubeMap;
+		SimpleGeometryGroupPtr moonGG;
+		// void pbskyComputeCubemap();
+		// RendererTextureObject PBSkyCubeMap;
 		SimpleRenderer_GLushort Skybox;
 		void Sky_RegenHosekWilkieTextures();
 		void Sky_SaveHosekWilkieTextures();
@@ -73,14 +73,14 @@ namespace SSPHH {
 		///////////////////////////////////////////////////////////////
 
 	public:
-		//GLfloat aspect = 1.0f;
-		//GLfloat fovy = 45.0f;
+		// GLfloat aspect = 1.0f;
+		// GLfloat fovy = 45.0f;
 		//// GLfloat nearVal = 0.001f;
 		//// GLfloat farVal = 1000.0f;
-		//GLfloat screenX = 0.0f;
-		//GLfloat screenY = 0.0f;
-		//GLfloat screenWidth = 0.0f;
-		//GLfloat screenHeight = 0.0f;
+		// GLfloat screenX = 0.0f;
+		// GLfloat screenY = 0.0f;
+		// GLfloat screenWidth = 0.0f;
+		// GLfloat screenHeight = 0.0f;
 
 		// SCENE GRAPH METHODS
 
@@ -88,17 +88,18 @@ namespace SSPHH {
 		float rotY = 0.0;
 		float rotZ = 0.0;
 
-		//std::string sceneFilename = "resources/scenes/test_texture_scene/test_outdoor_scene.scn";
-		//std::string sceneFilename = "resources/scenes/test_texture_scene/test_mitsuba_scene.scn";
-		//std::string sceneFilename = "resources/scenes/test_texture_scene/test_indoor_scene.scn";
+		// std::string sceneFilename = "resources/scenes/test_texture_scene/test_outdoor_scene.scn";
+		// std::string sceneFilename = "resources/scenes/test_texture_scene/test_mitsuba_scene.scn";
+		// std::string sceneFilename = "resources/scenes/test_texture_scene/test_indoor_scene.scn";
 		std::string sceneFilename = "resources/scenes/test_texture_scene/test_gallery_scene.scn";
-		//std::string sceneFilename = "resources/scenes/test_texture_scene/simple_inside_scene.scn";
-		//std::string sceneFilename = "resources/scenes/rungholt_scene/rungholt.scn";
+		// std::string sceneFilename = "resources/scenes/test_texture_scene/simple_inside_scene.scn";
+		// std::string sceneFilename = "resources/scenes/rungholt_scene/rungholt.scn";
 
-		//Uf::CoronaDatabase sceneDB;
-		Fluxions::SimpleSceneGraph ssg;
+		// Uf::CoronaDatabase sceneDB;
+		IBaseObjectPtr root;
+		Fluxions::SimpleSceneGraphPtr ssg;
 		Fluxions::SimpleSSPHH ssphh;
-		Fluxions::SSG_SSPHHRendererPlugin* ssgUserData = nullptr;
+		Fluxions::SSG_SSPHHRendererPluginPtr ssgUserData;
 		Uf::CoronaSceneFile coronaScene;
 		std::vector<Uf::CoronaJob> coronaJobs;
 
@@ -133,10 +134,12 @@ namespace SSPHH {
 			bool enableOrbit = false;
 			bool enableSunCycle = false;
 			bool usePBSKY = true;
-			bool drawSkyBox = true;
-			bool drawPBR = true;
-			bool drawVIZ = true;
-			bool drawPOST = true;
+			bool drawRectShadows = false;
+			bool drawCubeShadows = false;
+			bool drawSkyBox = false;
+			bool drawPBR = false;
+			bool drawVIZ = false;
+			bool drawPOST = false;
 			bool saveScreenshot = false;
 			bool captureShadows = false;
 
@@ -230,19 +233,14 @@ namespace SSPHH {
 				std::map<std::string, bool> mtlsCollapsed;
 				std::map<std::string, SimpleMaterial*> mtls;
 				std::map<std::string, MtlValuePtrs> mtls_ptrs;
-				//vector<pair<bool, vector<int, bool>>> mtlsCollapsed;
+				// vector<pair<bool, vector<int, bool>>> mtlsCollapsed;
 			} mtls;
 
 			struct SSPHHWINDOW {
 				bool enabled = false;
 				static const int MaxSPHLs = 16;
 
-				enum class SSPHH_Status {
-					SendUfMessage = 0,
-					RecvUfMessage = 1,
-					UploadToGpu = 2,
-					Finished
-				};
+				enum class SSPHH_Status { SendUfMessage = 0, RecvUfMessage = 1, UploadToGpu = 2, Finished };
 
 				int numSphls = 0;
 				std::map<int, SSPHH_Status> ssphhStatus;
@@ -254,7 +252,7 @@ namespace SSPHH {
 				std::vector<double> viz_times;
 				bool HierarchiesIncludeSelf = true;
 				bool HierarchiesIncludeNeighbors = true;
-				float HierarchiesMix;
+				float HierarchiesMix{ 0 };
 				int HierarchiesMaxSphls = MaxSphlLights;
 				bool HierarchiesGeneratePPMs = false;
 				int MaxDegrees = MaxSphlDegree;
@@ -271,11 +269,11 @@ namespace SSPHH {
 				bool enableREF = true;
 				bool enableREFCubeMap = false;
 
-				std::string lastAPPImagePath;			// The previous screenshot
-				std::string lastREFImagePath;			// The previous ground truth
-				std::string lastREFCubeMapImagePath;	// The previous ground truth cube
-				std::string lastGENRenderImagePath;		// The previous gen light probe
-				std::string lastVIZRenderImagePath;		// The previous viz light probe
+				std::string lastAPPImagePath;		 // The previous screenshot
+				std::string lastREFImagePath;		 // The previous ground truth
+				std::string lastREFCubeMapImagePath; // The previous ground truth cube
+				std::string lastGENRenderImagePath;	 // The previous gen light probe
+				std::string lastVIZRenderImagePath;	 // The previous viz light probe
 
 				int cacheFilesRemoved{ 0 };
 				double lastAPPTime = 0.0;
@@ -303,7 +301,7 @@ namespace SSPHH {
 				int recv_queue_item = 0;
 
 				bool uf_isinit = false; // one time flag to tell service if it has started or not
-				bool uf_stop = false;   // one time flag to tell service to stop
+				bool uf_stop = false;	// one time flag to tell service to stop
 				UfType uf_type{ UfType::None };
 				std::string endpoint{ "" };
 				std::string service{ "" };
@@ -344,7 +342,7 @@ namespace SSPHH {
 			bool renderCoronaSCN = false;
 			bool renderCoronaCubeMapSCN = false;
 
-			bool sphl_checkboxes[32][4] = { {false} };
+			bool sphl_checkboxes[32][4] = { { false } };
 
 			double lastRenderConfigLoadTime = 0.0;
 			double lastScenegraphLoadTime = 0.0;
@@ -417,6 +415,7 @@ namespace SSPHH {
 
 	private:
 		PbskyViewController* vcPbsky = nullptr;
+
 	public:
 		// TESTS
 
@@ -436,10 +435,27 @@ namespace SSPHH {
 		std::string frameName() const;
 		void SaveScreenshot();
 
-		static std::string GetPathTracerName(const std::string& sceneName, const std::string& mode, bool ks, int mrd, int pl);
+		static std::string GetPathTracerName(
+			const std::string& sceneName,
+			const std::string& mode,
+			bool ks,
+			int mrd,
+			int pl);
 		static std::string GetSphlRenderName(const std::string& sceneName, const std::string& mode, int md);
-		static std::string GetPathTracerSphlRenderName(const std::string& sceneName, const std::string& mode, bool ks, int mrd, int pl, int md);
-		static std::string GetStatsName(const std::string& sceneName, const std::string& mode, bool ks, int mrd, int pl, int md);
+		static std::string GetPathTracerSphlRenderName(
+			const std::string& sceneName,
+			const std::string& mode,
+			bool ks,
+			int mrd,
+			int pl,
+			int md);
+		static std::string GetStatsName(
+			const std::string& sceneName,
+			const std::string& mode,
+			bool ks,
+			int mrd,
+			int pl,
+			int md);
 
 		void DirtySPHLs();
 		void UpdateSPHLs();
@@ -450,43 +466,41 @@ namespace SSPHH {
 		int renderMode = 2;
 		void SetupRenderGLES30();
 
-		//RendererConfig defaultRenderConfig;
-		//RendererConfig gbufferRenderConfig;
-		//RendererConfig cubeShadowRenderConfig;
-		//RendererConfig cubeEnvMapRenderConfig;
-		//RendererConfig rectShadowRenderConfig;
-		//RendererConfig rectEnvMapRenderConfig;
-		//RendererConfig uberShaderRenderConfig;
-		//RendererConfig foursplitULRenderConfig;
-		//RendererConfig foursplitURRenderConfig;
-		//RendererConfig foursplitLLRenderConfig;
-		//RendererConfig foursplitLRRenderConfig;
+		// RendererConfig defaultRenderConfig;
+		// RendererConfig gbufferRenderConfig;
+		// RendererConfig cubeShadowRenderConfig;
+		// RendererConfig cubeEnvMapRenderConfig;
+		// RendererConfig rectShadowRenderConfig;
+		// RendererConfig rectEnvMapRenderConfig;
+		// RendererConfig uberShaderRenderConfig;
+		// RendererConfig foursplitULRenderConfig;
+		// RendererConfig foursplitURRenderConfig;
+		// RendererConfig foursplitLLRenderConfig;
+		// RendererConfig foursplitLRRenderConfig;
 
-		//RendererSampler defaultCubeTextureSampler;
-		//RendererSampler default2DTextureSampler;
-		//RendererSampler defaultShadowCubeTextureSampler;
-		//RendererSampler defaultShadow2DTextureSampler;
+		// RendererSampler defaultCubeTextureSampler;
+		// RendererSampler default2DTextureSampler;
+		// RendererSampler defaultShadowCubeTextureSampler;
+		// RendererSampler defaultShadow2DTextureSampler;
 
-		//SimpleTexture enviroCubeTexture1;
-		//SimpleTexture enviroCubeTexture2;
-		//RendererTextureObject enviroSkyBoxTexture;
+		// SimpleTexture enviroCubeTexture1;
+		// SimpleTexture enviroCubeTexture2;
+		// RendererTextureObject enviroSkyBoxTexture;
 
-		//TMatrix4<GLfloat> screenPerspMatrix;
+		// TMatrix4<GLfloat> screenPerspMatrix;
 		TMatrix4<GLfloat> screenOrthoMatrix;
 
-		RendererContext rendererContext;
-		//Fluxions::SimpleRenderer_GLuint renderer;
-		//Fluxions::RendererGLES30 sph_renderer{ "sph_renderer" };
-		//Fluxions::RendererGLES30 gles30{ "gles30" };
-		//Fluxions::RendererGLES30 gles30CubeMap{ "gles30CubeMap" };
+		RendererContextPtr rendererContext;
 
 		void RenderFixedFunctionGL();
 		void RenderGLES20();
 		void RenderGLES30();
-		void RenderGLES30Scene();
+		// void RenderGLES30Scene();
 		void RenderGLES30Shadows();
 		void RenderGLES30SPHLs();
 		void RenderGL11Hierarchies();
+		void RenderGLES30_RectShadows();
+		void RenderGLES30_CubeShadows();
 		void RenderGLES30_SkyBox();
 		void RenderGLES30_SceneGraph();
 		void RenderGLES30_VIZ();
@@ -510,17 +524,18 @@ namespace SSPHH {
 
 		// SPHL METHODS
 		SimpleGeometryMesh ssphh_hierarchy_mesh;
+		Matrix4f I;
 		FxModel geosphere;
-		// Sphl sphl;
+		// SphlViz sphl;
 		static constexpr int MaxShLights = 16;
-		std::map<size_t, Sphl> sphls;
+		std::map<size_t, SphlViz> sphls;
 		bool coefs_init = false;
 		// End SPHL code
 
 	public:
 		HUDInfo my_hud_info;
 		std::map<std::string, Vf::WidgetPtr> hotkeyWindows;
-		//Df::PythonInterpreter python;
+		// Df::PythonInterpreter python;
 
 		std::vector<std::string> cmd_args; // to pull in the argc, argv from main()
 
@@ -528,9 +543,13 @@ namespace SSPHH {
 		using UniquePtr = std::unique_ptr<SSPHH_Application>;
 
 		template <class... _Types>
-		static SharedPtr MakeShared(_Types&&... _Args) { return SharedPtr(new SSPHH_Application(std::forward<_Types>(_Args)...)); }
+		static SharedPtr MakeShared(_Types&&... _Args) {
+			return SharedPtr(new SSPHH_Application(std::forward<_Types>(_Args)...));
+		}
 		template <class... _Types>
-		static UniquePtr MakeUnique(_Types&&... _Args) { return UniquePtr(new SSPHH_Application(std::forward<_Types>(_Args)...)); }
+		static UniquePtr MakeUnique(_Types&&... _Args) {
+			return UniquePtr(new SSPHH_Application(std::forward<_Types>(_Args)...));
+		}
 
 		SSPHH_Application();
 		SSPHH_Application(const std::string& name);
@@ -543,7 +562,7 @@ namespace SSPHH {
 		virtual void DoInterfaceUpdate(double deltaTime);
 		const Matrix4f& GetCameraMatrix() const;
 
-		const std::string& GetSceneName() const { return Interface.sceneName; }
+		const std::string& GetSceneName() const { return Interface->sceneName; }
 
 		CameraAnimation cameraAnimation;
 		float cameraAnimationSpeed{ 1.0f };
@@ -556,21 +575,21 @@ namespace SSPHH {
 		void PathAnim_Toggle();
 		void PathAnim_Update();
 
-		InterfaceInfo Interface;
+		std::unique_ptr<InterfaceInfo> Interface = std::make_unique<InterfaceInfo>();
 		int counter = 0;
 		double framesPerSecond = 0.0;
 
-		//void OnKeyDown(int key);
-		//void OnKeyUp(int key);
-		//void OnSpecialKeyDown(int key);
-		//void OnSpecialKeyUp(int key);
+		// void OnKeyDown(int key);
+		// void OnKeyUp(int key);
+		// void OnSpecialKeyDown(int key);
+		// void OnSpecialKeyUp(int key);
 
 		void OnKeyDown(const std::string& key, int modifiers) override;
 		void OnKeyUp(const std::string& key, int modifiers) override;
 
-		//void OnMouseMove(int X, int y, int dx, int dy);
-		//void OnMouseButtonDown(int X, int y, int button);
-		//void OnMouseButtonUp(int X, int y, int button);
+		// void OnMouseMove(int X, int y, int dx, int dy);
+		// void OnMouseButtonDown(int X, int y, int button);
+		// void OnMouseButtonUp(int X, int y, int button);
 
 		void OnMouseMove(int x, int y) override;
 		void OnMouseButtonDown(int button) override;
@@ -592,6 +611,7 @@ namespace SSPHH {
 		void Sun_SetLights();
 		void InitRenderConfigs();
 		void LoadRenderConfigs();
+		void LoadShaders();
 
 		void RunJob(Uf::CoronaJob& job);
 

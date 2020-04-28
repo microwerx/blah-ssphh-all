@@ -39,6 +39,9 @@ layout(std140) uniform DirToLightBlock {
 	DirToLight DirtoLights[MAX_DIRTOLIGHT_COUNT];
 };
 
+uniform sampler2D DirToLightColorMaps[MAX_DIRTOLIGHT_COUNT];
+uniform sampler2D DirToLightDepthMaps[MAX_DIRTOLIGHT_COUNT];
+
 //////////////////////////////////////////////////////////////////////
 // POINT LIGHT UNIFORM BLOCK /////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
@@ -53,6 +56,9 @@ layout(std140) uniform PointLightBlock {
 	PointLight pointLights[MAX_POINTLIGHT_COUNT];
 };
 
+uniform samplerCube PointLightColorMaps[MAX_POINTLIGHT_COUNT];
+uniform samplerCube PointLightDepthMaps[MAX_POINTLIGHT_COUNT];
+
 //////////////////////////////////////////////////////////////////////
 // SAMPLER UNIFORMS //////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
@@ -60,6 +66,8 @@ layout(std140) uniform PointLightBlock {
 uniform sampler2D MapKd;
 uniform sampler2D MapKs;
 uniform int MtlID;
+
+uniform sampler2D MapTest2D;
 
 //////////////////////////////////////////////////////////////////////
 // VERTEX SHADER INPUTS //////////////////////////////////////////////
@@ -70,6 +78,7 @@ in vec3 vNormal;
 in vec2 vTexCoord;
 in vec3 vCameraPosition;
 in vec3 vColor;
+in vec4 vShadowCoords[MAX_DIRTOLIGHT_COUNT];
 
 //////////////////////////////////////////////////////////////////////
 // FRAGMENT SHADER OUTPUTS ///////////////////////////////////////////
@@ -100,27 +109,68 @@ vec3 calcPBR(vec3 N, vec3 L, vec3 V) {
 	return vec3(0.1 + 0.9 * max(0.0, NdotL));
 }
 
+
+//////////////////////////////////////////////////////////////////////
+// DIRTO SHADOW MAPS /////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+
+
+// calcShadow returns 0 if completely shadowed, 1 if not shadowed
+float calcShadow(int mapId) {
+	float texel = 1.0;
+	switch(mapId) {
+	case 0:
+		texel = textureProj(DirToLightDepthMaps[0], vShadowCoords[0].xyw).r;
+		break;
+	case 1:
+		texel = textureProj(DirToLightDepthMaps[1], vShadowCoords[1].xyw).r;
+		break;
+	case 2:
+		texel = textureProj(DirToLightDepthMaps[2], vShadowCoords[2].xyw).r;
+		break;
+	}
+	return texel;
+}
+
+
 //////////////////////////////////////////////////////////////////////
 // MAIN FUNCTION /////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
 void main() {
+	int light = 0;
+	float shadow = calcShadow(0);
+	vec4 texel = textureProj(MapTest2D, vShadowCoords[0].xyw);
+	if (shadow == 1.0)
+		texel = vec4(1.0, 1.0, 0.0, 1.0);
+	if (shadow == 0.0)
+		texel = vec4(0.0, 1.0, 1.0, 1.0);
+	oColor = vec4(texel.rgb, 1.0);
+	return;
+
 	vec3 color;
 	if (length(vColor) > 0.0) {
 		oColor = vec4(vColor, 1.0);
 		return;
 	}
 
-	vec3 L = normalize(DirtoLights[0].dirTo.xyz);
 	vec3 N = normalize(vNormal);
 	vec3 V = normalize(vPosition - vCameraPosition);
 
-	vec3 E0 = DirtoLights[0].E0.rgb;
-	vec3 lighting = E0 * max(0.0, L.y) * calcPBR(N, L, V);
-
-	L = normalize(DirtoLights[1].dirTo.xyz);
-	E0 = DirtoLights[1].E0.rgb;
-	lighting += E0 * max(0.0, L.y) * calcPBR(N, L, V);
+	vec3 lighting = vec3(0.0);
+	for (int i = 0; i < MAX_DIRTOLIGHT_COUNT; i++) {
+		vec3 L = normalize(DirtoLights[i].dirTo.xyz);
+		if (L.y <= 0.0) continue;
+		float shadow = calcShadow(i);
+		vec4 texel = textureProj(MapTest2D, vShadowCoords[1].xyw);
+		if (shadow == 1.0)
+			texel = vec4(1.0, 1.0, 0.0, 1.0);
+		lighting += texel.rgb;
+		if (shadow == 0.0) discard;
+		//lighting += shadow;
+		vec3 E0 = DirtoLights[i].E0.rgb;
+		lighting += E0 * max(0.0, L.y) * calcPBR(N, L, V);
+	}
 
 	vec3 mtlkd = materials[MtlID].Kd.rgb;
 	float kdmix = materials[MtlID].Kd.a;

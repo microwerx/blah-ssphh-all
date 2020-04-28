@@ -1,8 +1,8 @@
 #ifndef TOOL_WINDOW_HPP
 #define TOOL_WINDOW_HPP
 
-#include <viperfish_window.hpp>
 #include <fluxions_ssg_scene_graph.hpp>
+#include <viperfish_window.hpp>
 
 class ToolWindow : public Vf::Window {
 public:
@@ -11,10 +11,11 @@ public:
 
 	void OnUpdate(double timeStamp) override;
 	void OnRenderDearImGui() override;
-
+	void OnKill() override { }
 
 private:
-	Fluxions::SimpleSceneGraph* ssg{ nullptr };
+	Fluxions::SimpleSceneGraphWeakPtr ssg_wptr;
+	Fluxions::RendererContextWeakPtr context_wptr;
 };
 
 using ToolWindowPtr = std::shared_ptr<ToolWindow>;
