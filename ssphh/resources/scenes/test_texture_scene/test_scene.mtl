@@ -128,6 +128,7 @@ ReflectFresnel 1.333
 ReflectGlossiness 0.5
 
 Kd 0.0 0.0 0.0
+Pm 1.0
 
 ### WRECKED TEAPOT ---------------------------------------------------
 
