@@ -407,6 +407,7 @@ namespace SSPHH {
 
 			Hf::StopWatch writeEXRClock;
 			exrimage.flipY();
+			exrimage.ReverseSRGB();
 			exrimage.saveEXR(exrfilename);
 			HFLOGINFO("saveEXR took %3.2f milliseconds", writeEXRClock.Stop_ms());
 
