@@ -69,7 +69,8 @@ texture2D alwaysLoad
 textureCube enviroSkyCube
 # textureCube map test_corona_cube.exr
 # textureCube map galileo_cross.exr
-textureCube map mwpan2_cubemap.exr
+# textureCube map mwpan2_cubemap.exr
+textureCube map "corona_output/ssphh_sky.exr"
 textureCube uniform MapEnviroCube
 textureCube sampler defaultCubeSampler
 textureCube alwaysLoad
@@ -155,7 +156,15 @@ fbo autoresize
 # renderconfig camera moonInverseTransform
 # renderconfig projection orthoSquare
 
-# this render config is for drawing the skybox
+
+#
+# Sky Shader
+#
+# Renders to `linear_fbo`
+# No depth test
+# 120 degree FOV
+# autoresizes to screen resolution
+
 renderconfig skybox_rc
 renderconfig program skybox_program
 renderconfig writefbo linear_fbo
@@ -168,6 +177,16 @@ renderconfig draw skybox
 # renderconfig pretransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 # renderconfig posttransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 # renderconfig camera default
+
+
+#
+# Physically Based Rendering Shader
+#
+# Renders to `linear_fbo`
+# clears depth buffer
+# LEQUAL depth test
+# 120 degree FOV
+# autoresizes to screen resolution
 
 renderconfig pbr_rc
 renderconfig program pbr_program
@@ -183,6 +202,14 @@ renderconfig cleardepth
 renderconfig texture2D test2d MapKd
 renderconfig draw scene
 
+#
+# Visualization Shader
+#
+# Renders to `linear_fbo`
+# LEQUAL depth test
+# Uses 120 degree FOV
+# autoresizes to screen resolution
+
 renderconfig viz_rc
 renderconfig program viz_program
 renderconfig writefbo linear_fbo
@@ -197,6 +224,14 @@ renderconfig draw viz
 # renderconfig viewport @SCREENWIDTH @SCREENHEIGHT
 # renderconfig camera default
 
+# 
+# POST Processing Filter
+#
+# Reads from `linear_fbo`
+# Writes to screen
+# autoresizes to screen resolution
+# reads from coronaGroundTruth texture for the reference image
+
 renderconfig postprocess_rc
 renderconfig program postprocess_program
 renderconfig readfbo linear_fbo
@@ -206,14 +241,18 @@ renderconfig texture2D coronaGroundTruth MapBlendReference
 renderconfig draw post
 renderconfig srgb
 
+
 # ==== UniformLists ====
+
 
 uniformlist defaultCamera
 uniformMatrix4f cameraMatrix @CAMERAMATRIX
 uniformMatrix4f shadowMatrix @SHADOWMATRIX
 uniformMatrix4f sunMatrix @SUNMATRIX
 
+
 # ==== Renderers ====
+
 
 # renderer gles30Shadow
 # renderer renderconfig zonly
