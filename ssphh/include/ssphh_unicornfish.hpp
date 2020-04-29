@@ -35,7 +35,7 @@ enum class UfType {
 //
 //	void Push(const string &msg);
 //	void Pop(string &msg);
-//	size_t Size() const;
+//	size_t size() const;
 //private:
 //	vector<string> messages;
 //	mutable mutex messagesMutex;
@@ -64,7 +64,7 @@ enum class UfType {
 //	messages.pop_back();
 //}
 //
-//size_t UfStringQueue::Size() const
+//size_t UfStringQueue::size() const
 //{
 //	lock_guard<mutex> guard(messagesMutex);
 //	return messages.size();
@@ -104,9 +104,9 @@ public:
 	std::string worker_endpoint = "tcp://127.0.0.1:9081";
 	std::string client_endpoint = "tcp://127.0.0.1:9081";
 
-	void Lock() { uf_mutex.lock(); }
-	bool TryLock() { return uf_mutex.try_lock(); }
-	void Unlock() { uf_mutex.unlock(); }
+	inline void Lock() { uf_mutex.lock(); }
+	inline bool TryLock() { return uf_mutex.try_lock(); }
+	inline void Unlock() { uf_mutex.unlock(); }
 
 	void LockRead() { Lock(); }
 	bool TryLockRead() { return TryLock(); }

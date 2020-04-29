@@ -8,15 +8,15 @@ namespace SSPHH
 {
 	void SSPHH_Application::Test()
 	{
-		if (Interface.tests.bTestSPHLs) {
+		if (Interface->tests.bTestSPHLs) {
 			TestSPHLs();
-			Interface.tests.bTestSPHLs = false;
+			Interface->tests.bTestSPHLs = false;
 		}
 	}
 
 	void SSPHH_Application::TestSPHLs()
 	{
-		int &test = Interface.tests.saveSphlOBJ;
+		int &test = Interface->tests.saveSphlOBJ;
 		FilePathInfo fpi("output");
 		if (fpi.notFound()) {
 			std::error_code ec;
@@ -29,17 +29,17 @@ namespace SSPHH
 		}
 		test = 0;
 		size_t count = 0;
-		for (auto &sphl : ssgUserData->ssphhLights) {
+		for (auto &sphl : ssgUserData->anisoLights) {
 			std::ostringstream ostr;
-			ostr << ssg.name() << "_sphl" << count;
-			if (!sphl.saveOBJ("output", ostr.str())) {
-				HFLOGWARN("sphl.saveOBJ() failed to save %s", ostr.str().c_str());
-				break;
-			}
+			ostr << ssg->name() << "_sphl" << count;
+			//if (!sphl->saveOBJ("output", ostr.str())) {
+			//	HFLOGWARN("sphl.saveOBJ() failed to save %s", ostr.str().c_str());
+			//	break;
+			//}
 			count++;
 		}
 
-		if (count != ssgUserData->ssphhLights.size()) {
+		if (count != ssgUserData->anisoLights.size()) {
 			HFLOGERROR("Did not save all the SPHLs as OBJ/MTL files");
 			test = -1;
 		}

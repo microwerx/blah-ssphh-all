@@ -41,11 +41,11 @@ namespace SSPHH {
 
 	PPMCompare::~PPMCompare() {}
 
-	void PPMCompare::Init(bool hasSpecular, int maxRayDepth, int passCount, int maxDegree) {
+	void PPMCompare::Init(bool hasSpecular, int maxRayDepth, int passCount, int maxDegree_) {
 		ks = hasSpecular;
 		mrd = maxRayDepth;
 		pl = passCount;
-		md = maxDegree;
+		md = maxDegree_;
 	}
 
 	void PPMCompare::SetConversion(ColorSpaceType im1type, ColorSpaceType im2type) {
@@ -180,9 +180,9 @@ namespace SSPHH {
 			const int AvgIIndex = 4;
 			const int MinIIndex = 5;
 			const int MaxIIndex = 6;
-			for (unsigned j = 0; j < blockstat.image.height(); j++) {
-				for (unsigned i = 0; i < blockstat.image.width(); i++) {
-					unsigned addr = blockstat.image.addr(i, j);
+			for (int j = 0; j < blockstat.image.height(); j++) {
+				for (int i = 0; i < blockstat.image.width(); i++) {
+					size_t addr = blockstat.image.addr(i, j);
 					float averageI = std::get<AvgIIndex>(blockcounts[addr]);
 					float mindiffI = std::get<MinIIndex>(blockcounts[addr]);
 					float maxdiffI = std::get<MaxIIndex>(blockcounts[addr]);

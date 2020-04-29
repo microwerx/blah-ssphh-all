@@ -23,7 +23,7 @@ namespace SSPHH
 		Matrix4f perspective;
 		perspective.PerspectiveY(ssg.camera.fov, aspect, 0.01f, 200.0f);
 		glMultMatrixf(perspective.const_ptr());
-		glMultMatrixf((Interface.preCameraMatrix).AsInverse().const_ptr());
+		glMultMatrixf((Interface->preCameraMatrix).AsInverse().const_ptr());
 		//glMultMatrixf((ssg.camera.viewMatrix_).const_ptr());
 
 		glMatrixMode(GL_MODELVIEW);
@@ -65,7 +65,7 @@ namespace SSPHH
 		FxDrawGL1SixAxis(2.0);
 
 		// Spheres
-		for (auto s = ssg.spheres.begin(); s != ssg.spheres.end(); s++) {
+		for (auto s = ssg.spheres.beginSurface(); s != ssg.spheres.end(); s++) {
 			glPushMatrix();
 			glMultMatrixf(s->second.transform.const_ptr());
 			FxDrawGL1SolidSphere(0.5f, 16, 16);
@@ -73,15 +73,15 @@ namespace SSPHH
 		}
 
 		// Geometry
-		for (auto g = ssg.geometryGroups_.begin(); g != ssg.geometryGroups_.end(); g++) {
+		for (auto g = ssg.geometryGroups_.beginSurface(); g != ssg.geometryGroups_.end(); g++) {
 			glPushMatrix();
 			glMultMatrixf(g->second.transform.const_ptr());
 			glMultMatrixf(g->second.addlTransform.const_ptr());
-			Vector3f center = ssg.staticMeshes[g->second.objectId].BoundingBox.Center();
+			Vector3f center = ssg.staticMeshes[g->second.objectId].bbox.Center();
 
 			glPushMatrix();
 			glTranslatef(center.x, center.y, center.z);
-			FxDrawGL1WireCube(ssg.staticMeshes[g->second.objectId].BoundingBox.MaxSize());
+			FxDrawGL1WireCube(ssg.staticMeshes[g->second.objectId].bbox.maxSize());
 			glPopMatrix();
 
 			glEnable(GL_LIGHTING);
@@ -101,7 +101,7 @@ namespace SSPHH
 
 		// Point Lights
 		glEnable(GL_BLEND);
-		for (auto pl = ssg.pointLights.begin(); pl != ssg.pointLights.end(); pl++) {
+		for (auto pl = ssg.pointLights.beginSurface(); pl != ssg.pointLights.end(); pl++) {
 			glPushMatrix();
 			glTranslatef(pl->position.x, pl->position.y, pl->position.z);
 			glColor4f(1.0f, 1.0f, 0.0f, 1.0f);

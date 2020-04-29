@@ -14,7 +14,7 @@ newmtl sp_00_luk_mali
 	Ke 0.000000 0.000000 0.000000
 	map_Ka sp_luk.jpg
 	map_Kd sp_luk.jpg
-	map_normal sp_luk-normal.png
+	map_normal sp_luk_normal.png
 
 
 
@@ -33,7 +33,7 @@ newmtl sp_svod_kapitel
 	Ke 0.000000 0.000000 0.000000
 	map_Ka 00_skap.jpg
 	map_Kd 00_skap.jpg
-	map_normal 00_skap-normal.png
+	map_normal 00_skap_normal.png
 
 
 
@@ -66,7 +66,7 @@ newmtl sp_01_stub_kut
 	Ke 0.000000 0.000000 0.000000
 	map_Ka 01_stub.jpg
 	map_Kd 01_stub.jpg
-	map_normal 01_stub-normal.png
+	map_normal 01_stub_normal.png
 
 
 
@@ -85,7 +85,7 @@ newmtl sp_00_stup
 	Ke 0.000000 0.000000 0.000000
 	map_Ka 01_stub.jpg
 	map_Kd 01_stub.jpg
-	map_normal 01_stub-normal.png
+	map_normal 01_stub_normal.png
 
 
 
@@ -104,7 +104,7 @@ newmtl sp_01_stub_baza
 	Ke 0.000000 0.000000 0.000000
 	map_Ka 01_s_ba.jpg
 	map_Kd 01_s_ba.jpg
-	map_normal 01_s_ba-normal.png
+	map_normal 01_s_ba_normal.png
 
 
 
@@ -123,7 +123,7 @@ newmtl sp_00_luk_mal1
 	Ke 0.000000 0.000000 0.000000
 	map_Ka 01_st_kp.jpg
 	map_Kd 01_st_kp.jpg
-	map_normal 01_st_kp-normal.png
+	map_normal 01_st_kp_normal.png
 
 
 
@@ -142,7 +142,7 @@ newmtl sp_01_stub
 	Ke 0.000000 0.000000 0.000000
 	map_Ka 01_stub.jpg
 	map_Kd 01_stub.jpg
-	map_normal 01_stub-normal.png
+	map_normal 01_stub_normal.png
 
 
 
@@ -175,7 +175,7 @@ newmtl sp_vijenac
 	Ke 0.000000 0.000000 0.000000
 	map_Ka 00_skap.jpg
 	map_Kd 00_skap.jpg
-	map_normal 00_skap-normal.png
+	map_normal 00_skap_normal.png
 
 
 
@@ -192,9 +192,9 @@ newmtl sp_00_svod
 	Kd 0.941177 0.866667 0.737255
 	Ks 0.034039 0.032314 0.029333
 	Ke 0.000000 0.000000 0.000000
-        map_Kd kamen-stup.jpg
-        map_Ka kamen-stup.jpg
-        map_normal kamen-stup-normal.png
+        map_Kd kamen_stup.jpg
+        map_Ka kamen_stup.jpg
+        map_normal kamen_stup_normal.png
        
 
 
@@ -213,7 +213,7 @@ newmtl sp_02_reljef
 	Ke 0.000000 0.000000 0.000000
 	map_Ka reljef.jpg
 	map_Kd reljef.jpg
-	map_normal reljef-normal.png
+	map_normal reljef_normal.png
 
 
 
@@ -232,7 +232,7 @@ newmtl sp_01_luk_a
 	Ke 0.000000 0.000000 0.000000
 	map_Ka sp_luk.jpg
 	map_Kd sp_luk.jpg
-	map_normal sp_luk-normal.png
+	map_normal sp_luk_normal.png
 
 
 
@@ -251,7 +251,7 @@ newmtl sp_zid_vani
 	Ke 0.000000 0.000000 0.000000
 	map_Ka kamen.jpg
 	map_Kd kamen.jpg
-	map_normal kamen-normal.png
+	map_normal kamen_normal.png
 
 
 
@@ -270,7 +270,7 @@ newmtl sp_01_stup_baza
 	Ke 0.000000 0.000000 0.000000
 	map_Ka 01_s_ba.jpg
 	map_Kd 01_s_ba.jpg
-	map_normal 01_s_ba-normal.png
+	map_normal 01_s_ba_normal.png
 
 
 
@@ -289,7 +289,7 @@ newmtl sp_00_zid
 	Ke 0.000000 0.000000 0.000000
 	map_Ka kamen.jpg
 	map_Kd kamen.jpg
-	map_normal kamen-normal.png
+	map_normal kamen_normal.png
 
 
 
@@ -308,7 +308,7 @@ newmtl sp_00_prozor
 	Ke 0.000000 0.000000 0.000000
 	map_Ka prozor1.jpg
 	map_Kd prozor1.jpg
-	map_normal prozor1-normal.png
+	map_normal prozor1_normal.png
 
 
 
@@ -327,7 +327,7 @@ newmtl sp_00_vrata_krug
 	Ke 0.000000 0.000000 0.000000
 	map_Ka vrata_kr.jpg
 	map_Kd vrata_kr.jpg
-	map_normal vrata_kr-normal.png
+	map_normal vrata_kr_normal.png
 
 
 
@@ -346,7 +346,7 @@ newmtl sp_00_pod
 	Ke 0.000000 0.000000 0.000000
 	map_Ka kamen.jpg
 	map_Kd kamen.jpg
-	map_normal kamen-normal.png
+	map_normal kamen_normal.png
 
 
 
@@ -365,7 +365,7 @@ newmtl sp_00_vrata_kock
 	Ke 0.000000 0.000000 0.000000
 	map_Ka vrata_ko.jpg
 	map_Kd vrata_ko.jpg
-	map_normal vrata_ko-normal.png
+	map_normal vrata_ko_normal.png
 
 
 

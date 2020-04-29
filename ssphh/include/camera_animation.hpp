@@ -6,7 +6,7 @@
 
 class CameraAnimation : public Fluxions::SimplePathAnimation {
 public:
-	void calcgraph(Vf::AnimPathWindowPtr& mw);
+	void calcgraph(Vf::AnimPathWindowPtr mw);
 };
 
 

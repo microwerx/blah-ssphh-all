@@ -2,47 +2,41 @@
 #include <renderer_config_window.hpp>
 #include <ssphhapp.hpp>
 
-RendererConfigWindow::RendererConfigWindow(const std::string& name)
-	: Vf::Window(name) {}
+RendererConfigWindow::RendererConfigWindow(const std::string& name) : Vf::Window(name) {}
 
 RendererConfigWindow::~RendererConfigWindow() {}
 
 void RendererConfigWindow::OnUpdate(double timestamp) {
 	if (!ssphh_widget_ptr) {
-		context = nullptr;
+		rendererContext = nullptr;
 		return;
 	}
 
 	Vf::Window::OnUpdate(timestamp);
 
-	if (context != &ssphh_widget_ptr->rendererContext)
-		context = &ssphh_widget_ptr->rendererContext;
+	if (rendererContext != ssphh_widget_ptr->rendererContext) rendererContext = ssphh_widget_ptr->rendererContext;
 
-	if (!context) return;
+	if (!rendererContext) return;
 
-	if (renderConfigList.size() != context->rendererConfigs.size()) {
-		rc = nullptr;
+	if (renderConfigList.size() != rendererContext->rendererConfigs.size()) {
+		rc_wptr.reset();
 		renderConfigList.clear();
 	}
-	renderConfigList.resize(context->rendererConfigs.size());
+	renderConfigList.resize(rendererContext->rendererConfigs.size());
 	int i = 0;
-	for (const auto& [k, v] : context->rendererConfigs) {
-		renderConfigList[i++] = v.name();
-	}
+	for (const auto& [k, v] : rendererContext->rendererConfigs) { renderConfigList[i++] = v->name(); }
 	if (curRendererConfigIndex >= renderConfigList.size()) {
-		rc = nullptr;
+		rc_wptr.reset();
 		curRendererConfigIndex = 0;
 	}
 	else {
-		rc = context->getRendererConfig(renderConfigList[curRendererConfigIndex]);
+		rc_wptr = rendererContext->getRendererConfig(renderConfigList[curRendererConfigIndex]);
 	}
 }
 
 void RendererConfigWindow::OnRenderDearImGui() {
-	if (!context) return;
-	if (renderConfigList.size() != context->rendererConfigs.size()) {
-		return;
-	}
+	if (!rendererContext) return;
+	if (renderConfigList.size() != rendererContext->rendererConfigs.size()) { return; }
 	if (!beginWindow()) return;
 	Vf::Window::OnRenderDearImGui();
 
@@ -51,41 +45,62 @@ void RendererConfigWindow::OnRenderDearImGui() {
 		defaultParameterWidth = r.x;
 	}
 
-	ImGui::ListBox("Renderer Configs",
-				   &curRendererConfigIndex,
-				   renderConfigList.data(),
-				   (int)renderConfigList.size(), 8);
+	ImGui::ListBox(
+		"Renderer Configs",
+		&curRendererConfigIndex,
+		renderConfigList.data(),
+		(int)renderConfigList.size(),
+		8);
 
-	if (!rc) { endWindow(); return; }
+	auto rc = rc_wptr.lock();
+	if (!rc) {
+		endWindow();
+		return;
+	}
+
 	if (rc && !rc->parent()) {
 		ImGui::TextColored(Colors::Red, "RC '%s' is invalid!", rc->name());
-		endWindow(); return;
+		endWindow();
+		return;
 	}
 	if (!rc->rc_program_ptr) {
 		ImGui::TextColored(Colors::Red, "RC '%s' rc_program_ptr is invalid!", rc->name());
-		endWindow(); return;
+		endWindow();
+		return;
 	}
 
 	// OPTIONS
 
 	ImGui::Separator();
-	ImGui::Checkbox("SRGB", &rc->enableSRGB);
-	ImGui::Checkbox("Maps", &rc->useMaps);
-	ImGui::Checkbox("Mats", &rc->useMaterials);
+	if (ImGui::TreeNode("Options")) {
+		ImGui::Checkbox("ZOnly", &rc->useZOnly);
+		ImGui::Checkbox("SRGB", &rc->enableSRGB);
+		ImGui::Checkbox("Maps", &rc->useMaps);
+		ImGui::Checkbox("Materials", &rc->useMaterials);
+		ImGui::Checkbox("Autoresize", &rc->viewportAutoresize);
+		ImGui::Checkbox("Clear Color", &rc->clearColorBuffer);
+		ImGui::Checkbox("Clear Depth", &rc->clearDepthBuffer);
+		ImGui::ColorPicker4("clearcolor", rc->clearColor.ptr());
+		ImGui::Checkbox("Scene Camera", &rc->useSceneCamera);
+		ImGui::TreePop();
+	}
 
 	// FBO information ///////////////////////////////////////////////////
 
 	ImGui::Separator();
 	ImGui::TextColored(Colors::White, "RC '%s' [%s]", rc->name(), rc->parent()->name());
 	if (ImGui::TreeNode("writefbos")) {
-		for (const auto& [k, v] : rc->writeFBOs) {
+		auto v = rc->writeFBO;
+		if (v) {
+			// for (const auto& [k, v] : rc->writeFBOs) {
 			ImGui::Text("writefbo: %s %s", (v ? v->name() : "NULL"), (v ? v->status() : "no status"));
 			if (v) {
 				for (const auto& fbo : v->renderTargets) {
-					ImGui::Text("target: %s/%s/%s",
-								Fluxions::glNameTranslator.getString(fbo.first),
-								Fluxions::glNameTranslator.getString(fbo.second.attachment),
-								Fluxions::glNameTranslator.getString(fbo.second.target));
+					ImGui::Text(
+						"target: %s/%s/%s",
+						Fluxions::glNameTranslator.getString(fbo.first),
+						Fluxions::glNameTranslator.getString(fbo.second.attachment),
+						Fluxions::glNameTranslator.getString(fbo.second.target));
 				}
 			}
 		}
@@ -97,10 +112,11 @@ void RendererConfigWindow::OnRenderDearImGui() {
 			ImGui::Text("readfbo: %s %s", (v ? v->name() : "NULL"), (v ? v->status() : "no status"));
 			if (v) {
 				for (const auto& fbo : v->renderTargets) {
-					ImGui::Text("target: %s/%s/%s",
-								Fluxions::glNameTranslator.getString(fbo.second.target),
-								Fluxions::glNameTranslator.getString(fbo.first),
-								fbo.second.mapName.c_str());
+					ImGui::Text(
+						"target: %s/%s/%s",
+						Fluxions::glNameTranslator.getString(fbo.second.target),
+						Fluxions::glNameTranslator.getString(fbo.first),
+						fbo.second.mapName.c_str());
 				}
 			}
 		}
@@ -113,18 +129,13 @@ void RendererConfigWindow::OnRenderDearImGui() {
 		ImGui::TextColored(Colors::Red, "RC '%s' program is not linked!", rc->name());
 	}
 	if (rc->rc_program_ptr->getInfoLog().size()) {
-		ImGui::TextColored(Colors::Yellow, rc->rc_program_ptr->getInfoLog().c_str());
+		ImGui::TextColored(Colors::Yellow, "%s", rc->rc_program_ptr->getInfoLog().c_str());
 	}
 	if (ImGui::TreeNode("Attached Shaders")) {
 		for (const auto& v : rc->rc_program_ptr->attachedShaders) {
 			if (!v) continue;
-			ImGui::Text("%s %s %s",
-						Fluxions::glNameTranslator.getString(v->shaderType),
-						v->name(),
-						v->status());
-			if (v->infoLog.size()) {
-				ImGui::TextColored(Colors::Yellow, v->infoLog.c_str());
-			}
+			ImGui::Text("%s %s %s", Fluxions::glNameTranslator.getString(v->shaderType), v->name(), v->status());
+			if (v->infoLog.size()) { ImGui::TextColored(Colors::Yellow, "%s", v->infoLog.c_str()); }
 		}
 		ImGui::TreePop();
 	}

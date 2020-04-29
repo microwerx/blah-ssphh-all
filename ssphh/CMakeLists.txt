@@ -1,19 +1,21 @@
 cmake_minimum_required(VERSION 3.13)
 project(ssphh)
 
-if (APPLE)
+
+if(APPLE OR ${CMAKE_SYSTEM_NAME} MATCHES "BSD")
+    message("adding /usr/local/include because Apple or BSD detected")
+    message("adding /usr/local/lib     because Apple or BSD detected")
     include_directories(/usr/local/include)
-    set(STD_CXX_FS c++fs)	
+    link_directories(/usr/local/lib)
 endif()
 
-if (!APPLE)
-	target_link_libraries(simplegame stdc++fs)
-endif()
 
 include_directories(~/github/fluxions/include)
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
+
 add_executable(${PROJECT_NAME}
+	src/AuroraVisualization.cpp
 	src/camera_animation.cpp
 	src/Damselfish.cpp
 	src/DragDrop.cpp
@@ -61,6 +63,26 @@ add_executable(${PROJECT_NAME}
     )
 
 target_link_libraries(${PROJECT_NAME} fluxions)
+
+
+message("Found " ${CMAKE_CXX_COMPILER_ID} " " ${CMAKE_CXX_COMPILER_VERSION})
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    set(LLVM_EXPECTED_VERSION 10.0.0)
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS LLVM_EXPECTED_VERSION)
+        message("Using stdc++fs because Clang 10 not detected")
+        target_link_libraries(${PROJECT_NAME} c++fs)
+    endif()
+endif()
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    set(GCC_EXPECTED_VERSION 9.0.0)
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS GCC_EXPECTED_VERSION)
+        message("Using stdc++fs because G++ 9 not detected")
+        target_link_libraries(${PROJECT_NAME} stdc++fs)
+    endif()
+endif()
+
 
 find_library(SDL2_LIB NAMES SDL2)
 find_library(SDL2_IMAGE_LIB NAMES SDL2_image)

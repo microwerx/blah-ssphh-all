@@ -1,8 +1,8 @@
 #ifndef SCENE_EDITOR_WINDOW_HPP
 #define SCENE_EDITOR_WINDOW_HPP
 
-#include <viperfish_window.hpp>
 #include <fluxions_ssg_scene_graph.hpp>
+#include <viperfish_window.hpp>
 
 class SceneEditorWindow : public Vf::Window {
 public:
@@ -11,8 +11,10 @@ public:
 
 	void OnUpdate(double timeStamp) override;
 	void OnRenderDearImGui() override;
+	void OnKill() override { ssg.reset(); }
+
 private:
-	Fluxions::SimpleSceneGraph* ssg{ nullptr };
+	Fluxions::SimpleSceneGraphPtr ssg;
 	Fluxions::BaseDirToLight* moon{ nullptr };
 	Fluxions::BaseDirToLight* sun{ nullptr };
 };

@@ -32,15 +32,15 @@ namespace SSPHH
 	}
 
 	void SSPHH_Application::PathAnim_Play() {
-		Interface.enableAnimation = true;
+		Interface->enableAnimation = true;
 	}
 
 	void SSPHH_Application::PathAnim_Stop() {
-		Interface.enableAnimation = false;
+		Interface->enableAnimation = false;
 	}
 
 	void SSPHH_Application::PathAnim_Toggle() {
-		Interface.enableAnimation = !Interface.enableAnimation;
+		Interface->enableAnimation = !Interface->enableAnimation;
 	}
 
 	void SSPHH_Application::PathAnim_Update() {
@@ -51,7 +51,7 @@ namespace SSPHH
 		cameraAnimationKeyframe = animpath_window_ptr->key;
 		int i = cameraAnimationKeyframe;
 
-		if (Interface.enableAnimation) {
+		if (Interface->enableAnimation) {
 			cameraAnimationTime += cameraAnimationSpeed * (float)GetFrameTime();
 			if (cameraAnimationTime > (float)cameraAnimation.size()) {
 				cameraAnimationTime -= std::floor(cameraAnimationTime);
@@ -115,6 +115,8 @@ namespace SSPHH
 		case Vf::PathAnimActions::SaveAnimation:
 			PathAnim_SaveCameraPath(default_animation_path);
 			break;
+		default:
+			break;
 		}
 		if (animpath_window_ptr->action >= Vf::PathAnimActions::FragileOperation) {
 			animpath_window_ptr->action = Vf::PathAnimActions::None;
@@ -146,7 +148,7 @@ namespace SSPHH
 		Matrix4f m;
 		m.Translate(p.x, p.y, p.z);
 		m.MultMatrix((animpath_window_ptr->q * q).toMatrix4());
-		ssg.camera.viewMatrix(m.AsInverse());
+		ssg->camera->viewMatrix(m.AsInverse());
 
 		cameraAnimation.calcgraph(animpath_window_ptr);
 	}

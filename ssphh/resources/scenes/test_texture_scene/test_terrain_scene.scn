@@ -18,7 +18,7 @@ transform 0.15 0.0 0.0 0.0 0.0 0.15 0.0 5.0 0.0 0.0 0.15 5.0
 sphere whiteLight
 
 transform 1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0 0.0
-geometryGroup teapot.obj
+# geometryGroup teapot.obj
 
 transform 2.0 0.0 0.0 4.0 0.0 2.0 0.0 0.0 0.0 0.0 2.0 0.0
 geometryGroup bunny.obj
@@ -32,8 +32,8 @@ transform 1.0 0.0 0.0 -4.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0 4.0
 
 
 transform 0.0 0.0 2.0 0.0 0.0 2.0 0.0 -2.0 2.0 0.0 0.0 0.0
-mtllib sponza.obj.mtl
-geometryGroup sponza.obj
+# mtllib sponza.mtl
+# geometryGroup sponza.obj
 
 # Floor
 
@@ -56,3 +56,4 @@ anisoLight SHL00 -4.0 2.0 -4.0 100.0 1 1 1
 anisoLight SHL01  4.0 2.0 -4.0 100.0 1 1 1
 anisoLight SHL02  4.0 2.0  4.0 100.0 1 1 1
 anisoLight SHL03 -4.0 2.0  4.0 100.0 1 1 1
+anisoLight SHL05  0.0 3.0  0.0 100.0 1 1 1

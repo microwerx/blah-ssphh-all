@@ -26,6 +26,16 @@ void HelpWindow::OnInit(const std::vector<std::string>& args) {
 	lines.push_back({ H1, "F10","Menu" });
 	lines.push_back({ H1, "F11","Tool Window" });
 	lines.push_back({ H1, "F12","Unicornfish Window" });
+	lines.push_back({ H1, "", "Options" });
+	lines.push_back({ P,  "1", "Load renderconfigs" });
+	lines.push_back({ P,  "2", "Load shaders" });
+	lines.push_back({ P,  "3", "Load scene graph" });
+	lines.push_back({ P,  "4", "Toggle Rect Shadows" });
+	lines.push_back({ P,  "5", "Toggle Cube Shadows" });
+	lines.push_back({ P,  "6", "Toggle Sky Box" });
+	lines.push_back({ P,  "7", "Toggle Scene" });
+	lines.push_back({ P,  "8", "Toggle VIZ" });
+	lines.push_back({ P,  "9", "Toggle POST" });
 }
 
 void HelpWindow::OnRenderDearImGui() {
@@ -44,9 +54,9 @@ void HelpWindow::OnRenderDearImGui() {
 
 	for (auto& [heading, key, desc] : lines) {
 		ImGui::PushStyleColor(ImGuiCol_Text, colors[heading]);
-		ImGui::Text(key.c_str());
+		ImGui::Text("%s", key.c_str());
 		ImGui::SameLine(gap);
-		ImGui::TextWrapped(desc.c_str());
+		ImGui::TextWrapped("%s", desc.c_str());
 		ImGui::PopStyleColor();
 	}
 
